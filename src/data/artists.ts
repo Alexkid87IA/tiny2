@@ -62,7 +62,7 @@ export const artists = [
       cities: 60,
       followers: 250000
     },
-    production: "Doudou Production"
+    prod: "Doudou Production"
   },
   {
     id: "djal",
@@ -130,7 +130,7 @@ export const artists = [
       cities: 30,
       followers: 120000
     },
-    diffusion: "Les Derniers couchés"
+    prod: "Les Derniers couchés"
   },
   {
     id: "thomas",
@@ -163,7 +163,7 @@ export const artists = [
       cities: 25,
       followers: 95000
     },
-    production: "ProdVocation"
+    prod: "ProdVocation"
   },
   {
     id: "lucie",
@@ -228,7 +228,7 @@ export const artists = [
       cities: 28,
       followers: 85000
     },
-    production: "Dan Bolender Production"
+    prod: "Dan Bolender Production"
   },
   {
     id: "julien-santini",
@@ -292,7 +292,8 @@ export const artists = [
       shows: 500,
       cities: 15,
       followers: 300000
-    }
+    },
+    diff: "diffusion"
   },
   {
     id: "sophie-alex",

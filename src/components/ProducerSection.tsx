@@ -201,36 +201,6 @@ const ArtistCard = ({ artist, index, isMobile }) => {
             }} />
           </motion.div>
           
-          {(artist.production || artist.diffusion) && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 + 0.3 }}
-              style={{
-                position: 'absolute',
-                top: '12px',
-                left: '12px',
-                right: '12px'
-              }}
-            >
-              <div style={{
-                padding: '4px 8px',
-                borderRadius: '50px',
-                background: 'rgba(255,255,255,0.9)',
-                backdropFilter: 'blur(10px)',
-                textAlign: 'center'
-              }}>
-                <span style={{
-                  fontSize: '9px',
-                  color: 'black',
-                  fontWeight: 600
-                }}>
-                  {artist.production ? artist.production : `Diffusion ${artist.diffusion}`}
-                </span>
-              </div>
-            </motion.div>
-          )}
-          
           <div style={{
             position: 'absolute',
             bottom: 0,
@@ -494,7 +464,7 @@ export const ProducerSection = () => {
               maxWidth: '700px',
               margin: '0 auto'
             }}>
-              <span style={{ color: '#ec4899', fontWeight: 500 }}>Nous travaillons avec des salles de 100 comme de 1000 places.</span><br/>
+              <span style={{ color: '#ec4899', fontWeight: 500 }}>Nous travaillons avec des salles de toute capacité.</span><br/>
               Ce qui compte, c'est la réussite de votre soirée.
             </p>
           </motion.div>
@@ -576,31 +546,6 @@ export const ProducerSection = () => {
               }}>
                 On ne vous promet pas la lune. On vous promet d'être là, du premier appel au dernier applaudissement.
               </p>
-              
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: '24px',
-                marginBottom: '40px'
-              }}>
-                {['Réponse sous 48h', 'Tarifs dégressifs', 'Kit com\' offert'].map((item, i) => (
-                  <div key={i} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    color: 'rgba(255,255,255,0.6)'
-                  }}>
-                    <span style={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      background: '#ec4899'
-                    }}></span>
-                    <span style={{ fontSize: '14px' }}>{item}</span>
-                  </div>
-                ))}
-              </div>
               
               <a
                 href="mailto:booking@tinyteam.fr"

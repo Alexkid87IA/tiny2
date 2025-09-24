@@ -501,17 +501,18 @@ export const BrandSection = () => {
           }}>Nos formats d'intervention</h3>
           
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
-            gap: '16px',
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '24px',
+            flexWrap: 'wrap',
             maxWidth: '800px',
             margin: '0 auto'
           }}>
             {[
-              { icon: Briefcase, title: "Séminaires", time: "30min à 1h30" },
-              { icon: Users, title: "Team Building", time: "2h à 1 journée" },
-              { icon: Rocket, title: "Conventions", time: "Sur mesure" },
-              { icon: Trophy, title: "Soirées privées", time: "1h à 2h" }
+              { icon: Briefcase, title: "Séminaires" },
+              { icon: Users, title: "Team Building" },
+              { icon: Rocket, title: "Conventions" },
+              { icon: Trophy, title: "Soirées privées" }
             ].map((service, index) => (
               <motion.div
                 key={index}
@@ -520,11 +521,13 @@ export const BrandSection = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
                 style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
                   background: DESIGN.colors.glass,
                   border: `1px solid ${DESIGN.colors.glassBorder}`,
-                  borderRadius: '12px',
-                  padding: '16px',
-                  textAlign: 'center',
+                  borderRadius: '50px',
+                  padding: '12px 24px',
                   transition: 'all 0.3s ease'
                 }}
                 onMouseEnter={(e) => {
@@ -541,20 +544,15 @@ export const BrandSection = () => {
                 }}
               >
                 <service.icon style={{
-                  width: '32px',
-                  height: '32px',
-                  color: '#ec4899',
-                  margin: '0 auto 12px'
+                  width: '20px',
+                  height: '20px',
+                  color: '#ec4899'
                 }} />
-                <h4 style={{
-                  fontWeight: 700,
+                <span style={{
+                  fontWeight: 600,
                   color: 'white',
-                  marginBottom: '4px'
-                }}>{service.title}</h4>
-                <p style={{
-                  fontSize: '12px',
-                  color: 'rgba(255,255,255,0.6)'
-                }}>{service.time}</p>
+                  fontSize: '14px'
+                }}>{service.title}</span>
               </motion.div>
             ))}
           </div>
@@ -658,7 +656,7 @@ export const BrandSection = () => {
               </Link>
               
               <a
-                href="mailto:booking@tinyteam.fr"
+                href="mailto:diffusion@tinyteam.fr"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -684,7 +682,7 @@ export const BrandSection = () => {
                 }}
               >
                 <Mail style={{ width: '20px', height: '20px', color: '#ec4899' }} />
-                <span>booking@tinyteam.fr</span>
+                <span>diffusion@tinyteam.fr</span>
               </a>
             </div>
           </div>

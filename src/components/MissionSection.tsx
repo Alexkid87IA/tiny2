@@ -71,7 +71,7 @@ const servicesData = [
     id: "diffusion",
     acte: "Partager",
     title: "Diffusion",
-    subtitle: "On connaît chaque directeur de salle par son prénom",
+    subtitle: "Pour chaque projet, nous avons une stratégie",
     story: "300 salles partenaires, mais surtout 300 relations de confiance. On sait ce qui marche où, pour qui, et on ne survendons jamais.",
     gradient: "linear-gradient(135deg, #c084fc, #a855f7)",
     borderColor: "rgba(192, 132, 252, 0.5)",
