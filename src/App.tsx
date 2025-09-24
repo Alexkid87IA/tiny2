@@ -8,7 +8,6 @@ import { MissionSection } from './components/MissionSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { Navigation } from './components/Navigation';
-import { ChatWidget } from './components/ChatWidget';
 import { ArtistProfilePage } from './pages/ArtistProfilePage';
 import { BrandPage } from './pages/BrandPage';
 import { TeamStoriesPage } from './pages/TeamStoriesPage';
@@ -54,7 +53,6 @@ function App() {
         <Route path="/services/:id" element={<ServiceDetailPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
-      <ChatWidget />
     </BrowserRouter>
   );
 }

@@ -1,242 +1,377 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Star, Shield, Rocket, Megaphone, Globe, Calendar, ChevronDown } from 'lucide-react';
 
-const missions = [
-  {
-    id: "strategie",
-    title: "Stratégie",
-    subtitle: "Votre vision, notre expertise",
-    description: "Nous élaborons ensemble une stratégie sur mesure pour développer votre carrière. De l'analyse du marché à la planification détaillée, chaque étape est pensée pour votre réussite.",
-    icon: () => (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-8 h-8 md:w-12 md:h-12 text-white"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <circle cx="12" cy="12" r="6" />
-        <circle cx="12" cy="12" r="2" />
-      </svg>
-    ),
-    features: [
-      "Analyse de marché approfondie",
-      "Positionnement artistique", 
-      "Plan de développement",
-      "Objectifs personnalisés"
-    ]
-  },
+// Services data avec les 6 piliers - Palette cohérente rose/violet
+const servicesData = [
   {
     id: "production",
+    acte: "Acte I",
     title: "Production",
-    subtitle: "De l'idée à la scène",
-    description: "Une approche globale de la production artistique. Nous gérons tous les aspects techniques et créatifs pour que vous puissiez vous concentrer sur votre art.",
-    icon: () => (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-8 h-8 md:w-12 md:h-12 text-white"
-      >
-        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-        <line x1="8" y1="21" x2="16" y2="21" />
-        <line x1="12" y1="17" x2="12" y2="21" />
-      </svg>
-    ),
-    features: [
-      "Direction artistique",
-      "Production exécutive",
-      "Gestion des tournées",
-      "Communication digitale"
-    ]
+    subtitle: "Donner vie aux idées",
+    story: "Imaginez une idée qui prend forme. Un rêve griffonné sur un coin de table qui devient un spectacle époustouflant. C'est notre première magie : transformer l'invisible en inoubliable. Nous sculptons vos visions pour qu'elles touchent les cœurs.",
+    color: "from-pink-500 to-pink-600",
+    borderColor: "border-pink-400/30",
+    glowColor: "rgba(236, 72, 153, 0.2)",
+    icon: Star
+  },
+  {
+    id: "management",
+    acte: "Acte II",
+    title: "Management",
+    subtitle: "Guider les talents",
+    story: "Chaque artiste est unique, chaque parcours singulier. Nous devenons les architectes silencieux de carrières extraordinaires. Avec bienveillance et expertise, nous traçons la route vers les sommets.",
+    color: "from-purple-500 to-pink-500",
+    borderColor: "border-purple-400/30",
+    glowColor: "rgba(168, 85, 247, 0.2)",
+    icon: Shield
   },
   {
     id: "digital",
+    acte: "Acte III",
     title: "Digital",
-    subtitle: "Votre présence en ligne",
-    description: "Maîtrisez les enjeux du numérique et développez votre présence en ligne. Une stratégie digitale complète pour maximiser votre impact et votre visibilité.",
-    icon: () => (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-8 h-8 md:w-12 md:h-12 text-white"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-      </svg>
-    ),
-    features: [
-      "Stratégie réseaux sociaux",
-      "Création de contenus",
-      "Monétisation digitale",
-      "Gestion de communauté"
-    ]
+    subtitle: "Rayonner dans le monde",
+    story: "Dans l'océan numérique, nous créons des phares. Vos histoires traversent les écrans, touchent des milliers d'âmes. Nous orchestrons votre présence digitale comme une symphonie.",
+    color: "from-purple-600 to-purple-700",
+    borderColor: "border-purple-400/30",
+    glowColor: "rgba(168, 85, 247, 0.2)",
+    icon: Rocket
   },
   {
-    id: "protection",
-    title: "Protection",
-    subtitle: "Sécuriser votre avenir",
-    description: "Un accompagnement juridique et stratégique complet pour protéger vos intérêts et valoriser votre travail dans un environnement en constante évolution.",
-    icon: () => (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-8 h-8 md:w-12 md:h-12 text-white"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
-    features: [
-      "Protection des droits",
-      "Monétisation des contenus",
-      "Conseil juridique",
-      "Gestion contractuelle"
-    ]
+    id: "communication",
+    acte: "Acte IV",
+    title: "Communication",
+    subtitle: "Créer l'émotion",
+    story: "Les mots ont le pouvoir de créer des mondes. Nous façonnons votre image avec la précision d'un orfèvre et l'âme d'un poète. Chaque message devient une invitation au voyage.",
+    color: "from-pink-400 to-purple-500",
+    borderColor: "border-pink-400/30",
+    glowColor: "rgba(236, 72, 153, 0.2)",
+    icon: Megaphone
+  },
+  {
+    id: "diffusion",
+    acte: "Acte V",
+    title: "Diffusion",
+    subtitle: "Conquérir les scènes",
+    story: "De théâtre en théâtre, de ville en ville, nous écrivons votre odyssée. Notre réseau devient votre constellation : 300 salles, autant d'étoiles où briller.",
+    color: "from-purple-400 to-purple-600",
+    borderColor: "border-purple-400/30",
+    glowColor: "rgba(168, 85, 247, 0.2)",
+    icon: Globe
+  },
+  {
+    id: "evenements",
+    acte: "Final",
+    title: "Événements",
+    subtitle: "Marquer les esprits",
+    story: "Pour les moments qui comptent, nous créons l'exceptionnel. Chaque événement devient une œuvre d'art totale, une expérience qui transcende le temps.",
+    color: "from-pink-500 to-purple-500",
+    borderColor: "border-purple-400/30",
+    glowColor: "rgba(236, 72, 153, 0.2)",
+    icon: Calendar
   }
 ];
 
-const MissionCard = ({ mission, index, isActive, onSelect }) => {
+interface ServicePanelProps {
+  service: typeof servicesData[0];
+  index: number;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, onClick }) => {
+  const Icon = service.icon;
+  
+  const handleServiceClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    // Navigation sera gérée dans votre App.tsx
+    window.location.href = `/services/${service.id}`;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`min-h-[calc(100vh-6rem)] md:min-h-screen flex items-center justify-center py-12 md:py-20 transition-all duration-700 ${
-        isActive ? 'opacity-100 scale-100' : 'opacity-50 scale-95'
-      }`}
-      onClick={() => onSelect(index)}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      className={`relative mb-4 rounded-2xl overflow-hidden backdrop-blur-md transition-all duration-500 cursor-pointer
+        ${isActive 
+          ? `bg-black/40 ${service.borderColor} shadow-2xl` 
+          : 'bg-black/20 border-white/10 hover:bg-black/30'
+        } border-2`}
+      onClick={onClick}
+      style={{
+        boxShadow: isActive ? `0 0 40px ${service.glowColor}` : undefined
+      }}
     >
-      <div className="w-full max-w-5xl mx-auto px-4">
-        <div className="relative">
-          <div className="relative">
-            {/* Title Section with Icon */}
-            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-8 md:mb-12">
-              <div className="relative group">
-                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-2xl md:rounded-3xl glass-effect flex items-center justify-center backdrop-blur-xl">
-                  <mission.icon />
-                </div>
-              </div>
-
-              <div className="text-center md:text-left">
-                <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight">
-                  <span className="block text-gradient from-white via-blue-100 to-white">
-                    {mission.title}
-                  </span>
-                </h2>
-                <span className="text-xl md:text-2xl lg:text-3xl block mt-2 md:mt-4 text-gradient from-pink-300 via-pink-200 to-pink-300">
-                  {mission.subtitle}
-                </span>
-              </div>
-            </div>
-
-            <div className="mb-8 md:mb-12">
-              <p className="text-base md:text-xl text-white/70 leading-relaxed">
-                {mission.description}
+      {/* Header du panneau */}
+      <div className="p-6 lg:p-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 lg:gap-6">
+            {/* Badge Acte */}
+            <motion.div
+              className={`px-3 py-1 lg:px-4 lg:py-1.5 rounded-full text-xs lg:text-sm font-bold tracking-wider
+                bg-gradient-to-r ${service.color} text-black`}
+              animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {service.acte}
+            </motion.div>
+            
+            {/* Titre et sous-titre */}
+            <div>
+              <h3 className="text-2xl lg:text-3xl font-bold text-white mb-1">
+                {service.title}
+              </h3>
+              <p className="text-white/60 text-sm lg:text-base italic">
+                {service.subtitle}
               </p>
             </div>
-
-            {/* Features Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
-              {mission.features.map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: i * 0.1 }}
-                  className="group"
-                >
-                  <div className="relative glass-card rounded-xl md:rounded-2xl p-4 md:p-6 backdrop-blur-xl overflow-hidden">
-                    <div className="relative">
-                      <span className="text-sm md:text-lg text-white/80 group-hover:text-white transition-colors duration-300">
-                        {feature}
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* CTA Button */}
-            <Link
-              to={`/mission/${mission.id}`}
-              className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-xl bg-gradient-to-r from-pink-400 to-pink-500 text-black font-semibold hover:from-pink-300 hover:to-pink-400 transition-all duration-300 group"
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {/* Icône */}
+            <motion.div
+              className={`w-12 h-12 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center
+                bg-gradient-to-br ${service.color} text-black`}
+              animate={isActive ? { rotate: 360 } : { rotate: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              <span className="text-sm md:text-base">En savoir plus</span>
-              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </Link>
+              <Icon className="w-6 h-6 lg:w-8 lg:h-8" strokeWidth={2} />
+            </motion.div>
+            
+            {/* Chevron indicateur de clic */}
+            <motion.div
+              animate={{ 
+                rotate: isActive ? 180 : 0,
+              }}
+              transition={{ duration: 0.3 }}
+              className="text-white/40 hover:text-white/60"
+            >
+              <ChevronDown className="w-6 h-6" />
+            </motion.div>
           </div>
         </div>
       </div>
+      
+      {/* Contenu expansible */}
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 pb-6 lg:px-8 lg:pb-8">
+              {/* Ligne de séparation animée */}
+              <motion.div 
+                className={`h-[1px] mb-6 bg-gradient-to-r ${service.color}`}
+                initial={{ width: 0 }}
+                animate={{ width: '100%' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              />
+              
+              {/* Story */}
+              <motion.p 
+                className="text-white/80 text-base lg:text-lg leading-relaxed mb-6"
+                initial={{ y: 10 }}
+                animate={{ y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                {service.story}
+              </motion.p>
+              
+              {/* Bouton découvrir */}
+              <motion.button
+                onClick={handleServiceClick}
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full
+                  bg-gradient-to-r ${service.color} text-black font-bold text-sm lg:text-base
+                  hover:scale-105 transition-transform duration-300`}
+                initial={{ y: 10 }}
+                animate={{ y: 0 }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ x: 5 }}
+              >
+                Découvrir ce service
+                <ArrowRight className="w-4 h-4" />
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
 
 export const MissionSection = () => {
-  const [activeMission, setActiveMission] = React.useState(0);
+  const [activePanel, setActivePanel] = useState<string | null>(null);
+
+  const togglePanel = (serviceId: string) => {
+    setActivePanel(prevActive => prevActive === serviceId ? null : serviceId);
+  };
+
+  const handleAllServicesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.location.href = '/services';
+  };
 
   return (
-    <section className="relative bg-[#0A0F29] overflow-hidden">
+    <section className="relative min-h-screen py-20 lg:py-32 bg-[#0A0F29] overflow-hidden">
+      {/* Fond animé avec particules (comme les autres sections) */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(236,72,153,0.1),transparent_70%)]" />
+        
+        {/* Grille animée subtile */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(168, 85, 247, 0.05) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
+          }}
+          animate={{
+            x: [0, 50],
+            y: [0, 50]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        
+        {/* Orbes de lumière flottants */}
+        <motion.div
+          className="absolute top-20 -left-20 w-96 h-96 rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15), transparent 70%)',
+            filter: 'blur(60px)'
+          }}
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <motion.div
+          className="absolute bottom-20 -right-20 w-96 h-96 rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.15), transparent 70%)',
+            filter: 'blur(60px)'
+          }}
+          animate={{
+            x: [0, -100, 0],
+            y: [0, 50, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
       </div>
 
-      <div className="relative pt-20 md:pt-32 text-center">
+      {/* Contenu principal */}
+      <div className="relative container mx-auto px-4 max-w-5xl">
+        
+        {/* Header épique */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="relative px-2 md:px-0"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-center mb-16 lg:mb-20 px-8"
         >
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="absolute -inset-x-4 -inset-y-8 md:-inset-y-16 bg-gradient-to-r from-pink-500/10 via-pink-500/5 to-pink-500/10 rounded-[40px] blur-3xl"
-          />
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative"
+          <h2 className="font-bold mb-6">
+            <motion.span 
+              className="block text-white mb-3 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl"
+              initial={{ x: -50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              Comment nous
+            </motion.span>
+            <motion.span 
+              className="block text-transparent bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-3xl sm:text-4xl lg:text-5xl xl:text-6xl pb-2"
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              style={{ lineHeight: '1.2' }}
+            >
+              Créons la magie
+            </motion.span>
+          </h2>
+          
+          <motion.p 
+            className="text-lg lg:text-xl text-white/60 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.9] md:leading-[0.9]">
-              <span className="inline-block bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
-                Une team au service
-              </span>
-              <br />
-              <span className="inline-block bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 bg-clip-text text-transparent">
-                de votre carrière
-              </span>
-            </h2>
+            De l'idée au rideau final, chaque étape est une œuvre
+          </motion.p>
+          
+          {/* Indicateur de clic */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-4 flex items-center justify-center gap-2 text-pink-400/60"
+          >
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <ChevronDown className="w-5 h-5" />
+            </motion.div>
+            <span className="text-sm">Cliquez pour découvrir</span>
           </motion.div>
         </motion.div>
-      </div>
 
-      <div className="relative">
-        {missions.map((mission, index) => (
-          <MissionCard
-            key={index}
-            mission={mission}
-            index={index}
-            isActive={index === activeMission}
-            onSelect={setActiveMission}
-          />
-        ))}
+        {/* Services accordéon */}
+        <div className="mb-16">
+          {servicesData.map((service, index) => (
+            <ServicePanel
+              key={service.id}
+              service={service}
+              index={index}
+              isActive={activePanel === service.id}
+              onClick={() => togglePanel(service.id)}
+            />
+          ))}
+        </div>
+
+        {/* Section finale */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <p className="text-2xl lg:text-3xl text-white/80 italic font-light mb-8">
+            "Six expertises, une vision : sublimer votre talent"
+          </p>
+          
+          <button
+            onClick={handleAllServicesClick}
+            className="group inline-flex items-center gap-3 px-8 py-4 rounded-full
+              bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-400 hover:to-pink-500
+              transition-all duration-300 shadow-lg hover:shadow-pink-500/25 hover:scale-105"
+          >
+            <span className="font-bold text-white text-base lg:text-lg">
+              EXPLORER TOUS NOS SERVICES
+            </span>
+            <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform duration-300" />
+          </button>
+        </motion.div>
       </div>
     </section>
   );

@@ -23,6 +23,37 @@ const ArtistCard = ({ artist, index }) => (
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
       
+      {/* Bandeau Production ou Diffusion */}
+      {(artist.production || artist.diffusion) && (
+        <div 
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            right: '12px',
+            background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)',
+            zIndex: 10,
+            textAlign: 'center'
+          }}
+        >
+          <span 
+            style={{
+              color: 'white',
+              fontSize: '11px',
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              whiteSpace: 'nowrap',
+              textTransform: 'uppercase'
+            }}
+          >
+            {artist.production ? `Production P/O ${artist.production}` : `Diffusion P/O ${artist.diffusion}`}
+          </span>
+        </div>
+      )}
+      
       {/* Overlay au hover */}
       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
@@ -47,7 +78,7 @@ const ArtistCard = ({ artist, index }) => (
 
 export const ArtistsSliderSection = () => {
   return (
-    <section id="artists" className="relative min-h-screen py-32 bg-[#0A0F29] overflow-hidden">
+    <section id="artistes" className="relative min-h-screen py-32 bg-[#0A0F29] overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />

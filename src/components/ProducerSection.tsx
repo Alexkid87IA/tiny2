@@ -1,332 +1,399 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, Users, Star, TrendingUp, Globe, Shield, Target, Zap, Heart } from 'lucide-react';
+import { ArrowRight, Users, ChevronRight, Mail } from 'lucide-react';
 import { artists } from '../data/artists';
 
-const stats = [
-  {
-    value: "Nos",
-    label: "artistes talentueux",
-    icon: Users,
-    gradient: "from-pink-400 to-pink-500"
-  },
-  {
-    value: "Forte",
-    label: "demande",
-    icon: TrendingUp,
-    gradient: "from-purple-400 to-purple-500"
-  },
-  {
-    value: "Présence",
-    label: "nationale",
-    icon: Globe,
-    gradient: "from-blue-400 to-blue-500"
-  }
-];
-
-const StatCard = ({ stat, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30, scale: 0.8 }}
-    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-    viewport={{ once: true }}
-    transition={{ 
-      duration: 0.6, 
-      delay: index * 0.1,
-      type: "spring",
-      stiffness: 100
-    }}
-    whileHover={{ 
-      y: -8,
-      scale: 1.05,
-      transition: { duration: 0.3 }
-    }}
-    className="group relative"
-  >
-    <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-white/5 to-white/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+// Composant pour les particules animées améliorées
+const AnimatedBackground = () => (
+  <div className="absolute inset-0 overflow-hidden">
+    {/* Gradient orbs animés */}
+    <motion.div
+      className="absolute w-96 h-96 rounded-full"
+      style={{
+        background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%)',
+        filter: 'blur(60px)',
+      }}
+      animate={{
+        x: ['-20%', '120%'],
+        y: ['20%', '80%'],
+      }}
+      transition={{
+        duration: 25,
+        repeat: Infinity,
+        repeatType: 'reverse',
+        ease: 'easeInOut',
+      }}
+    />
+    <motion.div
+      className="absolute w-96 h-96 rounded-full"
+      style={{
+        background: 'radial-gradient(circle, rgba(147, 51, 234, 0.15) 0%, transparent 70%)',
+        filter: 'blur(60px)',
+      }}
+      animate={{
+        x: ['120%', '-20%'],
+        y: ['80%', '20%'],
+      }}
+      transition={{
+        duration: 30,
+        repeat: Infinity,
+        repeatType: 'reverse',
+        ease: 'easeInOut',
+      }}
+    />
     
-    <div className="relative glass-card rounded-2xl p-4 md:p-6 h-full overflow-hidden">
-      <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-500`} />
-      
-      <div className="relative flex flex-col items-center text-center space-y-3 md:space-y-4">
-        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
-          <stat.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
-        </div>
-        
-        <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white group-hover:text-glow transition-all duration-300">
-          {stat.value}
-        </div>
-        
-        <div className="text-xs md:text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 leading-relaxed">
-          {stat.label}
-        </div>
-      </div>
-    </div>
-  </motion.div>
-);
-
-const ArtistCard = ({ artist, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.5, delay: index * 0.05 }}
-    className="group"
-  >
-    <Link to={`/artiste/${artist.id}`} className="block">
-      <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
-        <img
-          src={artist.image}
-          alt={artist.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        
-        {/* Production Badge */}
-        {(artist.production || artist.diffusion) && (
-          <div className="absolute top-3 left-3 right-3">
-            <div className="px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 text-center">
-              <span className="text-xs text-white/90 font-medium">
-                {artist.production ? `Production par ${artist.production}` : `Diffusion P/O ${artist.diffusion}`}
-              </span>
-            </div>
-          </div>
-        )}
-        
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
-          <h3 className="text-sm md:text-lg font-bold text-white mb-1 group-hover:text-glow transition-all duration-300">
-            {artist.name}
-          </h3>
-          <p className="text-xs md:text-sm text-white/80 mb-2">{artist.type}</p>
-          <p className="text-xs text-white/70 line-clamp-2">{artist.tagline}</p>
-          
-          {artist.stats && (
-            <div className="flex items-center gap-2 md:gap-3 mt-2 md:mt-3 text-xs text-white/60">
-              <div className="flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                <span>{artist.stats.shows} spectacles</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Globe className="w-3 h-3" />
-                <span>{artist.stats.cities} villes</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="px-3 md:px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs md:text-sm font-medium">
-            Découvrir l'artiste
-          </div>
-        </div>
-      </div>
-    </Link>
-  </motion.div>
-);
-
-const FloatingParticles = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(30)].map((_, i) => (
+    {/* Étoiles scintillantes */}
+    {[...Array(50)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute w-1 h-1 bg-white/20 rounded-full"
-        initial={{
-          x: Math.random() * 100 + "%",
-          y: Math.random() * 100 + "%",
-          scale: 0,
-          opacity: 0
+        className="absolute w-1 h-1 bg-white rounded-full"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
         }}
         animate={{
-          y: [null, `${Math.random() * 30 - 15}%`],
-          x: [null, `${Math.random() * 30 - 15}%`],
-          scale: [0, 1, 0],
-          opacity: [0, 0.8, 0]
+          opacity: [0, 1, 0],
+          scale: [0, 1.5, 0],
         }}
         transition={{
-          duration: Math.random() * 5 + 3,
+          duration: 3,
           repeat: Infinity,
-          repeatDelay: Math.random() * 2
+          delay: Math.random() * 5,
+          ease: 'easeInOut',
         }}
       />
     ))}
   </div>
 );
 
-export const ProducerSection = () => {
+// Composant pour une carte d'artiste interactive (format portrait)
+const ArtistCard = ({ artist, index }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
   return (
-    <section id="programmateurs" className="relative py-20 md:py-32 bg-[#0A0F29] overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(236,72,153,0.1),transparent_50%)]" />
-        <FloatingParticles />
-      </div>
-
-      <div className="relative container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16 md:mb-20">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="relative px-2 md:px-0"
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ 
+        duration: 0.6, 
+        delay: index * 0.05,
+        type: 'spring',
+        stiffness: 100
+      }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="group relative"
+    >
+      <Link to={`/artiste/${artist.id}`}>
+        <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
+          {/* Image de fond */}
+          <motion.div 
+            className="absolute inset-0"
+            animate={{ scale: isHovered ? 1.1 : 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              className="absolute -inset-x-4 -inset-y-8 md:-inset-y-16 bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-emerald-500/10 rounded-[40px] blur-3xl"
+            <img
+              src={artist.image}
+              alt={artist.name}
+              className="w-full h-full object-cover"
             />
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.9]">
-                <span className="block bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
-                  Programmateurs,
-                </span>
-                <span className="block bg-gradient-to-r from-emerald-300 via-emerald-200 to-emerald-300 bg-clip-text text-transparent mt-2">
-                  enrichissez votre saison
-                </span>
-              </h2>
-            </motion.div>
+            {/* Overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </motion.div>
+          
+          {/* Badge de production/diffusion plus visible */}
+          {(artist.production || artist.diffusion) && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 + 0.3 }}
+              className="absolute top-3 left-3 right-3"
+            >
+              <div className="px-2 py-1 rounded-full bg-white/90 backdrop-blur-sm text-center">
+                <span className="text-[9px] text-black font-semibold">
+                  {artist.production ? artist.production : `Diffusion ${artist.diffusion}`}
+                </span>
+              </div>
+            </motion.div>
+          )}
+          
+          {/* Contenu principal */}
+          <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+            <motion.div
+              animate={{ y: isHovered ? -3 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="text-sm md:text-lg font-bold text-white mb-1 group-hover:text-glow transition-all duration-300">
+                {artist.name}
+              </h3>
+              <p className="text-xs text-white/70 line-clamp-2">{artist.tagline}</p>
+            </motion.div>
+          </div>
+          
+          {/* Overlay au hover */}
+          <motion.div
+            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 1 : 0 }}
+          >
+            <div className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white text-sm font-medium">
+              Découvrir l'artiste
+            </div>
+          </motion.div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
 
+// Section principale
+export const ProducerSection = () => {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  
+  return (
+    <section 
+      ref={sectionRef}
+      id="programmateurs" 
+      className="relative py-32 bg-[#0A0F29] overflow-hidden"
+    >
+      <AnimatedBackground />
+      
+      {/* Background parallax */}
+      <motion.div 
+        className="absolute inset-0 opacity-30"
+        style={{ y: backgroundY }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(236,72,153,0.1),transparent_70%)]" />
+      </motion.div>
+      
+      <motion.div 
+        style={{ opacity }}
+        className="relative container mx-auto px-4"
+      >
+        {/* Header simplifié avec value proposition */}
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, type: "spring" }}
+            className="relative inline-block"
+          >
+            {/* Glow effect */}
+            <div className="absolute -inset-20 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-pink-500/10 blur-3xl" />
+            
+            <h2 className="relative text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+              <motion.span 
+                className="block bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent"
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                Programmateurs,
+              </motion.span>
+              <motion.span 
+                className="block bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mt-2"
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                enrichissez votre saison
+              </motion.span>
+            </h2>
+          </motion.div>
+          
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-base md:text-xl text-white/80 leading-relaxed max-w-4xl mx-auto mt-6 md:mt-8"
+            className="text-xl text-white/80 max-w-4xl mx-auto mt-8 leading-relaxed"
           >
-            Tiny Team accompagne des humoristes talentueux avec exigence, écoute et créativité.
-            Nous vous offrons une programmation fluide, fiable et amplifiée pour faire rayonner vos événements.
+            Tiny Team accompagne des humoristes talentueux avec exigence et créativité.
+            <br />
+            <span className="text-pink-300 font-medium">Chaque spectacle devient une expérience inoubliable.</span>
           </motion.p>
         </div>
-
-        {/* Punchline */}
+        
+        {/* Pourquoi Tiny Team - Arguments de vente */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mb-20"
+        >
+          <h3 className="text-center text-2xl md:text-3xl font-bold text-white mb-3">
+            Votre partenaire booking de confiance
+          </h3>
+          <p className="text-center text-white/60 mb-10 max-w-2xl mx-auto">
+            Plus qu'une agence : votre équipe dédiée pour transformer chaque spectacle en succès mémorable.
+          </p>
+          
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: "🎯",
+                  title: "Artistes triés sur le volet",
+                  description: "Seulement les meilleurs, testés et approuvés par nos équipes"
+                },
+                {
+                  icon: "📄",
+                  title: "Un seul interlocuteur",
+                  description: "Contrat unique, facture unique, suivi de A à Z"
+                },
+                {
+                  icon: "🚀",
+                  title: "Clé en main",
+                  description: "Technique, com', logistique : on gère tout pour vous"
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="glass-card rounded-xl p-6 text-center group hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="text-4xl mb-4">{item.icon}</div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
+                    {item.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* Grille d'artistes moderne - 2 lignes de 5 */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 max-w-7xl mx-auto mb-12">
+          {artists.slice(0, 10).map((artist, index) => (
+            <ArtistCard key={artist.id} artist={artist} index={index} />
+          ))}
+        </div>
+        
+        {/* Message de réassurance après la grille */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16 md:mb-20"
+          className="text-center mb-16"
         >
-          <div className="relative inline-block">
-            <div className="absolute -inset-8 rounded-full bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-emerald-500/10 blur-3xl" />
-            <h3 className="relative text-2xl md:text-3xl lg:text-4xl font-bold text-gradient from-emerald-300 via-emerald-200 to-emerald-300">
-              Chaque spectacle devient
-              <br />
-              une expérience inoubliable
-            </h3>
-          </div>
-          <p className="text-sm md:text-lg text-white/70 max-w-3xl mx-auto mt-6">
-            Avec Tiny Team, vous ne programmez pas seulement un artiste, vous offrez à votre public
-            une expérience complète et mémorable.
+          <p className="text-white/60 max-w-3xl mx-auto">
+            <span className="text-pink-300 font-medium">Simplifiez-vous le booking :</span> un contrat unique, 
+            une gestion complète, zéro stress. Concentrez-vous sur votre public, 
+            on s'occupe du reste.
           </p>
         </motion.div>
-
-        {/* All Artists */}
-        <div className="mb-16 md:mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12 md:mb-16"
-          >
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6">
-              <span className="block text-gradient from-white via-blue-100 to-white">
-                Tous nos talents
-              </span>
-              <span className="block text-gradient from-pink-300 via-pink-200 to-pink-300 mt-2">
-                disponibles
-              </span>
-            </h3>
-            <p className="text-sm md:text-lg text-white/70 max-w-3xl mx-auto">
-              Découvrez notre roster complet d'artistes prêts à enrichir votre programmation.
-              Cliquez sur un artiste pour voir son profil détaillé et ses disponibilités.
-            </p>
-          </motion.div>
-
-          {/* Artists Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 max-w-7xl mx-auto mb-8 md:mb-12">
-            {artists.map((artist, index) => (
-              <ArtistCard key={artist.id} artist={artist} index={index} />
-            ))}
-          </div>
-
-          {/* Link to full artists page */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center"
-          >
-            <Link
-              to="/artistes"
-              className="group inline-flex items-center gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full glass-card hover:bg-white/10 transition-all duration-300"
-            >
-              <Users className="w-5 h-5 md:w-6 md:h-6 text-emerald-400 group-hover:text-emerald-300 transition-colors duration-300" />
-              <span className="font-semibold text-white group-hover:text-glow transition-all duration-300 text-sm md:text-base">
-                Voir la page artistes complète
-              </span>
-              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Single CTA */}
+        
+        {/* Bouton vers la page artistes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
         >
-          <div className="relative inline-block">
-            <div className="absolute -inset-4 md:-inset-8 rounded-2xl bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-pink-500/10 blur-2xl" />
-            <div className="relative glass-card rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                Prêt à créer quelque chose d'unique ?
+          <Link
+            to="/artistes"
+            className="group inline-flex items-center gap-4 px-8 py-4 rounded-full bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 hover:border-pink-400/40 transition-all duration-300"
+          >
+            <Users className="w-6 h-6 text-pink-400" />
+            <span className="font-semibold text-white text-lg">
+              Explorer la page artistes complète
+            </span>
+            <ChevronRight className="w-5 h-5 text-pink-400 group-hover:translate-x-2 transition-transform duration-300" />
+          </Link>
+        </motion.div>
+        
+        {/* CTA Final amélioré */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative"
+        >
+          {/* Effet de lumière derrière la carte */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-full max-w-2xl h-96 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-pink-500/20 blur-3xl" />
+          </div>
+          
+          <div className="relative glass-card rounded-3xl p-10 max-w-3xl mx-auto text-center overflow-hidden">
+            {/* Motif de fond animé */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-transparent to-purple-500" />
+            </div>
+            
+            <div className="relative">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Bookez votre prochain succès
               </h3>
-              <p className="text-sm md:text-base text-white/70 mb-6 md:mb-8">
-                Discutons de votre projet et découvrons ensemble comment nos artistes peuvent contribuer à son succès.
-                Notre équipe vous accompagne dans le choix de l'artiste parfait pour votre événement et votre public.
+              
+              <p className="text-lg text-white/70 mb-10 max-w-2xl mx-auto">
+                Choisissez parmi nos artistes et bénéficiez de notre expertise complète.
+                De la signature à l'applaudissement final, nous sommes à vos côtés.
               </p>
               
-              <Link
-                to="/contact"
-                className="group relative inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 rounded-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-300 hover:to-pink-400 transition-all duration-300"
-              >
-                <span className="relative font-bold text-black text-base md:text-lg">
-                  Contactez-nous pour programmer un artiste
-                </span>
-                <ArrowRight className="w-5 h-5 md:w-6 md:h-6 text-black group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-
-              {/* Contact direct */}
-              <div className="pt-4 md:pt-6 border-t border-white/10 mt-6 md:mt-8">
-                <p className="text-xs md:text-sm text-white/50 mb-2">Contact direct :</p>
+              {/* Points de réassurance */}
+              <div className="flex flex-wrap justify-center gap-6 mb-10">
+                <div className="flex items-center gap-2 text-white/60">
+                  <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                  <span className="text-sm">Réponse sous 48h</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/60">
+                  <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                  <span className="text-sm">Tarifs dégressifs</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/60">
+                  <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                  <span className="text-sm">Kit com' offert</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  to="/contact"
+                  className="group flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-300 hover:to-pink-400 transition-all duration-300 transform hover:scale-105"
+                >
+                  <span className="font-bold text-black text-lg">
+                    Demander un devis gratuit
+                  </span>
+                  <ArrowRight className="w-6 h-6 text-black group-hover:translate-x-2 transition-transform duration-300" />
+                </Link>
+                
                 <a
                   href="mailto:booking@tinyteam.fr"
-                  className="text-pink-400 hover:text-pink-300 transition-colors duration-300 font-medium text-sm md:text-base"
+                  className="group flex items-center gap-3 px-8 py-4 rounded-full glass-card hover:bg-white/10 transition-all duration-300"
                 >
-                  booking@tinyteam.fr
+                  <Mail className="w-5 h-5 text-pink-400" />
+                  <span className="text-white font-medium">
+                    booking@tinyteam.fr
+                  </span>
                 </a>
               </div>
             </div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -263,12 +263,12 @@ export const artists = [
     }
   },
   {
-    id: "djamel-comedy-club",
-    name: "Djamel Comedy Club",
+    id: "jamel-comedy-club",
+    name: "Jamel Comedy Club",
     type: "Collectif d'Humoristes",
     tagline: "La nouvelle génération de l'humour",
-    description: "Le Djamel Comedy Club représente la nouvelle vague de l'humour français. Un collectif d'artistes talentueux qui renouvellent les codes du stand-up.",
-    longDescription: "Le Djamel Comedy Club est devenu une référence incontournable de la scène humoristique française. Ce collectif rassemble des talents émergents qui apportent un regard neuf sur notre société. Leur approche moderne et décomplexée de l'humour séduit une nouvelle génération de spectateurs avec fraîcheur et modernité.",
+    description: "Le Jamel Comedy Club représente la nouvelle vague de l'humour français. Un collectif d'artistes talentueux qui renouvellent les codes du stand-up.",
+    longDescription: "Le Jamel Comedy Club est devenu une référence incontournable de la scène humoristique française. Ce collectif rassemble des talents émergents qui apportent un regard neuf sur notre société. Leur approche moderne et décomplexée de l'humour séduit une nouvelle génération de spectateurs avec fraîcheur et modernité.",
     image: "https://26.staticbtf.eno.do/v1/30-default/975e3fdd1700df5c9bd53662949e3fda/media.jpg",
     posterImage: "https://26.staticbtf.eno.do/v1/30-default/975e3fdd1700df5c9bd53662949e3fda/media.jpg",
     social: {
@@ -276,7 +276,7 @@ export const artists = [
       tiktok: "jamelcomedyclub",
       youtube: "jamelcomedyclub"
     },
-    showName: "Djamel Comedy Club - Nouvelle Génération",
+    showName: "Jamel Comedy Club - Nouvelle Génération",
     showDescription: "Un spectacle collectif qui présente les talents de demain. Une soirée dynamique où se succèdent les artistes les plus prometteurs de la scène française.",
     videoUrl: "https://www.youtube.com/embed/UExwlmZ-WYM",
     websiteUrl: "https://lecomedyclub.com/",

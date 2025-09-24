@@ -1,324 +1,307 @@
-import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-const posters = [
-  'https://static.eno.do/x/fs-200359-default/9fb343deaad6dbe750cd731b4c0564b8/media.jpg',
-  'https://static.eno.do/x/fs-200360-default/a0c4d924ae52585a517dd76531300e5b/media.jpg',
-  'https://static.eno.do/x/fs-200361-default/ce4d47f8d131e7971b4f3fc0de45b470/media.jpg',
-  'https://static.eno.do/x/fs-200362-default/0743597244e1da871493bfbf5d13b7f7/media.jpg',
-  'https://static.eno.do/x/fs-200363-default/d71c4d77228d3718029f4f81a43190b6/media.jpg',
-  'https://static.eno.do/x/fs-200364-default/2cf3c8b262adfc3c6e72e95639c39cf8/media.jpg',
-  'https://static.eno.do/x/fs-200365-default/cda1d9f46d486a0ba2357daa5a79f6bd/media.jpg',
-  'https://static.eno.do/x/fs-200366-default/cdc3aba992ae1735c4a9b7a3fd8befc4/media.jpg',
-  'https://26.staticbtf.eno.do/v1/29-default/caa1da7f867fc1ad334621eba4d80b76/media.jpg',
-  'https://26.staticbtf.eno.do/v1/30-default/975e3fdd1700df5c9bd53662949e3fda/media.jpg'
+// Images des artistes depuis artists.ts
+const artistImages = [
+  'https://static.eno.do/x/fs-207671-default/a341c6ef1829c317020dc30296639fe4/media.jpg', // Urbain
+  'https://static.eno.do/x/fs-200360-default/a0c4d924ae52585a517dd76531300e5b/media.jpg', // Marc-Antoine
+  'https://static.eno.do/x/fs-200362-default/0743597244e1da871493bfbf5d13b7f7/media.jpg', // D'Jal
+  'https://i.imgur.com/munE7s3.jpeg', // Morgane
+  'https://static.eno.do/x/fs-200364-default/2cf3c8b262adfc3c6e72e95639c39cf8/media.jpg', // Thomas
+  'https://static.eno.do/x/fs-200365-default/cda1d9f46d486a0ba2357daa5a79f6bd/media.jpg', // Lucie
+  'https://static.eno.do/x/fs-207670-default/35f9701247c1480e4a053de7341d2547/media.jpg', // Edouard
+  'https://26.staticbtf.eno.do/v1/29-default/caa1da7f867fc1ad334621eba4d80b76/media.jpg', // Julien
+  'https://26.staticbtf.eno.do/v1/30-default/975e3fdd1700df5c9bd53662949e3fda/media.jpg', // Jamel Comedy Club
+  'https://i.imgur.com/ht3EucF.jpeg' // Sophie & Alex
 ];
 
-const FloatingStars = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(20)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute"
-        initial={{
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          scale: Math.random() * 0.5 + 0.5,
-          opacity: Math.random() * 0.3 + 0.1
-        }}
-        animate={{
-          y: [null, '-100%'],
-          opacity: [null, 0]
-        }}
-        transition={{
-          duration: Math.random() * 10 + 20,
-          repeat: Infinity,
-          ease: 'linear'
-        }}
-      >
-        <div className="w-1 h-1 bg-white/20 rounded-full" />
-      </motion.div>
-    ))}
-  </div>
-);
-
 export const HeroSection = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const { scrollY } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setDirection(1);
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % posters.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? '100%' : '-100%',
-      opacity: 0,
-      scale: 0.8
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? '100%' : '-100%',
-      opacity: 0,
-      scale: 0.8
-    })
-  };
+  const { scrollY } = useScroll();
+  const contentOpacity = useTransform(scrollY, [0, 200], [1, 0]);
 
   return (
     <section 
       ref={containerRef}
       id="hero" 
-      className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-[#0A0F29]"
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        background: 'linear-gradient(180deg, #0A0F29 0%, #16213e 100%)',
+        paddingTop: '80px' // Espace pour le header
+      }}
     >
-      {/* Premium background effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 via-transparent to-blue-900/20" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(44,62,153,0.1),transparent_70%)]" />
-        <FloatingStars />
-        <div className="absolute inset-0 backdrop-blur-[100px]" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-20 container mx-auto px-4">
-        <motion.div 
-          className="pt-20 md:pt-28"
-          style={{ opacity }}
-        >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="relative mb-4 md:mb-8 text-center"
-          >
-            <div className="relative px-4 md:px-0">
-              <motion.div
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1 }}
-                className="absolute -inset-x-8 -inset-y-16 md:-inset-y-24 bg-gradient-to-r from-pink-500/10 via-pink-500/5 to-pink-500/10 rounded-[40px] blur-3xl"
-              />
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative"
-              >
-                <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight px-2">
-                  <span className="block md:inline bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent leading-[1.1] mb-1 md:mb-0">
-                    Tiny Team,
-                  </span>
-                  {' '}
-                  <span className="block md:inline bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 bg-clip-text text-transparent leading-[1.1]">
-                    Big Dreams
-                  </span>
-                </h1>
-              </motion.div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Animated Posters */}
-      <motion.div 
-        className="relative flex-grow flex items-center justify-center mt-8 md:-mt-16"
-        style={{ opacity }}
+      {/* Cartes flottantes en arrière-plan - 20 cartes maximum */}
+      <div 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          zIndex: 1
+        }}
       >
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 200, damping: 30 },
-              opacity: { duration: 0.5 },
-              scale: { duration: 0.5 }
-            }}
-            className="absolute inset-0 w-full h-full"
-          >
-            <div className="relative w-full h-full flex justify-center items-center">
-              <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 px-4 md:px-4">
-                {[-2, -1, 0, 1, 2].map((offset) => {
-                  const index = (currentIndex + offset + posters.length) % posters.length;
-                  const isMobile = window.innerWidth < 640;
-                  const visibleOnMobile = offset >= -1 && offset <= 1;
-                  
-                  if (isMobile && !visibleOnMobile) return null;
-                  
-                  return (
-                    <motion.div
-                      key={index}
-                      className="relative flex-shrink-0"
-                      style={{
-                        width: isMobile ? '200px' : '240px',
-                        height: isMobile ? '300px' : '360px',
-                        perspective: 1000
-                      }}
-                      initial={false}
-                      animate={{
-                        scale: offset === 0 ? 1 : 0.8,
-                        opacity: offset === 0 ? 1 : 0.5,
-                        y: offset === 0 ? 0 : Math.abs(offset) * 20,
-                        rotateY: offset * 15,
-                        filter: offset === 0 ? 'brightness(1)' : 'brightness(0.7)',
-                        z: offset === 0 ? 0 : -100
-                      }}
-                      transition={{ 
-                        duration: 1,
-                        ease: [0.16, 1, 0.3, 1],
-                        delay: 0.1 * Math.abs(offset)
-                      }}
-                    >
-                      <motion.div
-                        className="relative w-full h-full group"
-                        whileHover={{ 
-                          scale: 1.05,
-                          rotateY: 0,
-                          z: 50,
-                          transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
-                        }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent rounded-xl" />
-                        <motion.img
-                          src={posters[index]}
-                          alt={`Poster ${index + 1}`}
-                          className="absolute inset-0 w-full h-full object-cover rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.3)] transition-all duration-700"
-                          initial={{ scale: 1.2 }}
-                          animate={{ scale: 1 }}
-                          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                        />
-                        <div className="absolute inset-0 rounded-xl ring-1 ring-white/10 group-hover:ring-white/30 transition-all duration-500" />
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-blue-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        
-                        {/* Hover Effect */}
-                        <motion.div
-                          className="absolute inset-0 bg-black/40 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"
-                          initial={false}
-                          whileHover={{ opacity: 1 }}
-                        >
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <motion.div
-                              initial={{ scale: 0.8, opacity: 0 }}
-                              whileHover={{ scale: 1, opacity: 1 }}
-                              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                              className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
-                            >
-                              <ArrowRight className="w-6 h-6 text-white" />
-                            </motion.div>
-                          </div>
-                        </motion.div>
-                      </motion.div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Navigation Dots */}
-        <div className="absolute -bottom-4 md:-bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-          {posters.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setDirection(index > currentIndex ? 1 : -1);
-                setCurrentIndex(index);
+        {/* Créer 20 cartes avec 2 fois les 10 images */}
+        {[...artistImages, ...artistImages].map((image, i) => {
+          const positions = [
+            { x: '10%', y: '15%', rotate: -8 },
+            { x: '80%', y: '10%', rotate: 12 },
+            { x: '5%', y: '60%', rotate: -5 },
+            { x: '90%', y: '70%', rotate: 8 },
+            { x: '45%', y: '8%', rotate: -10 },
+            { x: '25%', y: '40%', rotate: 6 },
+            { x: '70%', y: '35%', rotate: -12 },
+            { x: '15%', y: '85%', rotate: 10 },
+            { x: '60%', y: '65%', rotate: -7 },
+            { x: '35%', y: '20%', rotate: 9 },
+            { x: '85%', y: '45%', rotate: -11 },
+            { x: '20%', y: '25%', rotate: 5 },
+            { x: '55%', y: '90%', rotate: -6 },
+            { x: '40%', y: '50%', rotate: 11 },
+            { x: '75%', y: '80%', rotate: -9 },
+            { x: '30%', y: '70%', rotate: 7 },
+            { x: '65%', y: '15%', rotate: -8 },
+            { x: '50%', y: '30%', rotate: 10 },
+            { x: '10%', y: '35%', rotate: -4 },
+            { x: '95%', y: '25%', rotate: 6 }
+          ];
+          
+          const pos = positions[i];
+          const scale = 0.7 + (Math.random() * 0.3); // Entre 0.7 et 1
+          
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: 0.15,
+                y: [0, -15, 0]
               }}
-              className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                index === currentIndex
-                  ? 'bg-white w-6'
-                  : 'bg-white/30 hover:bg-white/50'
-              }`}
-            />
-          ))}
-        </div>
+              transition={{
+                opacity: { duration: 1, delay: i * 0.05 },
+                y: { 
+                  duration: 5 + Math.random() * 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: Math.random() * 2
+                }
+              }}
+              style={{
+                position: 'absolute',
+                left: pos.x,
+                top: pos.y,
+                transform: `rotate(${pos.rotate}deg) scale(${scale})`,
+                width: '180px',
+                height: '250px',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+              }}
+            >
+              <img 
+                src={image} 
+                alt="" 
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  filter: 'brightness(0.8)'
+                }}
+              />
+            </motion.div>
+          );
+        })}
+        
+        {/* Overlay gradient pour améliorer la lisibilité */}
+        <div 
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(ellipse at center, rgba(10,15,41,0.5) 0%, rgba(10,15,41,0.85) 100%)',
+            zIndex: 2
+          }}
+        />
+      </div>
+
+      {/* Contenu principal */}
+      <motion.div 
+        style={{ 
+          position: 'relative',
+          zIndex: 10,
+          width: '100%',
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 20px',
+          textAlign: 'center',
+          opacity: contentOpacity
+        }}
+      >
+        {/* Badge */}
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '12px 24px',
+            borderRadius: '50px',
+            background: 'rgba(255,255,255,0.05)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            marginBottom: '40px'
+          }}
+        >
+          <span 
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: '#ec4899',
+              animation: 'pulse 2s infinite'
+            }}
+          />
+          <span style={{ 
+            color: 'rgba(255,255,255,0.9)', 
+            fontSize: '14px', 
+            fontWeight: 500,
+            letterSpacing: '0.05em'
+          }}>
+            Production de spectacles vivants
+          </span>
+        </motion.div>
+
+        {/* Titre principal */}
+        <motion.h1
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          style={{
+            fontSize: 'clamp(3rem, 8vw, 8rem)',
+            fontWeight: 900,
+            lineHeight: 1,
+            marginBottom: '60px',
+            padding: '20px 0'
+          }}
+        >
+          <span style={{ 
+            display: 'block',
+            color: 'white',
+            marginBottom: '-10px'  // Espacement réduit
+          }}>
+            Tiny Team,
+          </span>
+          <span style={{ 
+            display: 'inline-block',
+            background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            paddingTop: '0',  // Suppression du padding top
+            paddingBottom: '20px',
+            lineHeight: 1.1
+          }}>
+            Big Dreams
+          </span>
+        </motion.h1>
+
+        {/* Sous-titre */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          style={{
+            fontSize: '18px',
+            color: 'rgba(255,255,255,0.7)',
+            marginBottom: '50px',
+            maxWidth: '600px',
+            marginLeft: 'auto',
+            marginRight: 'auto'
+          }}
+        >
+          Découvrez nos artistes exceptionnels et créez des événements inoubliables
+        </motion.p>
+
+        {/* Boutons CTA */}
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          style={{
+            display: 'flex',
+            gap: '20px',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            marginBottom: '80px'
+          }}
+        >
+          <motion.a
+            href="/artistes"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '16px 32px',
+              background: 'linear-gradient(135deg, #ec4899, #a855f7)',
+              color: 'white',
+              borderRadius: '50px',
+              fontWeight: 600,
+              fontSize: '16px',
+              textDecoration: 'none',
+              boxShadow: '0 10px 30px rgba(236,72,153,0.3)',
+              transition: 'box-shadow 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 15px 40px rgba(236,72,153,0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(236,72,153,0.3)';
+            }}
+          >
+            Découvrir nos artistes
+            <ArrowRight size={20} />
+          </motion.a>
+
+          <motion.a
+            href="#artists"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '16px 32px',
+              background: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: 'white',
+              borderRadius: '50px',
+              fontWeight: 600,
+              fontSize: '16px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            En savoir plus
+          </motion.a>
+        </motion.div>
       </motion.div>
 
-      {/* Call to Action - Desktop */}
-      <div className="relative z-20 hidden sm:flex flex-row items-center justify-center gap-4 pb-16 mt-8 md:mt-12">
-        <motion.a
-          href="#artists"
-          className="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-4 md:py-5"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 rounded-full" />
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-300/50 via-transparent to-pink-300/50 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative font-semibold text-black text-lg">En savoir plus</span>
-          <motion.div
-            className="relative"
-            initial={false}
-            animate={{ x: 0 }}
-            whileHover={{ x: 4 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ArrowRight className="w-6 h-6 text-black" />
-          </motion.div>
-        </motion.a>
-
-        <Link
-          to="/artistes"
-          className="group relative inline-flex items-center justify-center gap-2 px-8 md:px-10 py-4 md:py-5"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div className="absolute inset-0 glass-effect rounded-full border border-white/10 group-hover:border-white/20 transition-colors duration-500" />
-          <div className="absolute inset-0 bg-white/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative font-medium text-white text-lg group-hover:text-glow transition-all duration-300">Découvrir nos artistes</span>
-        </Link>
-      </div>
-
-      {/* Call to Action - Mobile */}
-      <div className="relative z-20 sm:hidden flex flex-col items-center justify-center gap-3 px-4 pb-8 mt-8">
-        <motion.a
-          href="#artists"
-          className="group relative w-full inline-flex items-center justify-center gap-2 px-6 py-4"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 rounded-xl" />
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-300/50 via-transparent to-pink-300/50 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative font-semibold text-black">En savoir plus</span>
-          <motion.div
-            className="relative"
-            initial={false}
-            animate={{ x: 0 }}
-            whileHover={{ x: 4 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ArrowRight className="w-5 h-5 text-black" />
-          </motion.div>
-        </motion.a>
-
-        <Link
-          to="/artistes"
-          className="group relative w-full inline-flex items-center justify-center gap-2 px-6 py-4"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div className="absolute inset-0 glass-effect rounded-xl border border-white/10 group-hover:border-white/20 transition-colors duration-500" />
-          <div className="absolute inset-0 bg-white/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative font-medium text-white group-hover:text-glow transition-all duration-300">Découvrir nos artistes</span>
-        </Link>
-      </div>
+      {/* Style pour l'animation pulse */}
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
     </section>
   );
 };

@@ -1,266 +1,391 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Target, Zap, Heart, Users, Star, TrendingUp } from 'lucide-react';
+import { ArrowRight, Briefcase, Users, Rocket, Trophy, ChevronRight, Mail } from 'lucide-react';
 
-const solutions = [
+// Études de cas réalistes
+const caseStudies = [
   {
-    icon: Target,
-    title: "Brand Content",
-    description: "Contenus authentiques avec nos artistes",
-    example: "Campagnes digitales virales"
+    id: 1,
+    type: "Séminaire annuel",
+    sector: "Groupe bancaire français",
+    context: "400 collaborateurs réunis pour le séminaire stratégique annuel",
+    solution: "Intervention d'un humoriste en ouverture pour briser la glace et créer une dynamique positive",
+    results: [
+      "96% de satisfaction globale (vs 72% année précédente)",
+      "Participation active en hausse de 40%",
+      "Ambiance détendue favorisant les échanges"
+    ],
+    gradient: "from-pink-500/20 to-purple-500/20"
   },
   {
-    icon: Sparkles,
-    title: "Événements Privés",
-    description: "Spectacles sur mesure pour vos équipes",
-    example: "Conventions, séminaires, lancements"
+    id: 2,
+    type: "Communication interne",
+    sector: "Leader retail",
+    context: "Changement d'ERP complexe à faire accepter à 2000 employés",
+    solution: "Série de 5 vidéos humoristiques avec nos artistes pour dédramatiser et expliquer",
+    results: [
+      "87% des employés ont visionné toute la série",
+      "Adoption de l'outil 3 semaines plus rapide",
+      "Baisse de 60% des tickets support"
+    ],
+    gradient: "from-purple-500/20 to-pink-500/20"
   },
   {
-    icon: Zap,
-    title: "Partenariats Créatifs",
-    description: "Collaborations long terme",
-    example: "Ambassadeurs de marque"
+    id: 3,
+    type: "Team Building",
+    sector: "Cabinet de conseil",
+    context: "Équipe de 50 consultants en télétravail depuis 2 ans",
+    solution: "Atelier d'improvisation et spectacle participatif sur mesure",
+    results: [
+      "Score de cohésion d'équipe +35% à 3 mois",
+      "100% souhaitent renouveler l'expérience",
+      "Création de private jokes fédératrices"
+    ],
+    gradient: "from-pink-500/20 to-pink-500/20"
+  },
+  {
+    id: 4,
+    type: "Convention commerciale",
+    sector: "Industrie pharmaceutique",
+    context: "Lancement d'une nouvelle gamme devant 300 commerciaux",
+    solution: "Show sur-mesure intégrant les messages clés de manière humoristique",
+    results: [
+      "Mémorisation des messages clés : 89%",
+      "Engagement sur l'événement x2.5",
+      "Standing ovation et demande de rappel"
+    ],
+    gradient: "from-purple-500/20 to-purple-500/20"
   }
 ];
 
-const successMetrics = [
-  {
-    value: "2.5M+",
-    label: "impressions générées",
-    icon: TrendingUp,
-    gradient: "from-pink-400 to-pink-500"
-  },
-  {
-    value: "92%",
-    label: "d'engagement authentique",
-    icon: Heart,
-    gradient: "from-purple-400 to-purple-500"
-  },
-  {
-    value: "+45%",
-    label: "ROI moyen",
-    icon: Star,
-    gradient: "from-blue-400 to-blue-500"
-  }
-];
-
-const SolutionCard = ({ solution, index }) => (
+// Composant pour une étude de cas
+const CaseStudyCard = ({ study, index }) => (
   <motion.div
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5, delay: index * 0.1 }}
+    transition={{ duration: 0.6, delay: index * 0.1 }}
     className="group"
   >
-    <div className="relative glass-card rounded-2xl p-6 overflow-hidden h-full">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-pink-300/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      </div>
-
-      <div className="relative">
-        <div className="mb-4">
-          <div className="w-12 h-12 rounded-xl glass-effect flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-            <solution.icon className="w-6 h-6 text-pink-400 group-hover:text-pink-300 transition-colors duration-300" />
-          </div>
-        </div>
-        
-        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-glow transition-all duration-300">
-          {solution.title}
-        </h3>
-        <p className="text-white/70 mb-3 group-hover:text-white/90 transition-colors duration-300">
-          {solution.description}
-        </p>
-        <div className="text-sm text-pink-400 font-medium">
-          {solution.example}
-        </div>
-      </div>
-    </div>
-  </motion.div>
-);
-
-const MetricCard = ({ metric, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30, scale: 0.8 }}
-    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-    viewport={{ once: true }}
-    transition={{ 
-      duration: 0.6, 
-      delay: index * 0.1,
-      type: "spring",
-      stiffness: 100
-    }}
-    whileHover={{ 
-      y: -8,
-      scale: 1.05,
-      transition: { duration: 0.3 }
-    }}
-    className="group relative"
-  >
-    <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-white/5 to-white/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-    
     <div className="relative glass-card rounded-2xl p-6 h-full overflow-hidden">
-      <div className={`absolute inset-0 bg-gradient-to-br ${metric.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-500`} />
+      <div className={`absolute inset-0 bg-gradient-to-br ${study.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
       
-      <div className="relative flex flex-col items-center text-center space-y-4">
-        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${metric.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
-          <metric.icon className="w-8 h-8 text-white" />
+      <div className="relative">
+        {/* Badge type */}
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 mb-4">
+          <span className="text-xs font-semibold text-pink-300">{study.type}</span>
         </div>
         
-        <div className="text-3xl md:text-4xl font-bold text-white group-hover:text-glow transition-all duration-300">
-          {metric.value}
+        {/* Secteur */}
+        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-glow transition-all duration-300">
+          {study.sector}
+        </h3>
+        
+        {/* Contexte */}
+        <div className="mb-4">
+          <p className="text-sm text-white/50 font-medium mb-1">Contexte :</p>
+          <p className="text-sm text-white/70">{study.context}</p>
         </div>
         
-        <div className="text-sm text-white/70 group-hover:text-white/90 transition-colors duration-300 leading-relaxed">
-          {metric.label}
+        {/* Solution */}
+        <div className="mb-4">
+          <p className="text-sm text-white/50 font-medium mb-1">Notre intervention :</p>
+          <p className="text-sm text-white/70">{study.solution}</p>
+        </div>
+        
+        {/* Résultats */}
+        <div className="space-y-2">
+          <p className="text-sm text-white/50 font-medium">Résultats :</p>
+          {study.results.map((result, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <span className="text-pink-400 mt-1">→</span>
+              <span className="text-sm text-white/80">{result}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   </motion.div>
 );
 
-const FloatingParticles = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(30)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 bg-white/20 rounded-full"
-        initial={{
-          x: Math.random() * 100 + "%",
-          y: Math.random() * 100 + "%",
-          scale: 0,
-          opacity: 0
-        }}
-        animate={{
-          y: [null, `${Math.random() * 30 - 15}%`],
-          x: [null, `${Math.random() * 30 - 15}%`],
-          scale: [0, 1, 0],
-          opacity: [0, 0.8, 0]
-        }}
-        transition={{
-          duration: Math.random() * 5 + 3,
-          repeat: Infinity,
-          repeatDelay: Math.random() * 2
-        }}
-      />
-    ))}
+// Background animé (cohérent avec ProducerSection)
+const AnimatedBackground = () => (
+  <div className="absolute inset-0 overflow-hidden">
+    <motion.div
+      className="absolute w-96 h-96 rounded-full"
+      style={{
+        background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%)',
+        filter: 'blur(60px)',
+      }}
+      animate={{
+        x: ['120%', '-20%'],
+        y: ['20%', '80%'],
+      }}
+      transition={{
+        duration: 25,
+        repeat: Infinity,
+        repeatType: 'reverse',
+        ease: 'easeInOut',
+      }}
+    />
+    <motion.div
+      className="absolute w-96 h-96 rounded-full"
+      style={{
+        background: 'radial-gradient(circle, rgba(147, 51, 234, 0.15) 0%, transparent 70%)',
+        filter: 'blur(60px)',
+      }}
+      animate={{
+        x: ['-20%', '120%'],
+        y: ['80%', '20%'],
+      }}
+      transition={{
+        duration: 30,
+        repeat: Infinity,
+        repeatType: 'reverse',
+        ease: 'easeInOut',
+      }}
+    />
   </div>
 );
 
 export const BrandSection = () => {
   return (
-    <section className="relative py-32 bg-[#080C20] overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.1),transparent_50%)]" />
-        <FloatingParticles />
-      </div>
-
+    <section id="entreprises" className="relative py-32 bg-[#080C20] overflow-hidden">
+      <AnimatedBackground />
+      
       <div className="relative container mx-auto px-4">
-        {/* Header */}
+        {/* Header simplifié et plus business */}
         <div className="text-center mb-20">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="relative px-2 md:px-0"
+            transition={{ duration: 1, type: "spring" }}
+            className="relative inline-block"
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              className="absolute -inset-x-4 -inset-y-8 md:-inset-y-16 bg-gradient-to-r from-pink-500/10 via-pink-500/5 to-pink-500/10 rounded-[40px] blur-3xl"
-            />
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.9] md:leading-[0.9]">
-                <span className="inline-block bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
-                  Marques,
-                </span>
-                <br />
-                <span className="inline-block bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 bg-clip-text text-transparent">
-                  créez l'exception
-                </span>
-              </h2>
-            </motion.div>
+            <div className="absolute -inset-20 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-pink-500/10 blur-3xl" />
+            
+            <h2 className="relative text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+              <motion.span 
+                className="block bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent"
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                Entreprises,
+              </motion.span>
+              <motion.span 
+                className="block bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mt-2"
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                transformez vos événements
+              </motion.span>
+            </h2>
           </motion.div>
-
+          
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mt-8"
+            className="text-xl text-white/80 max-w-4xl mx-auto mt-8 leading-relaxed"
           >
-            Collaborez avec nos artistes pour créer des expériences authentiques qui marquent les esprits.
-            Du brand content aux événements privés, donnez une dimension unique à vos projets.
+            L'humour au service de vos objectifs business.
+            <br />
+            <span className="text-pink-300 font-medium">Des interventions qui marquent, des résultats qui durent.</span>
           </motion.p>
         </div>
-
-        {/* Solutions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {solutions.map((solution, index) => (
-            <SolutionCard key={solution.title} solution={solution} index={index} />
+        
+        {/* Pourquoi l'humour en entreprise - Arguments business */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mb-20"
+        >
+          <h3 className="text-center text-2xl md:text-3xl font-bold text-white mb-3">
+            L'humour, votre meilleur ROI
+          </h3>
+          <p className="text-center text-white/60 mb-10 max-w-2xl mx-auto">
+            Plus qu'un divertissement : un outil stratégique pour engager, fédérer et transformer.
+          </p>
+          
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: "🧠",
+                  title: "Mémorisation x3",
+                  description: "Les messages transmis avec humour sont 3 fois mieux retenus"
+                },
+                {
+                  icon: "🎯",
+                  title: "Engagement maximal",
+                  description: "Attention captée à 100% dès la première minute"
+                },
+                {
+                  icon: "💪",
+                  title: "Cohésion renforcée",
+                  description: "Rire ensemble crée des liens durables entre équipes"
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="glass-card rounded-xl p-6 text-center group hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="text-4xl mb-4">{item.icon}</div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
+                    {item.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* Titre études de cas */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center gap-4 px-4 py-2 rounded-full glass-card mb-6 text-sm">
+            <Trophy className="w-4 h-4 text-pink-400" />
+            <span className="text-white/70">Cas clients récents • Résultats vérifiés</span>
+          </div>
+          
+          <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <span className="text-gradient from-white via-white to-white/80">
+              Ils nous ont fait confiance
+            </span>
+          </h3>
+          <p className="text-lg text-white/60 max-w-3xl mx-auto">
+            Découvrez comment nos interventions transforment les événements d'entreprise
+          </p>
+        </motion.div>
+        
+        {/* Grille des études de cas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto mb-20">
+          {caseStudies.map((study, index) => (
+            <CaseStudyCard key={study.id} study={study} index={index} />
           ))}
         </div>
-
-        {/* Success Metrics */}
-        <div className="mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h3 className="text-3xl font-bold text-white mb-4">
-              Des résultats qui parlent
-            </h3>
-            <p className="text-white/70 max-w-2xl mx-auto">
-              Nos collaborations génèrent un impact mesurable et durable
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {successMetrics.map((metric, index) => (
-              <MetricCard key={metric.label} metric={metric} index={index} />
-            ))}
-          </div>
-        </div>
-
-        {/* Call to Action */}
+        
+        {/* Services proposés */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center"
+          transition={{ duration: 0.8 }}
+          className="mb-20"
         >
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link
-              to="/marque"
-              className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-300 hover:to-pink-400 transition-all duration-300"
-            >
-              <span className="font-bold text-white text-lg">Collaborer avec nous</span>
-              <ArrowRight className="w-6 h-6 text-white group-hover:translate-x-1 transition-transform duration-300" />
-            </Link>
+          <h3 className="text-center text-2xl md:text-3xl font-bold text-white mb-10">
+            Nos formats d'intervention
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            {[
+              { icon: Briefcase, title: "Séminaires", time: "30min à 1h30" },
+              { icon: Users, title: "Team Building", time: "2h à 1 journée" },
+              { icon: Rocket, title: "Conventions", time: "Sur mesure" },
+              { icon: Trophy, title: "Soirées privées", time: "1h à 2h" }
+            ].map((service, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+                className="glass-card rounded-xl p-4 text-center group hover:bg-white/10 transition-all duration-300"
+              >
+                <service.icon className="w-8 h-8 text-pink-400 mx-auto mb-3" />
+                <h4 className="font-bold text-white mb-1">{service.title}</h4>
+                <p className="text-xs text-white/60">{service.time}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+        
+        {/* CTA Final fort */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative"
+        >
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-full max-w-2xl h-96 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-pink-500/20 blur-3xl" />
+          </div>
+          
+          <div className="relative glass-card rounded-3xl p-10 max-w-3xl mx-auto text-center overflow-hidden">
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-transparent to-purple-500" />
+            </div>
             
-            <Link
-              to="/contact"
-              className="group inline-flex items-center gap-3 px-10 py-5 rounded-full glass-card hover:bg-white/10 transition-all duration-300"
-            >
-              <Heart className="w-6 h-6 text-pink-400 group-hover:text-pink-300 transition-colors duration-300" />
-              <span className="font-semibold text-white group-hover:text-glow transition-all duration-300">Discuter de votre projet</span>
-              <ArrowRight className="w-5 h-5 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
-            </Link>
+            <div className="relative">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Prêt à transformer votre prochain événement ?
+              </h3>
+              
+              <p className="text-lg text-white/70 mb-10 max-w-2xl mx-auto">
+                Discutons de vos objectifs et créons ensemble une expérience inoubliable 
+                pour vos équipes. Devis gratuit sous 48h.
+              </p>
+              
+              {/* Réassurance */}
+              <div className="flex flex-wrap justify-center gap-6 mb-10">
+                <div className="flex items-center gap-2 text-white/60">
+                  <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                  <span className="text-sm">Conseil personnalisé</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/60">
+                  <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                  <span className="text-sm">Budget sur mesure</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/60">
+                  <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                  <span className="text-sm">Partout en France</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  to="/contact"
+                  className="group flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-300 hover:to-pink-400 transition-all duration-300 transform hover:scale-105"
+                >
+                  <span className="font-bold text-black text-lg">
+                    Organiser une rencontre
+                  </span>
+                  <ArrowRight className="w-6 h-6 text-black group-hover:translate-x-2 transition-transform duration-300" />
+                </Link>
+                
+                <a
+                  href="mailto:booking@tinyteam.fr"
+                  className="group flex items-center gap-3 px-8 py-4 rounded-full glass-card hover:bg-white/10 transition-all duration-300"
+                >
+                  <Mail className="w-5 h-5 text-pink-400" />
+                  <span className="text-white font-medium">
+                    booking@tinyteam.fr
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
