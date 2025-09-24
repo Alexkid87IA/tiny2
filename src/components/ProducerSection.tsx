@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Users, ChevronRight, Mail } from 'lucide-react';
+import { Users, ChevronRight, Mail } from 'lucide-react';
 import { artists } from '../data/artists';
 
 // Composant pour les particules animées améliorées
@@ -369,17 +369,7 @@ export const ProducerSection = () => {
                 </div>
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link
-                  to="/contact"
-                  className="group flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-300 hover:to-pink-400 transition-all duration-300 transform hover:scale-105"
-                >
-                  <span className="font-bold text-black text-lg">
-                    Demander un devis gratuit
-                  </span>
-                  <ArrowRight className="w-6 h-6 text-black group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-                
+              <div className="flex justify-center items-center">
                 <a
                   href="mailto:booking@tinyteam.fr"
                   className="group flex items-center gap-3 px-8 py-4 rounded-full glass-card hover:bg-white/10 transition-all duration-300"
