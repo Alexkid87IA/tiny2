@@ -1,6 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
+import { Mail, MapPin, MessageSquare } from 'lucide-react';
+
+// DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
+const DESIGN = {
+  colors: {
+    titleGradient: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%)',
+    buttonGradient: 'linear-gradient(135deg, #ec4899, #a855f7)',
+    backgroundGradient: 'linear-gradient(180deg, #0A0F29 0%, #16213e 100%)',
+    white: '#FFFFFF',
+    textSecondary: 'rgba(255, 255, 255, 0.7)',
+    glass: 'rgba(255, 255, 255, 0.05)',
+    glassBorder: 'rgba(255, 255, 255, 0.15)'
+  },
+  typography: {
+    h1Desktop: 'clamp(4rem, 8vw, 7rem)',
+    h1Mobile: 'clamp(2.5rem, 12vw, 3.5rem)',
+    bodyDesktop: '18px',
+    bodyMobile: '15px'
+  }
+};
 
 const contactInfo = [
   {
@@ -19,65 +38,155 @@ const contactInfo = [
   }
 ];
 
-const ContactInfoCard = ({ info, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.5, delay: index * 0.1 }}
-    className="group"
-  >
-    <a
-      href={info.href}
-      target={info.href.startsWith('http') ? '_blank' : undefined}
-      rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-      className="block"
+// Composant titre uniformisé
+const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
+  <>
+    <motion.h2
+      initial={{ y: 30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+      style={{
+        fontSize: isMobile ? DESIGN.typography.h1Mobile : DESIGN.typography.h1Desktop,
+        fontWeight: 900,
+        lineHeight: 0.9,
+        letterSpacing: '-0.02em',
+        textAlign: 'center'
+      }}
     >
-      <div className="relative glass-card rounded-2xl p-8 overflow-hidden hover:scale-105 transition-transform duration-300">
-        <div className="absolute inset-0">
-          <div className={`absolute inset-0 bg-gradient-to-br ${info.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        </div>
-
-        <div className="relative text-center">
-          <div className="relative mb-6">
-            <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-pink-500/20 to-pink-300/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="relative w-16 h-16 mx-auto rounded-2xl glass-effect flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-              <info.icon className="w-8 h-8 text-pink-400 group-hover:text-pink-300 transition-colors duration-300" />
-            </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-medium text-white/70 mb-2">{info.title}</h3>
-            <p className="text-xl text-white group-hover:text-glow transition-all duration-300 font-medium">{info.value}</p>
-          </div>
-        </div>
-      </div>
-    </a>
-  </motion.div>
+      <span style={{ 
+        display: 'block',
+        color: DESIGN.colors.white,
+        marginBottom: isMobile ? '-2px' : '-8px'
+      }}>
+        {line1}
+      </span>
+      <span style={{ 
+        display: 'block',
+        background: DESIGN.colors.titleGradient,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        paddingBottom: '0.15em'
+      }}>
+        {line2}
+      </span>
+    </motion.h2>
+    
+    {subtitle && (
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        style={{
+          fontSize: isMobile ? DESIGN.typography.bodyMobile : DESIGN.typography.bodyDesktop,
+          color: DESIGN.colors.textSecondary,
+          maxWidth: '600px',
+          margin: '0 auto',
+          lineHeight: 1.6,
+          marginTop: '1.5rem',
+          textAlign: 'center'
+        }}
+      >
+        {subtitle}
+      </motion.p>
+    )}
+  </>
 );
 
+const ContactInfoCard = ({ info, index, isMobile }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
+      <a
+        href={info.href}
+        target={info.href.startsWith('http') ? '_blank' : undefined}
+        rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        style={{
+          display: 'block',
+          textDecoration: 'none',
+          transform: isHovered && !isMobile ? 'scale(1.05)' : 'scale(1)',
+          transition: 'transform 0.3s ease'
+        }}
+        onMouseEnter={() => !isMobile && setIsHovered(true)}
+        onMouseLeave={() => !isMobile && setIsHovered(false)}
+      >
+        <div style={{
+          position: 'relative',
+          background: DESIGN.colors.glass,
+          border: `1px solid ${DESIGN.colors.glassBorder}`,
+          borderRadius: '16px',
+          padding: '32px',
+          overflow: 'hidden',
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              margin: '0 auto 24px',
+              borderRadius: '16px',
+              background: DESIGN.colors.glass,
+              border: `1px solid ${DESIGN.colors.glassBorder}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: isHovered && !isMobile ? 'scale(1.1)' : 'scale(1)',
+              transition: 'transform 0.5s ease'
+            }}>
+              <info.icon style={{
+                width: '32px',
+                height: '32px',
+                color: '#ec4899',
+              }} />
+            </div>
+            <div>
+              <h3 style={{
+                fontSize: '18px',
+                fontWeight: 500,
+                color: 'rgba(255,255,255,0.7)',
+                marginBottom: '8px'
+              }}>{info.title}</h3>
+              <p style={{
+                fontSize: '20px',
+                color: 'white',
+                fontWeight: 600
+              }}>{info.value}</p>
+            </div>
+          </div>
+        </div>
+      </a>
+    </motion.div>
+  );
+};
+
 const FloatingParticles = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(30)].map((_, i) => (
+  <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+    {[...Array(15)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute w-1 h-1 bg-white/20 rounded-full"
-        initial={{
-          x: Math.random() * 100 + "%",
-          y: Math.random() * 100 + "%",
-          scale: 0,
-          opacity: 0
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          background: 'rgba(255,255,255,0.2)',
+          borderRadius: '50%',
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
         }}
         animate={{
-          y: [null, `${Math.random() * 30 - 15}%`],
-          x: [null, `${Math.random() * 30 - 15}%`],
-          scale: [0, 1, 0],
-          opacity: [0, 0.8, 0]
+          y: [`0%`, `${Math.random() * 30 - 15}%`],
+          x: [`0%`, `${Math.random() * 30 - 15}%`],
+          opacity: [0.2, 0.6, 0.2]
         }}
         transition={{
           duration: Math.random() * 5 + 3,
           repeat: Infinity,
-          repeatDelay: Math.random() * 2
+          ease: 'easeInOut'
         }}
       />
     ))}
@@ -85,65 +194,56 @@ const FloatingParticles = () => (
 );
 
 export const ContactSection = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
-    <section className="relative min-h-screen py-32 bg-[#0A0F29] overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />
-        <FloatingParticles />
-      </div>
+    <section style={{
+      position: 'relative',
+      minHeight: '100vh',
+      padding: isMobile ? '80px 0' : '120px 0',
+      background: DESIGN.colors.backgroundGradient,
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse at center,rgba(44,62,153,0.15),transparent 70%)'
+      }} />
+      <FloatingParticles />
 
-      <div className="relative container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="relative px-2 md:px-0"
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              className="absolute -inset-x-4 -inset-y-8 md:-inset-y-16 bg-gradient-to-r from-pink-500/10 via-pink-500/5 to-pink-500/10 rounded-[40px] blur-3xl"
-            />
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.9] md:leading-[0.9]">
-                <span className="inline-block bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
-                  Contactez-nous
-                </span>
-                <br />
-                <span className="inline-block bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 bg-clip-text text-transparent">
-                  directement
-                </span>
-              </h2>
-            </motion.div>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mt-8"
-          >
-            Que vous soyez artiste, programmateur ou marque, nous sommes là pour vous accompagner.
-            Contactez-nous pour discuter de votre projet.
-          </motion.p>
+      <div style={{
+        position: 'relative',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '0 32px'
+      }}>
+        {/* Header avec titre uniformisé */}
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? '48px' : '80px' }}>
+          <SectionTitle 
+            line1="Contactez-nous,"
+            line2="Sans filtre"
+            subtitle="Pas de formulaire de 15 champs. Pas de bot. Des vrais gens qui répondent vraiment."
+            isMobile={isMobile}
+          />
         </div>
 
         {/* Contact Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto mb-16">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+          gap: '32px',
+          maxWidth: '600px',
+          margin: '0 auto 64px'
+        }}>
           {contactInfo.map((info, index) => (
-            <ContactInfoCard key={info.title} info={info} index={index} />
+            <ContactInfoCard key={info.title} info={info} index={index} isMobile={isMobile} />
           ))}
         </div>
 
@@ -153,21 +253,50 @@ export const ContactSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center mt-20"
+          style={{ textAlign: 'center', marginTop: '80px' }}
         >
-          <div className="relative glass-card rounded-2xl p-8 max-w-2xl mx-auto">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-2xl glass-effect flex items-center justify-center">
-                <MessageSquare className="w-8 h-8 text-pink-400" />
+          <div style={{
+            position: 'relative',
+            background: DESIGN.colors.glass,
+            border: `1px solid ${DESIGN.colors.glassBorder}`,
+            borderRadius: '16px',
+            padding: '32px',
+            maxWidth: '600px',
+            margin: '0 auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '16px',
+              marginBottom: '24px'
+            }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '16px',
+                background: DESIGN.colors.glass,
+                border: `1px solid ${DESIGN.colors.glassBorder}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <MessageSquare style={{ width: '32px', height: '32px', color: '#ec4899' }} />
               </div>
-              <div className="text-left">
-                <h3 className="text-2xl font-bold text-white">Parlons de votre projet</h3>
-                <p className="text-white/70">Une équipe dédiée à votre réussite</p>
+              <div style={{ textAlign: 'left' }}>
+                <h3 style={{
+                  fontSize: '24px',
+                  fontWeight: 700,
+                  color: 'white'
+                }}>On préfère les vraies conversations</h3>
+                <p style={{ color: 'rgba(255,255,255,0.7)' }}>Appelez, écrivez, passez nous voir</p>
               </div>
             </div>
-            <p className="text-white/80 leading-relaxed">
-              Nous répondons généralement sous 24h. N'hésitez pas à nous contacter 
-              pour toute question ou demande d'information.
+            <p style={{
+              color: 'rgba(255,255,255,0.8)',
+              lineHeight: 1.6
+            }}>
+              Le café est toujours chaud et la porte toujours ouverte.
             </p>
           </div>
         </motion.div>

@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { ArtistsHeroSection } from '../sections/artists-page/HeroSection';
-import { ArtistsServicesSection } from '../sections/artists-page/ServicesSection';
-import { ArtistsListSection } from '../sections/artists-page/ArtistsListSection';
-import { ArtistsCTASection } from '../sections/artists-page/CTASection';
 
 export const ArtistsPage = () => {
   return (
     <main className="min-h-screen bg-[#0A0F29]">
       <Navigation />
+      
+      {/* Hero avec les images d'artistes qui défilent - Version améliorée */}
       <ArtistsHeroSection />
-      <ArtistsServicesSection />
-      <ArtistsListSection />
-      <ArtistsCTASection />
+      
       <Footer />
     </main>
   );

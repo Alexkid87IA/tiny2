@@ -1,91 +1,158 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Star, Shield, Rocket, Megaphone, Globe, Calendar, ChevronDown } from 'lucide-react';
 
-// Services data avec les 6 piliers - Palette cohérente rose/violet
+// DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
+const DESIGN = {
+  colors: {
+    titleGradient: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%)',
+    buttonGradient: 'linear-gradient(135deg, #ec4899, #a855f7)',
+    backgroundGradient: 'linear-gradient(180deg, #0A0F29 0%, #16213e 100%)',
+    white: '#FFFFFF',
+    textSecondary: 'rgba(255, 255, 255, 0.7)',
+    glass: 'rgba(255, 255, 255, 0.05)',
+    glassBorder: 'rgba(255, 255, 255, 0.15)'
+  },
+  typography: {
+    h1Desktop: 'clamp(4rem, 8vw, 7rem)',
+    h1Mobile: 'clamp(2.5rem, 12vw, 3.5rem)',
+    bodyDesktop: '18px',
+    bodyMobile: '15px'
+  }
+};
+
+// Services data avec les 6 piliers - Copie authentique et simple
 const servicesData = [
   {
     id: "production",
-    acte: "Acte I",
+    acte: "Production",
     title: "Production",
-    subtitle: "Donner vie aux idées",
-    story: "Imaginez une idée qui prend forme. Un rêve griffonné sur un coin de table qui devient un spectacle époustouflant. C'est notre première magie : transformer l'invisible en inoubliable. Nous sculptons vos visions pour qu'elles touchent les cœurs.",
-    color: "from-pink-500 to-pink-600",
-    borderColor: "border-pink-400/30",
-    glowColor: "rgba(236, 72, 153, 0.2)",
+    subtitle: "On investit notre temps et notre argent dans des projets qu'on aime",
+    story: "On ne produit pas n'importe quoi. Chaque spectacle est un pari, un engagement personnel. On met notre énergie et nos ressources dans des artistes auxquels on croit vraiment.",
+    gradient: "linear-gradient(135deg, #ec4899, #f472b6)",
+    borderColor: "rgba(236, 72, 153, 0.5)",
+    glowColor: "rgba(236, 72, 153, 0.3)",
     icon: Star
   },
   {
     id: "management",
-    acte: "Acte II",
+    acte: "Management",
     title: "Management",
-    subtitle: "Guider les talents",
-    story: "Chaque artiste est unique, chaque parcours singulier. Nous devenons les architectes silencieux de carrières extraordinaires. Avec bienveillance et expertise, nous traçons la route vers les sommets.",
-    color: "from-purple-500 to-pink-500",
-    borderColor: "border-purple-400/30",
-    glowColor: "rgba(168, 85, 247, 0.2)",
+    subtitle: "On connaît nos artistes. Leurs forces, leurs doutes, leurs ambitions",
+    story: "Pas de gestion à la chaîne. Chaque artiste a son histoire, ses besoins, son rythme. On est là pour les comprendre et les accompagner, pas pour les formater.",
+    gradient: "linear-gradient(135deg, #a855f7, #ec4899)",
+    borderColor: "rgba(168, 85, 247, 0.5)",
+    glowColor: "rgba(168, 85, 247, 0.3)",
     icon: Shield
   },
   {
     id: "digital",
-    acte: "Acte III",
+    acte: "Digital",
     title: "Digital",
-    subtitle: "Rayonner dans le monde",
-    story: "Dans l'océan numérique, nous créons des phares. Vos histoires traversent les écrans, touchent des milliers d'âmes. Nous orchestrons votre présence digitale comme une symphonie.",
-    color: "from-purple-600 to-purple-700",
-    borderColor: "border-purple-400/30",
-    glowColor: "rgba(168, 85, 247, 0.2)",
+    subtitle: "On raconte leurs histoires, pas des statistiques",
+    story: "Les réseaux sociaux ne sont pas une course aux likes. On préfère une vraie connexion avec 100 personnes qu'un million de vues sans lendemain.",
+    gradient: "linear-gradient(135deg, #9333ea, #a855f7)",
+    borderColor: "rgba(147, 51, 234, 0.5)",
+    glowColor: "rgba(147, 51, 234, 0.3)",
     icon: Rocket
   },
   {
     id: "communication",
-    acte: "Acte IV",
+    acte: "Communication",
     title: "Communication",
-    subtitle: "Créer l'émotion",
-    story: "Les mots ont le pouvoir de créer des mondes. Nous façonnons votre image avec la précision d'un orfèvre et l'âme d'un poète. Chaque message devient une invitation au voyage.",
-    color: "from-pink-400 to-purple-500",
-    borderColor: "border-pink-400/30",
-    glowColor: "rgba(236, 72, 153, 0.2)",
+    subtitle: "On privilégie l'authentique au sensationnel",
+    story: "Pas de buzzwords, pas de faux scandales. On communique sur ce qui compte vraiment : le talent, le travail, la sincérité de nos artistes.",
+    gradient: "linear-gradient(135deg, #f472b6, #c084fc)",
+    borderColor: "rgba(244, 114, 182, 0.5)",
+    glowColor: "rgba(244, 114, 182, 0.3)",
     icon: Megaphone
   },
   {
     id: "diffusion",
-    acte: "Acte V",
+    acte: "Diffusion",
     title: "Diffusion",
-    subtitle: "Conquérir les scènes",
-    story: "De théâtre en théâtre, de ville en ville, nous écrivons votre odyssée. Notre réseau devient votre constellation : 300 salles, autant d'étoiles où briller.",
-    color: "from-purple-400 to-purple-600",
-    borderColor: "border-purple-400/30",
-    glowColor: "rgba(168, 85, 247, 0.2)",
+    subtitle: "On connaît chaque directeur de salle par son prénom",
+    story: "300 salles partenaires, mais surtout 300 relations de confiance. On sait ce qui marche où, pour qui, et on ne survendons jamais.",
+    gradient: "linear-gradient(135deg, #c084fc, #a855f7)",
+    borderColor: "rgba(192, 132, 252, 0.5)",
+    glowColor: "rgba(192, 132, 252, 0.3)",
     icon: Globe
   },
   {
     id: "evenements",
-    acte: "Final",
+    acte: "Événements",
     title: "Événements",
-    subtitle: "Marquer les esprits",
-    story: "Pour les moments qui comptent, nous créons l'exceptionnel. Chaque événement devient une œuvre d'art totale, une expérience qui transcende le temps.",
-    color: "from-pink-500 to-purple-500",
-    borderColor: "border-purple-400/30",
-    glowColor: "rgba(236, 72, 153, 0.2)",
+    subtitle: "On s'adapte à votre culture, pas l'inverse",
+    story: "Chaque entreprise a son ADN. On ne plaque pas une formule toute faite. On écoute, on comprend, on propose ce qui vous ressemble.",
+    gradient: "linear-gradient(135deg, #ec4899, #9333ea)",
+    borderColor: "rgba(236, 72, 153, 0.5)",
+    glowColor: "rgba(236, 72, 153, 0.3)",
     icon: Calendar
   }
 ];
 
-interface ServicePanelProps {
-  service: typeof servicesData[0];
-  index: number;
-  isActive: boolean;
-  onClick: () => void;
-}
+// Composant titre uniformisé
+const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
+  <>
+    <motion.h2
+      initial={{ y: 30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+      style={{
+        fontSize: isMobile ? DESIGN.typography.h1Mobile : DESIGN.typography.h1Desktop,
+        fontWeight: 900,
+        lineHeight: 0.9,
+        letterSpacing: '-0.02em',
+        textAlign: 'center'
+      }}
+    >
+      <span style={{ 
+        display: 'block',
+        color: DESIGN.colors.white,
+        marginBottom: isMobile ? '-2px' : '-8px'
+      }}>
+        {line1}
+      </span>
+      <span style={{ 
+        display: 'block',
+        background: DESIGN.colors.titleGradient,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        paddingBottom: '0.15em'
+      }}>
+        {line2}
+      </span>
+    </motion.h2>
+    
+    {subtitle && (
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        style={{
+          fontSize: isMobile ? DESIGN.typography.bodyMobile : DESIGN.typography.bodyDesktop,
+          color: DESIGN.colors.textSecondary,
+          maxWidth: '600px',
+          margin: '0 auto',
+          lineHeight: 1.6,
+          marginTop: '1.5rem',
+          textAlign: 'center'
+        }}
+      >
+        {subtitle}
+      </motion.p>
+    )}
+  </>
+);
 
-const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, onClick }) => {
+// Composant ServicePanel
+const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
   const Icon = service.icon;
   
-  const handleServiceClick = (e: React.MouseEvent) => {
+  const handleServiceClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    // Navigation sera gérée dans votre App.tsx
     window.location.href = `/services/${service.id}`;
   };
 
@@ -95,24 +162,54 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, o
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className={`relative mb-4 rounded-2xl overflow-hidden backdrop-blur-md transition-all duration-500 cursor-pointer
-        ${isActive 
-          ? `bg-black/40 ${service.borderColor} shadow-2xl` 
-          : 'bg-black/20 border-white/10 hover:bg-black/30'
-        } border-2`}
-      onClick={onClick}
       style={{
-        boxShadow: isActive ? `0 0 40px ${service.glowColor}` : undefined
+        position: 'relative',
+        marginBottom: '16px',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        backdropFilter: 'blur(12px)',
+        background: isActive ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.4)',
+        border: `2px solid ${isActive ? service.borderColor : 'rgba(255,255,255,0.1)'}`,
+        transition: 'all 0.5s ease',
+        cursor: 'pointer',
+        boxShadow: isActive ? `0 0 40px ${service.glowColor}` : '0 4px 20px rgba(0,0,0,0.3)'
+      }}
+      onClick={onClick}
+      onMouseEnter={(e) => {
+        if (!isMobile && !isActive) {
+          e.currentTarget.style.background = 'rgba(0,0,0,0.3)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isMobile && !isActive) {
+          e.currentTarget.style.background = 'rgba(0,0,0,0.2)';
+        }
       }}
     >
       {/* Header du panneau */}
-      <div className="p-6 lg:p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 lg:gap-6">
+      <div style={{ padding: isMobile ? '24px' : '32px' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: isMobile ? '16px' : '24px'
+          }}>
             {/* Badge Acte */}
             <motion.div
-              className={`px-3 py-1 lg:px-4 lg:py-1.5 rounded-full text-xs lg:text-sm font-bold tracking-wider
-                bg-gradient-to-r ${service.color} text-black`}
+              style={{
+                padding: '6px 16px',
+                borderRadius: '50px',
+                fontSize: isMobile ? '12px' : '14px',
+                fontWeight: 700,
+                letterSpacing: '0.1em',
+                background: service.gradient,
+                color: 'white',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+              }}
               animate={isActive ? { scale: [1, 1.05, 1] } : {}}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -121,35 +218,65 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, o
             
             {/* Titre et sous-titre */}
             <div>
-              <h3 className="text-2xl lg:text-3xl font-bold text-white mb-1">
-                {service.title}
-              </h3>
-              <p className="text-white/60 text-sm lg:text-base italic">
-                {service.subtitle}
-              </p>
+              <h3 style={{
+                fontSize: isMobile ? '24px' : '32px',
+                fontWeight: 700,
+                color: 'white',
+                marginBottom: '4px'
+              }}>{service.title}</h3>
+              <p style={{
+                color: 'rgba(255,255,255,0.6)',
+                fontSize: isMobile ? '14px' : '16px',
+                fontStyle: 'italic'
+              }}>{service.subtitle}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
             {/* Icône */}
             <motion.div
-              className={`w-12 h-12 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center
-                bg-gradient-to-br ${service.color} text-black`}
+              style={{
+                width: isMobile ? '48px' : '64px',
+                height: isMobile ? '48px' : '64px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: service.gradient,
+                color: 'white',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+              }}
               animate={isActive ? { rotate: 360 } : { rotate: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Icon className="w-6 h-6 lg:w-8 lg:h-8" strokeWidth={2} />
+              <Icon style={{
+                width: isMobile ? '24px' : '32px',
+                height: isMobile ? '24px' : '32px',
+                strokeWidth: 2,
+                color: 'white'
+              }} />
             </motion.div>
             
-            {/* Chevron indicateur de clic */}
+            {/* Chevron */}
             <motion.div
-              animate={{ 
-                rotate: isActive ? 180 : 0,
-              }}
+              animate={{ rotate: isActive ? 180 : 0 }}
               transition={{ duration: 0.3 }}
-              className="text-white/40 hover:text-white/60"
+              style={{
+                color: 'rgba(255,255,255,0.4)',
+                transition: 'color 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'rgba(255,255,255,0.4)';
+              }}
             >
-              <ChevronDown className="w-6 h-6" />
+              <ChevronDown style={{ width: '24px', height: '24px' }} />
             </motion.div>
           </div>
         </div>
@@ -163,12 +290,18 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, o
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-            className="overflow-hidden"
+            style={{ overflow: 'hidden' }}
           >
-            <div className="px-6 pb-6 lg:px-8 lg:pb-8">
-              {/* Ligne de séparation animée */}
+            <div style={{
+              padding: isMobile ? '0 24px 24px' : '0 32px 32px'
+            }}>
+              {/* Ligne de séparation */}
               <motion.div 
-                className={`h-[1px] mb-6 bg-gradient-to-r ${service.color}`}
+                style={{
+                  height: '1px',
+                  marginBottom: '24px',
+                  background: service.gradient
+                }}
                 initial={{ width: 0 }}
                 animate={{ width: '100%' }}
                 transition={{ duration: 0.5, delay: 0.1 }}
@@ -176,7 +309,12 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, o
               
               {/* Story */}
               <motion.p 
-                className="text-white/80 text-base lg:text-lg leading-relaxed mb-6"
+                style={{
+                  color: 'rgba(255,255,255,0.8)',
+                  fontSize: isMobile ? '16px' : '18px',
+                  lineHeight: 1.6,
+                  marginBottom: '24px'
+                }}
                 initial={{ y: 10 }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -187,16 +325,28 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, o
               {/* Bouton découvrir */}
               <motion.button
                 onClick={handleServiceClick}
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full
-                  bg-gradient-to-r ${service.color} text-black font-bold text-sm lg:text-base
-                  hover:scale-105 transition-transform duration-300`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '12px 24px',
+                  borderRadius: '50px',
+                  background: service.gradient,
+                  color: 'white',
+                  fontWeight: 700,
+                  fontSize: isMobile ? '14px' : '16px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'transform 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                }}
                 initial={{ y: 10 }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.3 }}
-                whileHover={{ x: 5 }}
+                whileHover={{ scale: 1.05, boxShadow: '0 6px 16px rgba(0,0,0,0.3)' }}
               >
                 Découvrir ce service
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight style={{ width: '16px', height: '16px', color: 'white' }} />
               </motion.button>
             </div>
           </motion.div>
@@ -207,27 +357,46 @@ const ServicePanel: React.FC<ServicePanelProps> = ({ service, index, isActive, o
 };
 
 export const MissionSection = () => {
-  const [activePanel, setActivePanel] = useState<string | null>(null);
+  const [activePanel, setActivePanel] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const togglePanel = (serviceId: string) => {
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const togglePanel = (serviceId) => {
     setActivePanel(prevActive => prevActive === serviceId ? null : serviceId);
   };
 
-  const handleAllServicesClick = (e: React.MouseEvent) => {
+  const handleAllServicesClick = (e) => {
     e.preventDefault();
     window.location.href = '/services';
   };
 
   return (
-    <section className="relative min-h-screen py-20 lg:py-32 bg-[#0A0F29] overflow-hidden">
-      {/* Fond animé avec particules (comme les autres sections) */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(236,72,153,0.1),transparent_70%)]" />
+    <section style={{
+      position: 'relative',
+      minHeight: '100vh',
+      padding: isMobile ? '80px 0' : '120px 0',
+      background: DESIGN.colors.backgroundGradient,
+      overflow: 'hidden'
+    }}>
+      {/* Fond animé */}
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse at center,rgba(236,72,153,0.1),transparent 70%)'
+        }} />
         
         {/* Grille animée subtile */}
         <motion.div
-          className="absolute inset-0"
           style={{
+            position: 'absolute',
+            inset: 0,
             backgroundImage: `linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(168, 85, 247, 0.05) 1px, transparent 1px)`,
             backgroundSize: '50px 50px'
@@ -243,10 +412,15 @@ export const MissionSection = () => {
           }}
         />
         
-        {/* Orbes de lumière flottants */}
+        {/* Orbes de lumière */}
         <motion.div
-          className="absolute top-20 -left-20 w-96 h-96 rounded-full"
           style={{
+            position: 'absolute',
+            top: '80px',
+            left: '-80px',
+            width: '384px',
+            height: '384px',
+            borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15), transparent 70%)',
             filter: 'blur(60px)'
           }}
@@ -262,8 +436,13 @@ export const MissionSection = () => {
         />
         
         <motion.div
-          className="absolute bottom-20 -right-20 w-96 h-96 rounded-full"
           style={{
+            position: 'absolute',
+            bottom: '80px',
+            right: '-80px',
+            width: '384px',
+            height: '384px',
+            borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(168, 85, 247, 0.15), transparent 70%)',
             filter: 'blur(60px)'
           }}
@@ -280,63 +459,56 @@ export const MissionSection = () => {
       </div>
 
       {/* Contenu principal */}
-      <div className="relative container mx-auto px-4 max-w-5xl">
+      <div style={{
+        position: 'relative',
+        maxWidth: '900px',
+        margin: '0 auto',
+        padding: '0 32px'
+      }}>
         
-        {/* Header épique */}
+        {/* Header avec titre uniformisé */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-center mb-16 lg:mb-20 px-8"
+          style={{
+            textAlign: 'center',
+            marginBottom: isMobile ? '64px' : '80px'
+          }}
         >
-          <h2 className="font-bold mb-6">
-            <motion.span 
-              className="block text-white mb-3 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl"
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              Comment nous
-            </motion.span>
-            <motion.span 
-              className="block text-transparent bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-3xl sm:text-4xl lg:text-5xl xl:text-6xl pb-2"
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              style={{ lineHeight: '1.2' }}
-            >
-              Créons la magie
-            </motion.span>
-          </h2>
-          
-          <motion.p 
-            className="text-lg lg:text-xl text-white/60 max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            De l'idée au rideau final, chaque étape est une œuvre
-          </motion.p>
+          <SectionTitle 
+            line1="Notre approche,"
+            line2="Six métiers, une passion"
+            subtitle="Nous ne sommes pas les plus gros. Nous sommes peut-être les plus investis."
+            isMobile={isMobile}
+          />
           
           {/* Indicateur de clic */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-4 flex items-center justify-center gap-2 text-pink-400/60"
+            style={{
+              marginTop: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              color: 'rgba(236,72,153,0.6)'
+            }}
           >
             <motion.div
               animate={{ y: [0, 5, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <ChevronDown className="w-5 h-5" />
+              <ChevronDown style={{ width: '20px', height: '20px' }} />
             </motion.div>
-            <span className="text-sm">Cliquez pour découvrir</span>
+            <span style={{ fontSize: '14px' }}>Cliquez pour découvrir</span>
           </motion.div>
         </motion.div>
 
         {/* Services accordéon */}
-        <div className="mb-16">
+        <div style={{ marginBottom: '64px' }}>
           {servicesData.map((service, index) => (
             <ServicePanel
               key={service.id}
@@ -344,6 +516,7 @@ export const MissionSection = () => {
               index={index}
               isActive={activePanel === service.id}
               onClick={() => togglePanel(service.id)}
+              isMobile={isMobile}
             />
           ))}
         </div>
@@ -354,22 +527,50 @@ export const MissionSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center"
+          style={{ textAlign: 'center' }}
         >
-          <p className="text-2xl lg:text-3xl text-white/80 italic font-light mb-8">
-            "Six expertises, une vision : sublimer votre talent"
+          <p style={{
+            fontSize: isMobile ? '24px' : '32px',
+            color: 'rgba(255,255,255,0.8)',
+            fontStyle: 'italic',
+            fontWeight: 300,
+            marginBottom: '32px'
+          }}>
+            "Six expertises, mais une seule philosophie : le spectacle vivant, c'est d'abord une histoire humaine"
           </p>
           
           <button
             onClick={handleAllServicesClick}
-            className="group inline-flex items-center gap-3 px-8 py-4 rounded-full
-              bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-400 hover:to-pink-500
-              transition-all duration-300 shadow-lg hover:shadow-pink-500/25 hover:scale-105"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: isMobile ? '16px 32px' : '16px 32px',
+              borderRadius: '50px',
+              background: DESIGN.colors.buttonGradient,
+              color: 'white',
+              fontWeight: 700,
+              fontSize: isMobile ? '16px' : '18px',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 8px 32px rgba(236,72,153,0.35)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            onMouseEnter={(e) => {
+              if (!isMobile) {
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(236,72,153,0.5)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isMobile) {
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(236,72,153,0.35)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }
+            }}
           >
-            <span className="font-bold text-white text-base lg:text-lg">
-              EXPLORER TOUS NOS SERVICES
-            </span>
-            <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform duration-300" />
+            <span>EXPLORER TOUS NOS SERVICES</span>
+            <ArrowRight style={{ width: '20px', height: '20px' }} />
           </button>
         </motion.div>
       </div>
