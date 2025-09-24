@@ -316,27 +316,6 @@ export const ArtistsSliderSection = () => {
             margin: '0 -32px',
             padding: '2rem 0',
           }}>
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              width: '100px',
-              background: 'linear-gradient(to right, #0A0F29, transparent)',
-              zIndex: 10,
-              pointerEvents: 'none',
-            }} />
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              right: 0,
-              width: '100px',
-              background: 'linear-gradient(to left, #16213e, transparent)',
-              zIndex: 10,
-              pointerEvents: 'none',
-            }} />
-            
             <motion.div
               style={{
                 display: 'flex',

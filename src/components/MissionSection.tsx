@@ -25,7 +25,7 @@ const DESIGN = {
 const servicesData = [
   {
     id: "production",
-    acte: "Production",
+    acte: "Créer",
     title: "Production",
     subtitle: "On investit notre temps et notre argent dans des projets qu'on aime",
     story: "On ne produit pas n'importe quoi. Chaque spectacle est un pari, un engagement personnel. On met notre énergie et nos ressources dans des artistes auxquels on croit vraiment.",
@@ -36,7 +36,7 @@ const servicesData = [
   },
   {
     id: "management",
-    acte: "Management",
+    acte: "Guider",
     title: "Management",
     subtitle: "On connaît nos artistes. Leurs forces, leurs doutes, leurs ambitions",
     story: "Pas de gestion à la chaîne. Chaque artiste a son histoire, ses besoins, son rythme. On est là pour les comprendre et les accompagner, pas pour les formater.",
@@ -47,7 +47,7 @@ const servicesData = [
   },
   {
     id: "digital",
-    acte: "Digital",
+    acte: "Connecter",
     title: "Digital",
     subtitle: "On raconte leurs histoires, pas des statistiques",
     story: "Les réseaux sociaux ne sont pas une course aux likes. On préfère une vraie connexion avec 100 personnes qu'un million de vues sans lendemain.",
@@ -58,7 +58,7 @@ const servicesData = [
   },
   {
     id: "communication",
-    acte: "Communication",
+    acte: "Raconter",
     title: "Communication",
     subtitle: "On privilégie l'authentique au sensationnel",
     story: "Pas de buzzwords, pas de faux scandales. On communique sur ce qui compte vraiment : le talent, le travail, la sincérité de nos artistes.",
@@ -69,7 +69,7 @@ const servicesData = [
   },
   {
     id: "diffusion",
-    acte: "Diffusion",
+    acte: "Partager",
     title: "Diffusion",
     subtitle: "On connaît chaque directeur de salle par son prénom",
     story: "300 salles partenaires, mais surtout 300 relations de confiance. On sait ce qui marche où, pour qui, et on ne survendons jamais.",
@@ -80,7 +80,7 @@ const servicesData = [
   },
   {
     id: "evenements",
-    acte: "Événements",
+    acte: "Rassembler",
     title: "Événements",
     subtitle: "On s'adapte à votre culture, pas l'inverse",
     story: "Chaque entreprise a son ADN. On ne plaque pas une formule toute faite. On écoute, on comprend, on propose ce qui vous ressemble.",

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Briefcase, Users, Rocket, Trophy, Mail } from 'lucide-react';
+import { ArrowRight, Briefcase, Users, Rocket, Trophy, Mail, Ear, Settings, HandshakeIcon } from 'lucide-react';
 
 // DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
 const DESIGN = {
@@ -319,7 +319,7 @@ export const BrandSection = () => {
           />
         </div>
         
-        {/* L'humour en entreprise */}
+        {/* Notre approche - SECTION AVEC ICÔNES LUCIDE */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -333,7 +333,7 @@ export const BrandSection = () => {
             fontWeight: 700,
             color: 'white',
             marginBottom: '12px'
-          }}>L'humour, votre meilleur ROI</h3>
+          }}>Notre approche</h3>
           
           <p style={{
             textAlign: 'center',
@@ -342,7 +342,7 @@ export const BrandSection = () => {
             maxWidth: '700px',
             margin: '0 auto 40px'
           }}>
-            Plus qu'un divertissement : un outil stratégique pour engager, fédérer et transformer.
+            Votre séminaire n'est pas celui du voisin. Votre équipe a sa culture. Vos enjeux sont uniques.
           </p>
           
           <div style={{
@@ -353,60 +353,84 @@ export const BrandSection = () => {
             gap: '24px'
           }}>
             {[
-              { icon: "🧠", title: "Mémorisation x3", description: "Les messages transmis avec humour sont 3 fois mieux retenus" },
-              { icon: "🎯", title: "Engagement maximal", description: "Attention captée à 100% dès la première minute" },
-              { icon: "💪", title: "Cohésion renforcée", description: "Rire ensemble crée des liens durables entre équipes" }
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                style={{
-                  background: DESIGN.colors.glass,
-                  border: `1px solid ${DESIGN.colors.glassBorder}`,
-                  borderRadius: '12px',
-                  padding: '24px',
-                  textAlign: 'center',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isMobile) {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isMobile) {
-                    e.currentTarget.style.background = DESIGN.colors.glass;
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }
-                }}
-              >
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>{item.icon}</div>
-                <h3 style={{
-                  fontSize: '18px',
-                  fontWeight: 700,
-                  color: 'white',
-                  marginBottom: '8px'
-                }}>{item.title}</h3>
-                <p style={{
-                  fontSize: '14px',
-                  color: 'rgba(255,255,255,0.6)'
-                }}>{item.description}</p>
-              </motion.div>
-            ))}
+              { icon: Ear, title: "On commence par écouter", description: "Vos objectifs, vos contraintes, vos craintes" },
+              { icon: Settings, title: "On propose, on ajuste", description: "Jusqu'à trouver le bon artiste, le bon format" },
+              { icon: HandshakeIcon, title: "On reste à vos côtés", description: "Avant, pendant, après" }
+            ].map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  style={{
+                    background: DESIGN.colors.glass,
+                    border: `1px solid ${DESIGN.colors.glassBorder}`,
+                    borderRadius: '12px',
+                    padding: '24px',
+                    textAlign: 'center',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                      e.currentTarget.style.transform = 'translateY(-4px)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.background = DESIGN.colors.glass;
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }
+                  }}
+                >
+                  <div style={{ 
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '16px' 
+                  }}>
+                    <div style={{
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, rgba(236,72,153,0.1), rgba(168,85,247,0.1))',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1px solid rgba(236,72,153,0.2)'
+                    }}>
+                      <Icon style={{ 
+                        width: '28px', 
+                        height: '28px', 
+                        color: '#ec4899'
+                      }} />
+                    </div>
+                  </div>
+                  <h3 style={{
+                    fontSize: '18px',
+                    fontWeight: 700,
+                    color: 'white',
+                    marginBottom: '8px'
+                  }}>{item.title}</h3>
+                  <p style={{
+                    fontSize: '14px',
+                    color: 'rgba(255,255,255,0.6)'
+                  }}>{item.description}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
         
-        {/* Études de cas */}
+        {/* Titre "Ils nous ont fait confiance" */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          style={{ marginBottom: '80px' }}
+          style={{ marginBottom: '48px' }}
         >
           <div style={{
             display: 'flex',
@@ -442,7 +466,7 @@ export const BrandSection = () => {
             fontSize: '18px',
             color: 'rgba(255,255,255,0.6)',
             maxWidth: '800px',
-            margin: '0 auto 48px',
+            margin: '0 auto',
             textAlign: 'center'
           }}>Découvrez comment nos interventions transforment les événements d'entreprise</p>
         </motion.div>

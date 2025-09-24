@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Users, ChevronRight, Mail } from 'lucide-react';
+import { Users, ChevronRight, Mail, Phone, UserCheck, MessageCircle } from 'lucide-react';
 import { artists } from '../data/artists';
 
 // DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
@@ -397,10 +397,12 @@ export const ProducerSection = () => {
                 gap: '24px'
               }}>
                 {[
-                  { icon: "☎️", title: "Un seul interlocuteur", description: "Vous appelez, on décroche" },
-                  { icon: "👥", title: "Suivi personnalisé", description: "On connaît vos contraintes et vos publics" },
-                  { icon: "💬", title: "Transparence totale", description: "Les bonnes et les moins bonnes nouvelles" }
-                ].map((item, index) => (
+                  { icon: Phone, title: "Un seul interlocuteur", description: "Vous appelez, on décroche" },
+                  { icon: UserCheck, title: "Suivi personnalisé", description: "On connaît vos contraintes et vos publics" },
+                  { icon: MessageCircle, title: "Transparence totale", description: "Les bonnes et les moins bonnes nouvelles" }
+                ].map((item, index) => {
+                  const Icon = item.icon;
+                  return (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
@@ -428,7 +430,28 @@ export const ProducerSection = () => {
                       }
                     }}
                   >
-                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>{item.icon}</div>
+                    <div style={{ 
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginBottom: '16px' 
+                    }}>
+                      <div style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '12px',
+                        background: 'linear-gradient(135deg, rgba(236,72,153,0.1), rgba(168,85,247,0.1))',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '1px solid rgba(236,72,153,0.2)'
+                      }}>
+                        <Icon style={{ 
+                          width: '28px', 
+                          height: '28px', 
+                          color: '#ec4899'
+                        }} />
+                      </div>
+                    </div>
                     <h3 style={{
                       fontSize: '18px',
                       fontWeight: 700,
@@ -440,7 +463,7 @@ export const ProducerSection = () => {
                       color: 'rgba(255,255,255,0.6)'
                     }}>{item.description}</p>
                   </motion.div>
-                ))}
+                )})}
               </div>
             </div>
           </motion.div>
