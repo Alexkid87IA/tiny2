@@ -160,40 +160,127 @@ const StandardParticles = () => (
   </>
 );
 
-// Carte d'artiste standardisée
+// Carte d'artiste standardisée - CORRECTION DU BADGE MOBILE
 const ArtistCard = ({ artist, index, isMobile }) => {
   const [isHovered, setIsHovered] = useState(false);
   
+  // FIX: Pour mobile, utiliser une structure différente pour garantir l'affichage du badge
+  if (isMobile) {
+    return (
+      <Link 
+        to={`/artiste/${artist.id}`}
+        style={{
+          display: 'block',
+          width: '100%',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          position: 'relative',
+          background: DESIGN.colors.glass,
+          border: `1px solid ${DESIGN.colors.glassBorder}`,
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+        }}
+      >
+        {/* Container avec ratio fixe pour mobile */}
+        <div style={{
+          position: 'relative',
+          paddingBottom: '150%', // Ratio aspect pour garder la hauteur
+        }}>
+          <img
+            src={artist.posterImage || artist.image}
+            alt={artist.name}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: 0, // Base layer
+            }}
+          />
+          
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%)',
+            zIndex: 1, // Au-dessus de l'image
+          }} />
+          
+          {/* BADGE CORRIGÉ POUR MOBILE */}
+          {(artist.prod || artist.diff) && (
+            <div style={{
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
+              right: '12px',
+              background: DESIGN.colors.buttonGradient,
+              padding: '8px 12px',
+              borderRadius: '8px',
+              fontSize: '0.65rem',
+              color: 'white',
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              textAlign: 'center',
+              boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)',
+              zIndex: 2, // Au-dessus du gradient
+            }}>
+              {artist.prod || 'DIFFUSION'}
+            </div>
+          )}
+          
+          <div style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '20px',
+            right: '20px',
+            zIndex: 2, // Au même niveau que le badge
+          }}>
+            <h3 style={{
+              fontSize: '1.2rem',
+              fontWeight: 700,
+              color: 'white',
+              marginBottom: '8px',
+            }}>
+              {artist.name}
+            </h3>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+  
+  // Version desktop inchangée
   return (
     <Link 
       to={`/artiste/${artist.id}`}
       style={{
         display: 'block',
-        width: isMobile ? '100%' : '220px',
-        height: isMobile ? 'auto' : '330px',
+        width: '220px',
+        height: '330px',
         borderRadius: '20px',
         overflow: 'hidden',
         position: 'relative',
         background: DESIGN.colors.glass,
         border: `1px solid ${DESIGN.colors.glassBorder}`,
         transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-        transform: !isMobile && isHovered ? 'scale(1.05) translateY(-10px)' : 'scale(1)',
-        boxShadow: !isMobile && isHovered 
+        transform: isHovered ? 'scale(1.05) translateY(-10px)' : 'scale(1)',
+        boxShadow: isHovered 
           ? '0 25px 50px rgba(0, 0, 0, 0.5)' 
           : '0 10px 30px rgba(0, 0, 0, 0.3)',
       }}
-      onMouseEnter={() => !isMobile && setIsHovered(true)}
-      onMouseLeave={() => !isMobile && setIsHovered(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <img
         src={artist.posterImage || artist.image}
         alt={artist.name}
         style={{
           width: '100%',
-          height: isMobile ? 'auto' : '100%',
+          height: '100%',
           objectFit: 'cover',
           transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-          transform: !isMobile && isHovered ? 'scale(1.1)' : 'scale(1)',
+          transform: isHovered ? 'scale(1.1)' : 'scale(1)',
         }}
       />
       
@@ -203,7 +290,7 @@ const ArtistCard = ({ artist, index, isMobile }) => {
         background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%)',
       }} />
       
-      {(artist.production || artist.diffusion) && (
+      {(artist.prod || artist.diff) && (
         <div style={{
           position: 'absolute',
           top: '12px',
@@ -220,7 +307,7 @@ const ArtistCard = ({ artist, index, isMobile }) => {
           textAlign: 'center',
           boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)',
         }}>
-          {artist.production ? `Production ${artist.production}` : `Diffusion ${artist.diffusion}`}
+          {artist.prod || 'DIFFUSION'}
         </div>
       )}
       
@@ -231,7 +318,7 @@ const ArtistCard = ({ artist, index, isMobile }) => {
         right: '20px',
       }}>
         <h3 style={{
-          fontSize: isMobile ? '1.2rem' : '1.1rem',
+          fontSize: '1.1rem',
           fontWeight: 700,
           color: 'white',
           marginBottom: '8px',
@@ -239,29 +326,27 @@ const ArtistCard = ({ artist, index, isMobile }) => {
           {artist.name}
         </h3>
         
-        {!isMobile && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '50px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              color: 'white',
-            }}
-          >
-            Découvrir
-            <ArrowRight size={12} />
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '50px',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            color: 'white',
+          }}
+        >
+          Découvrir
+          <ArrowRight size={12} />
+        </motion.div>
       </div>
     </Link>
   );

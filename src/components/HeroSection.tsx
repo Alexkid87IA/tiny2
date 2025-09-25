@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Images des artistes
 const artistImages = [
@@ -272,78 +273,84 @@ export const HeroSection = () => {
               marginTop: isMobile ? '8px' : '16px'
             }}
           >
-            <motion.a
-              href="/artistes"
+            <motion.div
               whileHover={!isMobile ? { scale: 1.05 } : {}}
               whileTap={{ scale: 0.95 }}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: isMobile 
-                  ? '14px 28px' 
-                  : '16px 36px',
-                background: 'linear-gradient(135deg, #ec4899, #a855f7)',
-                color: 'white',
-                borderRadius: '100px',
-                fontWeight: 600,
-                fontSize: isMobile ? '14px' : '16px',
-                textDecoration: 'none',
-                boxShadow: '0 8px 32px rgba(236,72,153,0.35)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
-              onMouseEnter={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(236,72,153,0.5)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(236,72,153,0.35)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }
-              }}
             >
-              Découvrir nos artistes
-              <ArrowRight size={18} />
-            </motion.a>
+              <Link
+                to="/artistes"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: isMobile 
+                    ? '14px 28px' 
+                    : '16px 36px',
+                  background: 'linear-gradient(135deg, #ec4899, #a855f7)',
+                  color: 'white',
+                  borderRadius: '100px',
+                  fontWeight: 600,
+                  fontSize: isMobile ? '14px' : '16px',
+                  textDecoration: 'none',
+                  boxShadow: '0 8px 32px rgba(236,72,153,0.35)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isMobile) {
+                    e.currentTarget.style.boxShadow = '0 12px 40px rgba(236,72,153,0.5)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isMobile) {
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(236,72,153,0.35)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
+                }}
+              >
+                Découvrir nos artistes
+                <ArrowRight size={18} />
+              </Link>
+            </motion.div>
 
-            <motion.a
-              href="#artists"
+            <motion.div
               whileHover={!isMobile ? { scale: 1.05 } : {}}
               whileTap={{ scale: 0.95 }}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: isMobile 
-                  ? '14px 28px' 
-                  : '16px 36px',
-                background: 'rgba(255,255,255,0.05)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                color: 'white',
-                borderRadius: '100px',
-                fontWeight: 600,
-                fontSize: isMobile ? '14px' : '16px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
-                }
-              }}
             >
-              En savoir plus
-            </motion.a>
+              <Link
+                to="/equipe"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: isMobile 
+                    ? '14px 28px' 
+                    : '16px 36px',
+                  background: 'rgba(255,255,255,0.05)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  color: 'white',
+                  borderRadius: '100px',
+                  fontWeight: 600,
+                  fontSize: isMobile ? '14px' : '16px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isMobile) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isMobile) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                  }
+                }}
+              >
+                En savoir plus
+              </Link>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>

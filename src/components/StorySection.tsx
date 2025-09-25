@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Users } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Sparkles, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-// DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
+// DESIGN SYSTEM UNIFIÉ
 const DESIGN = {
   colors: {
     titleGradient: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%)',
@@ -15,10 +15,16 @@ const DESIGN = {
     glassBorder: 'rgba(255, 255, 255, 0.15)'
   },
   typography: {
-    h1Desktop: 'clamp(4rem, 8vw, 7rem)',
-    h1Mobile: 'clamp(2.5rem, 12vw, 3.5rem)',
+    h1Desktop: 'clamp(3.5rem, 7vw, 6rem)',
+    h1Mobile: 'clamp(2rem, 10vw, 3rem)',
     bodyDesktop: '18px',
-    bodyMobile: '15px'
+    bodyMobile: '16px'
+  },
+  spacing: {
+    sectionPaddingDesktop: '120px 0',
+    sectionPaddingTablet: '100px 0', 
+    sectionPaddingMobile: '60px 0',
+    containerPadding: '0 24px'
   }
 };
 
@@ -65,8 +71,8 @@ const teamMembers = [
   }
 ];
 
-// Composant titre uniformisé
-const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
+// Composant titre responsive optimisé
+const SectionTitle = memo(({ line1, line2, subtitle, isMobile, isTablet }) => (
   <>
     <motion.h2
       initial={{ y: 30, opacity: 0 }}
@@ -75,15 +81,16 @@ const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
       style={{
         fontSize: isMobile ? DESIGN.typography.h1Mobile : DESIGN.typography.h1Desktop,
         fontWeight: 900,
-        lineHeight: 0.9,
+        lineHeight: isMobile ? 1.1 : 0.9,
         letterSpacing: '-0.02em',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: isMobile ? '1rem' : '0'
       }}
     >
       <span style={{ 
         display: 'block',
         color: DESIGN.colors.white,
-        marginBottom: isMobile ? '-2px' : '-8px'
+        marginBottom: isMobile ? '4px' : '-8px'
       }}>
         {line1}
       </span>
@@ -107,80 +114,103 @@ const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
         style={{
           fontSize: isMobile ? DESIGN.typography.bodyMobile : DESIGN.typography.bodyDesktop,
           color: DESIGN.colors.textSecondary,
-          maxWidth: '600px',
+          maxWidth: isMobile ? '100%' : '600px',
           margin: '0 auto',
           lineHeight: 1.6,
-          marginTop: '1.5rem',
-          textAlign: 'center'
+          marginTop: isMobile ? '1rem' : '1.5rem',
+          textAlign: 'center',
+          padding: isMobile ? '0 16px' : '0'
         }}
       >
         {subtitle}
       </motion.p>
     )}
   </>
-);
+));
 
-// Carte membre équipe
-const TeamCard = ({ member, index, isMobile }) => {
+// Carte membre équipe optimisée
+const TeamCard = memo(({ member, index, isMobile, isTablet }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, delay: Math.min(index * 0.1, 0.3) }}
     >
       <div style={{
         position: 'relative',
         width: '100%',
-        height: isMobile ? '350px' : '380px',
-        borderRadius: '16px',
+        height: isMobile ? '380px' : isTablet ? '400px' : '420px',
+        borderRadius: isMobile ? '12px' : '16px',
         overflow: 'hidden',
         cursor: 'pointer',
-        transition: 'all 0.6s ease',
-        transform: !isMobile && isHovered ? 'scale(1.05) translateY(-5px)' : 'scale(1)'
+        transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+        transform: !isMobile && isHovered ? 'scale(1.05) translateY(-5px)' : 'scale(1)',
+        boxShadow: isHovered ? '0 20px 40px rgba(0,0,0,0.3)' : '0 4px 12px rgba(0,0,0,0.2)',
+        WebkitTapHighlightColor: 'transparent',
+        touchAction: 'manipulation'
       }}
       onMouseEnter={() => !isMobile && setIsHovered(true)}
-      onMouseLeave={() => !isMobile && setIsHovered(false)}>
+      onMouseLeave={() => !isMobile && setIsHovered(false)}
+      onTouchStart={() => {}} // Améliore la réactivité tactile
+      >
+        {/* Placeholder pendant le chargement */}
+        {!imageLoaded && (
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(236,72,153,0.1), rgba(168,85,247,0.1))',
+            animation: 'pulse 2s infinite'
+          }} />
+        )}
+        
         <motion.div
           style={{
             position: 'absolute',
             inset: 0,
             transform: !isMobile && isHovered ? 'scale(1.1)' : 'scale(1)',
-            transition: 'transform 0.6s ease'
+            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
         >
           <img 
             src={member.image} 
             alt={`${member.name} ${member.lastName}`}
+            onLoad={() => setImageLoaded(true)}
             style={{
               position: 'absolute',
               inset: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'cover'
+              objectFit: 'cover',
+              opacity: imageLoaded ? 1 : 0,
+              transition: 'opacity 0.5s ease'
             }}
+            loading="lazy"
           />
         </motion.div>
         
+        {/* Gradient overlay */}
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(to top, black, rgba(0,0,0,0.4), transparent)'
+          background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 40%, transparent 60%)'
         }} />
         
         {/* Badge numéro */}
         <motion.div 
           style={{
             position: 'absolute',
-            top: '16px',
-            right: '16px',
-            width: '48px',
-            height: '48px',
+            top: isMobile ? '12px' : '16px',
+            right: isMobile ? '12px' : '16px',
+            width: isMobile ? '40px' : '48px',
+            height: isMobile ? '40px' : '48px',
             borderRadius: '50%',
             background: 'rgba(236,72,153,0.2)',
             backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
             border: '1px solid rgba(236,72,153,0.3)',
             display: 'flex',
             alignItems: 'center',
@@ -192,7 +222,7 @@ const TeamCard = ({ member, index, isMobile }) => {
           <span style={{
             color: 'white',
             fontWeight: 700,
-            fontSize: '18px'
+            fontSize: isMobile ? '16px' : '18px'
           }}>{index + 1}</span>
         </motion.div>
         
@@ -201,13 +231,17 @@ const TeamCard = ({ member, index, isMobile }) => {
           <motion.div 
             style={{
               position: 'absolute',
-              top: '16px',
-              left: '16px'
+              top: isMobile ? '12px' : '16px',
+              left: isMobile ? '12px' : '16px'
             }}
             animate={{ rotate: 360 }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           >
-            <Sparkles style={{ width: '24px', height: '24px', color: '#fbbf24' }} />
+            <Sparkles style={{ 
+              width: isMobile ? '20px' : '24px', 
+              height: isMobile ? '20px' : '24px', 
+              color: '#fbbf24' 
+            }} />
           </motion.div>
         )}
         
@@ -218,20 +252,20 @@ const TeamCard = ({ member, index, isMobile }) => {
             bottom: 0,
             left: 0,
             right: 0,
-            padding: '24px',
+            padding: isMobile ? '20px' : '24px',
             transform: !isMobile && isHovered ? 'translateY(-5px)' : 'translateY(0)',
             transition: 'transform 0.3s ease'
           }}
         >
           <div>
             <h3 style={{
-              fontSize: '24px',
+              fontSize: isMobile ? '22px' : '24px',
               fontWeight: 700,
               color: 'white',
               textShadow: '0 2px 8px rgba(0,0,0,0.5)'
             }}>{member.name}</h3>
             <h4 style={{
-              fontSize: '20px',
+              fontSize: isMobile ? '18px' : '20px',
               fontWeight: 600,
               background: 'linear-gradient(to right, #ec4899, #ec4899)',
               WebkitBackgroundClip: 'text',
@@ -240,19 +274,20 @@ const TeamCard = ({ member, index, isMobile }) => {
             }}>{member.lastName}</h4>
           </div>
           <p style={{
-            fontSize: '14px',
+            fontSize: isMobile ? '13px' : '14px',
             color: 'rgba(255,255,255,0.9)',
             fontWeight: 500,
-            marginTop: '12px'
+            marginTop: isMobile ? '8px' : '12px'
           }}>{member.role}</p>
           <motion.p 
             style={{
-              fontSize: '12px',
+              fontSize: isMobile ? '12px' : '13px',
               color: 'rgba(255,255,255,0.7)',
               fontStyle: 'italic',
               marginTop: '8px',
               opacity: !isMobile && isHovered ? 1 : 0.7,
-              transition: 'opacity 0.3s ease'
+              transition: 'opacity 0.3s ease',
+              lineHeight: 1.4
             }}
           >
             "{member.bio}"
@@ -266,86 +301,252 @@ const TeamCard = ({ member, index, isMobile }) => {
           border: '2px solid transparent',
           borderColor: !isMobile && isHovered ? 'rgba(236,72,153,0.5)' : 'transparent',
           transition: 'all 0.5s ease',
-          borderRadius: '16px',
+          borderRadius: isMobile ? '12px' : '16px',
           pointerEvents: 'none'
         }} />
       </div>
     </motion.div>
   );
-};
+});
+
+// Composant Carousel Mobile optimisé
+const MobileCarousel = memo(({ members }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef(null);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  
+  const handlePrev = useCallback(() => {
+    setCurrentIndex(prev => prev === 0 ? members.length - 1 : prev - 1);
+  }, [members.length]);
+  
+  const handleNext = useCallback(() => {
+    setCurrentIndex(prev => prev === members.length - 1 ? 0 : prev + 1);
+  }, [members.length]);
+  
+  // Gestion du swipe
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+  
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (isLeftSwipe) handleNext();
+    if (isRightSwipe) handlePrev();
+  };
+  
+  return (
+    <div style={{ position: 'relative' }}>
+      {/* Carousel Container */}
+      <div 
+        ref={carouselRef}
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          borderRadius: '16px'
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <motion.div
+          style={{
+            display: 'flex',
+            width: `${members.length * 100}%`
+          }}
+          animate={{ x: `-${(currentIndex * 100) / members.length}%` }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        >
+          {members.map((member, index) => (
+            <div 
+              key={member.id} 
+              style={{
+                width: `${100 / members.length}%`,
+                padding: '0 8px'
+              }}
+            >
+              <TeamCard 
+                member={member} 
+                index={index} 
+                isMobile={true}
+                isTablet={false}
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+      
+      {/* Navigation Buttons */}
+      <button
+        onClick={handlePrev}
+        style={{
+          position: 'absolute',
+          left: '8px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          background: 'rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          cursor: 'pointer',
+          zIndex: 2,
+          transition: 'all 0.3s ease'
+        }}
+      >
+        <ChevronLeft style={{ width: '20px', height: '20px' }} />
+      </button>
+      
+      <button
+        onClick={handleNext}
+        style={{
+          position: 'absolute',
+          right: '8px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          background: 'rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          cursor: 'pointer',
+          zIndex: 2,
+          transition: 'all 0.3s ease'
+        }}
+      >
+        <ChevronRight style={{ width: '20px', height: '20px' }} />
+      </button>
+      
+      {/* Indicators */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '6px',
+        marginTop: '20px'
+      }}>
+        {members.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            style={{
+              width: index === currentIndex ? '24px' : '8px',
+              height: '8px',
+              borderRadius: '4px',
+              background: index === currentIndex ? '#ec4899' : 'rgba(255,255,255,0.3)',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+});
+
+// Background animé léger
+const AnimatedBackground = memo(() => (
+  <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      background: 'radial-gradient(ellipse at center,rgba(236,72,153,0.08),transparent 70%)'
+    }} />
+    
+    {/* Particules flottantes - Réduites sur mobile */}
+    {typeof window !== 'undefined' && window.innerWidth > 768 && (
+      [...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          style={{
+            position: 'absolute',
+            width: '1px',
+            height: '1px',
+            background: 'rgba(236,72,153,0.3)',
+            borderRadius: '50%',
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: [`0%`, `${Math.random() * 100}%`],
+            opacity: [0.2, 0.6, 0.2],
+          }}
+          transition={{
+            duration: Math.random() * 15 + 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      ))
+    )}
+  </div>
+));
 
 export const StorySection = () => {
   const navigate = useNavigate();
-  const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    setIsVisible(true);
-    return () => window.removeEventListener('resize', checkMobile);
+    const checkDevice = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 768);
+      setIsTablet(width > 768 && width <= 1024);
+      setIsSmallMobile(width <= 480);
+    };
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
   }, []);
 
-  const handleCtaClick = (e) => {
+  const handleCtaClick = useCallback((e) => {
     e.preventDefault();
     navigate('/equipe');
-  };
+  }, [navigate]);
 
   return (
     <section style={{
       position: 'relative',
       minHeight: '100vh',
-      padding: isMobile ? '64px 0' : '96px 0',
+      padding: isMobile ? DESIGN.spacing.sectionPaddingMobile : 
+               isTablet ? DESIGN.spacing.sectionPaddingTablet : 
+               DESIGN.spacing.sectionPaddingDesktop,
       background: DESIGN.colors.backgroundGradient,
       overflow: 'hidden'
     }}>
-      {/* Fond animé minimal */}
-      <div style={{
-        position: 'absolute',
-        inset: 0
-      }}>
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(ellipse at center,rgba(236,72,153,0.08),transparent 70%)'
-        }} />
-        {/* Quelques particules flottantes */}
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            style={{
-              position: 'absolute',
-              width: '1px',
-              height: '1px',
-              background: 'rgba(236,72,153,0.2)',
-              borderRadius: '50%',
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [`0%`, `${Math.random() * 100}%`],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 15 + 15,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        ))}
-      </div>
+      <AnimatedBackground />
 
       <div style={{
         position: 'relative',
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '0 32px'
+        padding: DESIGN.spacing.containerPadding
       }}>
         {/* Header avec titre uniformisé */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           style={{ textAlign: 'center', marginBottom: isMobile ? '48px' : '64px' }}
         >
@@ -355,11 +556,11 @@ export const StorySection = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '12px 24px',
+              padding: isMobile ? '10px 20px' : '12px 24px',
               borderRadius: '50px',
               background: 'rgba(236,72,153,0.1)',
               border: '1px solid rgba(236,72,153,0.3)',
-              marginBottom: '32px'
+              marginBottom: isMobile ? '24px' : '32px'
             }}
             animate={{ 
               boxShadow: [
@@ -370,11 +571,15 @@ export const StorySection = () => {
             }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <Sparkles style={{ width: '16px', height: '16px', color: '#ec4899' }} />
+            <Sparkles style={{ 
+              width: isMobile ? '14px' : '16px', 
+              height: isMobile ? '14px' : '16px', 
+              color: '#ec4899' 
+            }} />
             <span style={{
               color: '#ec4899',
               fontWeight: 600,
-              fontSize: '14px',
+              fontSize: isMobile ? '12px' : '14px',
               letterSpacing: '0.1em'
             }}>EN SCÈNE</span>
           </motion.div>
@@ -384,92 +589,71 @@ export const StorySection = () => {
             line2="Petite par la taille, grande par l'ambition"
             subtitle="Cinq passionnés qui mettent du cœur dans chaque projet"
             isMobile={isMobile}
+            isTablet={isTablet}
           />
         </motion.div>
 
-        {/* Grille desktop 5 colonnes */}
-        {!isMobile && (
+        {/* Layout Desktop - Grille 5 colonnes */}
+        {!isMobile && !isTablet && (
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(5, 1fr)',
             gap: '24px'
           }}>
             {teamMembers.map((member, index) => (
-              <TeamCard key={member.id} member={member} index={index} isMobile={false} />
+              <TeamCard 
+                key={member.id} 
+                member={member} 
+                index={index} 
+                isMobile={false}
+                isTablet={false}
+              />
             ))}
           </div>
         )}
 
-        {/* Grille tablette 3 + 2 */}
-        {isMobile && window.innerWidth > 640 && (
-          <>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '24px'
-            }}>
-              {teamMembers.slice(0, 3).map((member, index) => (
-                <TeamCard key={member.id} member={member} index={index} isMobile={false} />
-              ))}
-            </div>
+        {/* Layout Tablette - Grille responsive */}
+        {isTablet && (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '20px'
+          }}>
+            {teamMembers.map((member, index) => (
+              <TeamCard 
+                key={member.id} 
+                member={member} 
+                index={index} 
+                isMobile={false}
+                isTablet={true}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Layout Mobile - Carousel ou Grille selon taille */}
+        {isMobile && (
+          isSmallMobile ? (
+            // Très petit mobile : Carousel
+            <MobileCarousel members={teamMembers} />
+          ) : (
+            // Mobile normal : Grille 2 colonnes
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '24px',
-              marginTop: '24px',
-              maxWidth: '66%',
-              margin: '24px auto 0'
-            }}>
-              {teamMembers.slice(3, 5).map((member, index) => (
-                <TeamCard key={member.id} member={member} index={index + 3} isMobile={false} />
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Carousel mobile */}
-        {isMobile && window.innerWidth <= 640 && (
-          <>
-            <div style={{
-              display: 'flex',
-              gap: '16px',
-              overflowX: 'auto',
-              paddingBottom: '24px',
-              margin: '0 -32px',
-              padding: '0 32px 24px',
-              msOverflowStyle: 'none',
-              scrollbarWidth: 'none',
-              WebkitOverflowScrolling: 'touch'
+              gap: '16px'
             }}>
               {teamMembers.map((member, index) => (
-                <div key={member.id} style={{
-                  flexShrink: 0,
-                  width: '280px'
-                }}>
-                  <TeamCard member={member} index={index} isMobile={true} />
-                </div>
+                <TeamCard 
+                  key={member.id} 
+                  member={member} 
+                  index={index} 
+                  isMobile={true}
+                  isTablet={false}
+                />
               ))}
             </div>
-            
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              marginTop: '16px'
-            }}>
-              <span style={{
-                color: 'rgba(255,255,255,0.4)',
-                fontSize: '14px'
-              }}>Glissez pour découvrir</span>
-              <motion.div
-                animate={{ x: [0, 10, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <ArrowRight style={{ width: '16px', height: '16px', color: '#ec4899' }} />
-              </motion.div>
-            </div>
-          </>
+          )
         )}
 
         {/* CTA Final */}
@@ -480,53 +664,41 @@ export const StorySection = () => {
           transition={{ duration: 0.8 }}
           style={{
             textAlign: 'center',
-            marginTop: isMobile ? '64px' : '80px'
+            marginTop: isMobile ? '48px' : '80px'
           }}
         >
-          <button 
+          <motion.button 
             onClick={handleCtaClick}
             style={{
               position: 'relative',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '12px',
-              padding: isMobile ? '16px 32px' : '20px 40px',
+              padding: isMobile ? '14px 28px' : '20px 40px',
               borderRadius: '50px',
               background: DESIGN.colors.buttonGradient,
               color: 'white',
               fontWeight: 700,
-              fontSize: isMobile ? '16px' : '18px',
+              fontSize: isMobile ? '15px' : '18px',
               border: 'none',
               cursor: 'pointer',
               boxShadow: '0 8px 32px rgba(236,72,153,0.35)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              WebkitTapHighlightColor: 'transparent',
+              touchAction: 'manipulation'
             }}
-            onMouseEnter={(e) => {
-              if (!isMobile) {
-                e.currentTarget.style.boxShadow = '0 12px 40px rgba(236,72,153,0.5)';
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isMobile) {
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(236,72,153,0.35)';
-                e.currentTarget.style.transform = 'scale(1)';
-              }
-            }}
+            whileTap={{ scale: 0.95 }}
+            whileHover={!isMobile ? { 
+              scale: 1.05,
+              boxShadow: '0 12px 40px rgba(236,72,153,0.5)'
+            } : {}}
           >
             <Users style={{ width: '20px', height: '20px' }} />
-            <span>DÉCOUVRIR NOTRE HISTOIRE</span>
+            <span>{isMobile ? 'NOTRE HISTOIRE' : 'DÉCOUVRIR NOTRE HISTOIRE'}</span>
             <ArrowRight style={{ width: '20px', height: '20px' }} />
-          </button>
+          </motion.button>
         </motion.div>
       </div>
-      
-      {/* CSS pour cacher la scrollbar */}
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 };
