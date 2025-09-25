@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Star, Shield, Rocket, Megaphone, Globe, Calendar, ChevronDown } from 'lucide-react';
 
-// DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
+// DESIGN SYSTEM UNIFIÉ
 const DESIGN = {
   colors: {
     titleGradient: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%)',
@@ -14,14 +14,22 @@ const DESIGN = {
     glassBorder: 'rgba(255, 255, 255, 0.15)'
   },
   typography: {
-    h1Desktop: 'clamp(4rem, 8vw, 7rem)',
-    h1Mobile: 'clamp(2.5rem, 12vw, 3.5rem)',
+    // Optimisé pour mobile avec clamp()
+    h1Desktop: 'clamp(3.5rem, 7vw, 6rem)',
+    h1Mobile: 'clamp(2rem, 10vw, 3rem)',
     bodyDesktop: '18px',
-    bodyMobile: '15px'
+    bodyMobile: '16px'
+  },
+  spacing: {
+    // Espacement responsive
+    sectionPaddingDesktop: '120px 0',
+    sectionPaddingTablet: '100px 0',
+    sectionPaddingMobile: '60px 0',
+    containerPadding: '0 24px'
   }
 };
 
-// Services data avec les 6 piliers - Copie authentique et simple
+// Services data
 const servicesData = [
   {
     id: "production",
@@ -91,8 +99,8 @@ const servicesData = [
   }
 ];
 
-// Composant titre uniformisé
-const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
+// Composant titre responsive optimisé
+const SectionTitle = memo(({ line1, line2, subtitle, isMobile, isTablet }) => (
   <>
     <motion.h2
       initial={{ y: 30, opacity: 0 }}
@@ -101,15 +109,16 @@ const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
       style={{
         fontSize: isMobile ? DESIGN.typography.h1Mobile : DESIGN.typography.h1Desktop,
         fontWeight: 900,
-        lineHeight: 0.9,
+        lineHeight: isMobile ? 1.1 : 0.9,
         letterSpacing: '-0.02em',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: isMobile ? '1rem' : '0'
       }}
     >
       <span style={{ 
         display: 'block',
         color: DESIGN.colors.white,
-        marginBottom: isMobile ? '-2px' : '-8px'
+        marginBottom: isMobile ? '4px' : '-8px'
       }}>
         {line1}
       </span>
@@ -133,28 +142,29 @@ const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
         style={{
           fontSize: isMobile ? DESIGN.typography.bodyMobile : DESIGN.typography.bodyDesktop,
           color: DESIGN.colors.textSecondary,
-          maxWidth: '600px',
+          maxWidth: isMobile ? '100%' : '600px',
           margin: '0 auto',
           lineHeight: 1.6,
-          marginTop: '1.5rem',
-          textAlign: 'center'
+          marginTop: isMobile ? '1rem' : '1.5rem',
+          textAlign: 'center',
+          padding: isMobile ? '0 16px' : '0'
         }}
       >
         {subtitle}
       </motion.p>
     )}
   </>
-);
+));
 
-// Composant ServicePanel
-const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
+// ServicePanel optimisé avec memo
+const ServicePanel = memo(({ service, index, isActive, onClick, isMobile, isTablet }) => {
   const Icon = service.icon;
   
-  const handleServiceClick = (e) => {
+  const handleServiceClick = useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
     window.location.href = `/services/${service.id}`;
-  };
+  }, [service.id]);
 
   return (
     <motion.div
@@ -164,51 +174,50 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
       transition={{ duration: 0.5, delay: index * 0.08 }}
       style={{
         position: 'relative',
-        marginBottom: '16px',
-        borderRadius: '16px',
+        marginBottom: isMobile ? '12px' : '16px',
+        borderRadius: isMobile ? '12px' : '16px',
         overflow: 'hidden',
         backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)', // Support Safari
         background: isActive ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.4)',
         border: `2px solid ${isActive ? service.borderColor : 'rgba(255,255,255,0.1)'}`,
-        transition: 'all 0.5s ease',
+        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: 'pointer',
-        boxShadow: isActive ? `0 0 40px ${service.glowColor}` : '0 4px 20px rgba(0,0,0,0.3)'
+        boxShadow: isActive ? `0 0 40px ${service.glowColor}` : '0 4px 20px rgba(0,0,0,0.3)',
+        willChange: 'transform, background',
+        transform: 'translateZ(0)' // Force GPU acceleration
       }}
       onClick={onClick}
-      onMouseEnter={(e) => {
-        if (!isMobile && !isActive) {
-          e.currentTarget.style.background = 'rgba(0,0,0,0.3)';
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isMobile && !isActive) {
-          e.currentTarget.style.background = 'rgba(0,0,0,0.2)';
-        }
-      }}
+      onTouchStart={() => {}} // Améliore la réactivité tactile
     >
       {/* Header du panneau */}
-      <div style={{ padding: isMobile ? '24px' : '32px' }}>
+      <div style={{ 
+        padding: isMobile ? '20px' : isTablet ? '24px' : '32px'
+      }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          flexWrap: isMobile ? 'wrap' : 'nowrap'
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: isMobile ? '16px' : '24px'
+            gap: isMobile ? '12px' : '24px',
+            flex: 1
           }}>
             {/* Badge Acte */}
             <motion.div
               style={{
-                padding: '6px 16px',
+                padding: isMobile ? '4px 12px' : '6px 16px',
                 borderRadius: '50px',
-                fontSize: isMobile ? '12px' : '14px',
+                fontSize: isMobile ? '11px' : '14px',
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 background: service.gradient,
                 color: 'white',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                whiteSpace: 'nowrap'
               }}
               animate={isActive ? { scale: [1, 1.05, 1] } : {}}
               transition={{ duration: 2, repeat: Infinity }}
@@ -217,17 +226,18 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
             </motion.div>
             
             {/* Titre et sous-titre */}
-            <div>
+            <div style={{ flex: 1 }}>
               <h3 style={{
-                fontSize: isMobile ? '24px' : '32px',
+                fontSize: isMobile ? '20px' : isTablet ? '24px' : '32px',
                 fontWeight: 700,
                 color: 'white',
                 marginBottom: '4px'
               }}>{service.title}</h3>
               <p style={{
                 color: 'rgba(255,255,255,0.6)',
-                fontSize: isMobile ? '14px' : '16px',
-                fontStyle: 'italic'
+                fontSize: isMobile ? '13px' : '16px',
+                fontStyle: 'italic',
+                lineHeight: 1.4
               }}>{service.subtitle}</p>
             </div>
           </div>
@@ -235,48 +245,46 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px'
+            gap: isMobile ? '8px' : '12px'
           }}>
-            {/* Icône */}
-            <motion.div
-              style={{
-                width: isMobile ? '48px' : '64px',
-                height: isMobile ? '48px' : '64px',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: service.gradient,
-                color: 'white',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-              }}
-              animate={isActive ? { rotate: 360 } : { rotate: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Icon style={{
-                width: isMobile ? '24px' : '32px',
-                height: isMobile ? '24px' : '32px',
-                strokeWidth: 2,
-                color: 'white'
-              }} />
-            </motion.div>
+            {/* Icône - Caché sur très petits écrans si nécessaire */}
+            {(!isMobile || window.innerWidth > 375) && (
+              <motion.div
+                style={{
+                  width: isMobile ? '40px' : isTablet ? '48px' : '64px',
+                  height: isMobile ? '40px' : isTablet ? '48px' : '64px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: service.gradient,
+                  color: 'white',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                }}
+                animate={isActive ? { rotate: 360 } : { rotate: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Icon style={{
+                  width: isMobile ? '20px' : '32px',
+                  height: isMobile ? '20px' : '32px',
+                  strokeWidth: 2,
+                  color: 'white'
+                }} />
+              </motion.div>
+            )}
             
             {/* Chevron */}
             <motion.div
               animate={{ rotate: isActive ? 180 : 0 }}
               transition={{ duration: 0.3 }}
               style={{
-                color: 'rgba(255,255,255,0.4)',
-                transition: 'color 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(255,255,255,0.4)';
+                color: 'rgba(255,255,255,0.4)'
               }}
             >
-              <ChevronDown style={{ width: '24px', height: '24px' }} />
+              <ChevronDown style={{ 
+                width: isMobile ? '20px' : '24px', 
+                height: isMobile ? '20px' : '24px' 
+              }} />
             </motion.div>
           </div>
         </div>
@@ -293,13 +301,13 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
             style={{ overflow: 'hidden' }}
           >
             <div style={{
-              padding: isMobile ? '0 24px 24px' : '0 32px 32px'
+              padding: isMobile ? '0 20px 20px' : isTablet ? '0 24px 24px' : '0 32px 32px'
             }}>
               {/* Ligne de séparation */}
               <motion.div 
                 style={{
                   height: '1px',
-                  marginBottom: '24px',
+                  marginBottom: isMobile ? '16px' : '24px',
                   background: service.gradient
                 }}
                 initial={{ width: 0 }}
@@ -311,9 +319,9 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
               <motion.p 
                 style={{
                   color: 'rgba(255,255,255,0.8)',
-                  fontSize: isMobile ? '16px' : '18px',
+                  fontSize: isMobile ? '15px' : '18px',
                   lineHeight: 1.6,
-                  marginBottom: '24px'
+                  marginBottom: isMobile ? '20px' : '24px'
                 }}
                 initial={{ y: 10 }}
                 animate={{ y: 0 }}
@@ -329,7 +337,7 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '12px 24px',
+                  padding: isMobile ? '10px 20px' : '12px 24px',
                   borderRadius: '50px',
                   background: service.gradient,
                   color: 'white',
@@ -337,13 +345,16 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
                   fontSize: isMobile ? '14px' : '16px',
                   border: 'none',
                   cursor: 'pointer',
-                  transition: 'transform 0.3s ease',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                  WebkitTapHighlightColor: 'transparent', // Supprime le highlight sur iOS
+                  touchAction: 'manipulation' // Améliore la réactivité tactile
                 }}
                 initial={{ y: 10 }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.3 }}
-                whileHover={{ scale: 1.05, boxShadow: '0 6px 16px rgba(0,0,0,0.3)' }}
+                whileTap={{ scale: 0.95 }} // Feedback tactile
+                whileHover={!isMobile ? { scale: 1.05, boxShadow: '0 6px 16px rgba(0,0,0,0.3)' } : {}}
               >
                 Découvrir ce service
                 <ArrowRight style={{ width: '16px', height: '16px', color: 'white' }} />
@@ -354,72 +365,48 @@ const ServicePanel = ({ service, index, isActive, onClick, isMobile }) => {
       </AnimatePresence>
     </motion.div>
   );
-};
+});
 
-export const MissionSection = () => {
-  const [activePanel, setActivePanel] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const togglePanel = (serviceId) => {
-    setActivePanel(prevActive => prevActive === serviceId ? null : serviceId);
-  };
-
-  const handleAllServicesClick = (e) => {
-    e.preventDefault();
-    window.location.href = '/services';
-  };
-
-  return (
-    <section style={{
-      position: 'relative',
-      minHeight: '100vh',
-      padding: isMobile ? '80px 0' : '120px 0',
-      background: DESIGN.colors.backgroundGradient,
-      overflow: 'hidden'
-    }}>
-      {/* Fond animé */}
-      <div style={{ position: 'absolute', inset: 0 }}>
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(ellipse at center,rgba(236,72,153,0.1),transparent 70%)'
-        }} />
-        
-        {/* Grille animée subtile */}
+// Background animé léger
+const AnimatedBackground = memo(() => (
+  <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      background: 'radial-gradient(ellipse at center,rgba(236,72,153,0.1),transparent 70%)'
+    }} />
+    
+    {/* Grille animée subtile */}
+    <motion.div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: `linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(168, 85, 247, 0.05) 1px, transparent 1px)`,
+        backgroundSize: '50px 50px',
+        willChange: 'transform'
+      }}
+      animate={{
+        x: [0, 50],
+        y: [0, 50]
+      }}
+      transition={{
+        duration: 20,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+    />
+    
+    {/* Orbes de lumière - Réduits sur mobile */}
+    {typeof window !== 'undefined' && window.innerWidth > 768 && (
+      <>
         <motion.div
           style={{
             position: 'absolute',
-            inset: 0,
-            backgroundImage: `linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(168, 85, 247, 0.05) 1px, transparent 1px)`,
-            backgroundSize: '50px 50px'
-          }}
-          animate={{
-            x: [0, 50],
-            y: [0, 50]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        
-        {/* Orbes de lumière */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: '80px',
-            left: '-80px',
-            width: '384px',
-            height: '384px',
+            top: '10%',
+            left: '-10%',
+            width: '300px',
+            height: '300px',
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15), transparent 70%)',
             filter: 'blur(60px)'
@@ -438,10 +425,10 @@ export const MissionSection = () => {
         <motion.div
           style={{
             position: 'absolute',
-            bottom: '80px',
-            right: '-80px',
-            width: '384px',
-            height: '384px',
+            bottom: '10%',
+            right: '-10%',
+            width: '300px',
+            height: '300px',
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(168, 85, 247, 0.15), transparent 70%)',
             filter: 'blur(60px)'
@@ -456,14 +443,54 @@ export const MissionSection = () => {
             ease: "easeInOut"
           }}
         />
-      </div>
+      </>
+    )}
+  </div>
+));
+
+export const MissionSection = () => {
+  const [activePanel, setActivePanel] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const checkDevice = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 768);
+      setIsTablet(width > 768 && width <= 1024);
+    };
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
+  const togglePanel = useCallback((serviceId) => {
+    setActivePanel(prevActive => prevActive === serviceId ? null : serviceId);
+  }, []);
+
+  const handleAllServicesClick = useCallback((e) => {
+    e.preventDefault();
+    window.location.href = '/services';
+  }, []);
+
+  return (
+    <section style={{
+      position: 'relative',
+      minHeight: '100vh',
+      padding: isMobile ? DESIGN.spacing.sectionPaddingMobile : 
+               isTablet ? DESIGN.spacing.sectionPaddingTablet : 
+               DESIGN.spacing.sectionPaddingDesktop,
+      background: DESIGN.colors.backgroundGradient,
+      overflow: 'hidden'
+    }}>
+      <AnimatedBackground />
 
       {/* Contenu principal */}
       <div style={{
         position: 'relative',
         maxWidth: '900px',
         margin: '0 auto',
-        padding: '0 32px'
+        padding: DESIGN.spacing.containerPadding
       }}>
         
         {/* Header avec titre uniformisé */}
@@ -473,7 +500,7 @@ export const MissionSection = () => {
           transition={{ duration: 1 }}
           style={{
             textAlign: 'center',
-            marginBottom: isMobile ? '64px' : '80px'
+            marginBottom: isMobile ? '48px' : '80px'
           }}
         >
           <SectionTitle 
@@ -481,6 +508,7 @@ export const MissionSection = () => {
             line2="Six métiers, une passion"
             subtitle="Nous ne sommes pas les plus gros. Nous sommes peut-être les plus investis."
             isMobile={isMobile}
+            isTablet={isTablet}
           />
           
           {/* Indicateur de clic */}
@@ -503,12 +531,14 @@ export const MissionSection = () => {
             >
               <ChevronDown style={{ width: '20px', height: '20px' }} />
             </motion.div>
-            <span style={{ fontSize: '14px' }}>Cliquez pour découvrir</span>
+            <span style={{ fontSize: isMobile ? '13px' : '14px' }}>
+              {isMobile ? 'Touchez pour découvrir' : 'Cliquez pour découvrir'}
+            </span>
           </motion.div>
         </motion.div>
 
         {/* Services accordéon */}
-        <div style={{ marginBottom: '64px' }}>
+        <div style={{ marginBottom: isMobile ? '48px' : '64px' }}>
           {servicesData.map((service, index) => (
             <ServicePanel
               key={service.id}
@@ -517,6 +547,7 @@ export const MissionSection = () => {
               isActive={activePanel === service.id}
               onClick={() => togglePanel(service.id)}
               isMobile={isMobile}
+              isTablet={isTablet}
             />
           ))}
         </div>
@@ -530,48 +561,42 @@ export const MissionSection = () => {
           style={{ textAlign: 'center' }}
         >
           <p style={{
-            fontSize: isMobile ? '24px' : '32px',
+            fontSize: isMobile ? '20px' : isTablet ? '28px' : '32px',
             color: 'rgba(255,255,255,0.8)',
             fontStyle: 'italic',
             fontWeight: 300,
-            marginBottom: '32px'
+            marginBottom: '32px',
+            padding: isMobile ? '0 16px' : '0',
+            lineHeight: 1.4
           }}>
             "Six expertises, mais une seule philosophie : le spectacle vivant, c'est d'abord une histoire humaine"
           </p>
           
-          <button
+          <motion.button
             onClick={handleAllServicesClick}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '12px',
-              padding: isMobile ? '16px 32px' : '16px 32px',
+              padding: isMobile ? '14px 24px' : '16px 32px',
               borderRadius: '50px',
               background: DESIGN.colors.buttonGradient,
               color: 'white',
               fontWeight: 700,
-              fontSize: isMobile ? '16px' : '18px',
+              fontSize: isMobile ? '15px' : '18px',
               border: 'none',
               cursor: 'pointer',
               boxShadow: '0 8px 32px rgba(236,72,153,0.35)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              WebkitTapHighlightColor: 'transparent',
+              touchAction: 'manipulation'
             }}
-            onMouseEnter={(e) => {
-              if (!isMobile) {
-                e.currentTarget.style.boxShadow = '0 12px 40px rgba(236,72,153,0.5)';
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isMobile) {
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(236,72,153,0.35)';
-                e.currentTarget.style.transform = 'scale(1)';
-              }
-            }}
+            whileTap={{ scale: 0.95 }}
+            whileHover={!isMobile ? { scale: 1.05 } : {}}
           >
-            <span>EXPLORER TOUS NOS SERVICES</span>
+            <span>{isMobile ? 'NOS SERVICES' : 'EXPLORER TOUS NOS SERVICES'}</span>
             <ArrowRight style={{ width: '20px', height: '20px' }} />
-          </button>
+          </motion.button>
         </motion.div>
       </div>
     </section>
