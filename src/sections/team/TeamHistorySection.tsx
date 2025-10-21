@@ -8,7 +8,7 @@ const history = {
     {
       year: "2014",
       title: "Création",
-      description: "Naissance de Tiny Team avec des prestations de services pour accompagner les artistes du spectacle vivant."
+      description: "Naissance de la Tiny Team avec des contrats de prestations de services pour accompagner producteurs et promoteurs du spectacle vivant."
     },
     {
       year: "2015-2019",
@@ -21,14 +21,14 @@ const history = {
       description: "Transformation en boîte de production à part entière. Une nouvelle dimension pour accompagner nos artistes."
     },
     {
-      year: "2021-2023",
+      year: "2021-2024",
       title: "Expansion",
-      description: "Élargissement de notre équipe et développement de notre approche unique dans la production de spectacles."
+      description: "Élargissement de notre équipe et de notre catalogue d'artistes tout en développant une approche unique dans la production de spectacles."
     },
     {
       year: "2025",
       title: "Aujourd'hui",
-      description: "Une famille de passionnés au service de vos projets artistiques avec une approche unique et une excellence reconnue."
+      description: "Une famille de passionnés au service de vos projets artistiques et une excellence reconnue."
     }
   ]
 };

@@ -3,21 +3,6 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Heart, Sparkles } from 'lucide-react';
 
-const stats = [
-  {
-    number: "10+",
-    label: "années"
-  },
-  {
-    number: "50+",
-    label: "artistes"
-  },
-  {
-    number: "200+",
-    label: "spectacles"
-  }
-];
-
 export const TeamCTASection = () => {
   return (
     <section className="relative py-32 bg-[#080C20]">
@@ -88,7 +73,7 @@ export const TeamCTASection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6"
           >
             <Link
               to="/contact"
@@ -107,29 +92,6 @@ export const TeamCTASection = () => {
               <span className="font-semibold text-white group-hover:text-glow transition-all duration-300">Découvrir nos services</span>
               <ArrowRight className="w-5 h-5 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
             </Link>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex items-center justify-center gap-8"
-          >
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">
-                  {stat.number}
-                </div>
-                <div className="text-sm text-white/60">
-                  {stat.label}
-                </div>
-                {index < stats.length - 1 && (
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-white/30">•</div>
-                )}
-              </div>
-            ))}
           </motion.div>
         </div>
       </div>

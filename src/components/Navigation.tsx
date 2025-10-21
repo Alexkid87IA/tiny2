@@ -157,7 +157,7 @@ export const Navigation = () => {
                 <motion.img 
                   src="https://res.cloudinary.com/diqco2njt/image/upload/v1746189362/Logo_TT_blanc_th9klb.png" 
                   alt="Tiny Team"
-                  className="h-12 w-auto"
+                  className="h-20 w-auto"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 />

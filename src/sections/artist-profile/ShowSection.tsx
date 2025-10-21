@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Users, Calendar, Star, ExternalLink, Sparkles } from 'lucide-react';
+import { ExternalLink, Sparkles } from 'lucide-react';
 
 interface Artist {
   id: string;
@@ -129,77 +129,6 @@ export const ShowSection: React.FC<ShowSectionProps> = ({ artist }) => {
                 </p>
               )}
             </div>
-
-            {/* Features Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              <motion.div 
-                className="glass-card rounded-2xl p-5 group hover:bg-white/5 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-pink-500/20 to-pink-400/20 flex items-center justify-center mb-3">
-                  <Clock className="w-5 h-5 text-pink-400" />
-                </div>
-                <h3 className="text-white font-semibold mb-1">Durée</h3>
-                <p className="text-sm text-white/60">1h30 de spectacle</p>
-              </motion.div>
-
-              <motion.div 
-                className="glass-card rounded-2xl p-5 group hover:bg-white/5 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500/20 to-blue-400/20 flex items-center justify-center mb-3">
-                  <Users className="w-5 h-5 text-blue-400" />
-                </div>
-                <h3 className="text-white font-semibold mb-1">Public</h3>
-                <p className="text-sm text-white/60">Tout public, dès 12 ans</p>
-              </motion.div>
-
-              <motion.div 
-                className="glass-card rounded-2xl p-5 group hover:bg-white/5 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-500/20 to-purple-400/20 flex items-center justify-center mb-3">
-                  <Calendar className="w-5 h-5 text-purple-400" />
-                </div>
-                <h3 className="text-white font-semibold mb-1">Disponibilité</h3>
-                <p className="text-sm text-white/60">Dates flexibles</p>
-              </motion.div>
-
-              <motion.div 
-                className="glass-card rounded-2xl p-5 group hover:bg-white/5 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-yellow-500/20 to-yellow-400/20 flex items-center justify-center mb-3">
-                  <Star className="w-5 h-5 text-yellow-400" />
-                </div>
-                <h3 className="text-white font-semibold mb-1">Succès</h3>
-                <p className="text-sm text-white/60">Plus de 300 représentations</p>
-              </motion.div>
-            </div>
-
-            {/* Achievements */}
-            {artist.achievements && artist.achievements.length > 0 && (
-              <motion.div 
-                className="glass-card rounded-2xl p-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <Star className="w-5 h-5 text-yellow-400" />
-                  Récompenses & Succès
-                </h3>
-                <div className="space-y-2">
-                  {artist.achievements.map((achievement, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-yellow-400/50" />
-                      <span className="text-white/70">{achievement}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
 
             {/* CTA Section */}
             <motion.div 

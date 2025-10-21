@@ -24,7 +24,7 @@ const teamMembers = [
     description: "Experte en diffusion artistique, Isabelle transforme les spectacles en succès nationaux grâce à sa connaissance approfondie du secteur et son réseau exceptionnel. Elle orchestre chaque tournée avec précision et passion.",
     quote: "Chaque ville est une nouvelle scène à conquérir",
     skills: ["Programmation culturelle", "Gestion de tournées", "Relations publiques", "Booking national"],
-    image: "https://static.eno.do/x/fs-207410-default/af6d91411c60335f407220493c043763/media.jpg",
+    image: "https://26.staticbtf.eno.do/v1/81-default/50f21173d02d28fa4e1ff7ef69c16c44/media.jpg",
     color: "#8B5CF6", // Violet
     contact: {
       linkedin: "isabelle-sabatier",

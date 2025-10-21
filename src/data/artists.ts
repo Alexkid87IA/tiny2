@@ -6,14 +6,14 @@ export const artists = [
     tagline: "Le gars contradictoire qui assume ses paradoxes",
     description: "À 37 ans, Urbain incarne cette génération tiraillée entre l'envie de rester rock'n'roll et celle de se ranger. Un tournant s'impose, mais lequel choisir ?",
     longDescription: "Urbain parcourt la France avec ses nouvelles blagues, parce qu'il en a marre de ne les faire que pour des vapoteurs parisiens à trottinettes. Ce type contradictoire qui aime se mettre deux mines par semaine mais fait quand même le Dry January, qui rêve de coucher avec la terre entière mais est en couple depuis 14 ans, qui tente de faire du sport uniquement après s'être enfilé un matelas de fromage.",
-    image: "https://static.eno.do/x/fs-207671-default/a341c6ef1829c317020dc30296639fe4/media.jpg",
-    posterImage: "https://static.eno.do/x/fs-207671-default/a341c6ef1829c317020dc30296639fe4/media.jpg",
+    image: "https://26.staticbtf.eno.do/v1/82-default/1af70a653989eb01746d292c6fb48501/media.jpg",
+    posterImage: "https://26.staticbtf.eno.do/v1/82-default/1af70a653989eb01746d292c6fb48501/media.jpg",
     social: {
       instagram: "@urbain_comedy",
       tiktok: "@urbain_official",
       youtube: "@UrbainComedy"
     },
-    showName: "En rodage",
+    showName: "Connard Bienveillant",
     showDescription: "Une véritable dramaturgie moderne où Urbain pèse le pour et le contre avec vous pendant une heure. Va-t-il rester le gars rock'n'roll qu'il aime être ou se ranger définitivement et l'assumer ?",
     videoUrl: "https://www.youtube.com/embed/MMsKyi6Tm_c",
     websiteUrl: "https://urbainstandup.com/",
@@ -62,7 +62,7 @@ export const artists = [
       cities: 60,
       followers: 250000
     },
-    prod: "Doudou Production"
+    prod: "Doudoudou Production"
   },
   {
     id: "djal",
@@ -78,7 +78,7 @@ export const artists = [
       tiktok: "@djal_comedy",
       youtube: "@DjalHumour"
     },
-    showName: "À Cœur Ouvert",
+    showName: "En pleine conscience",
     showDescription: "Un nouveau spectacle mêlant personnages toujours plus dingues et situations encore plus folles ! L'occasion de s'amuser tout en prenant votre dose d'humour et d'amour.",
     videoUrl: "https://www.youtube.com/embed/p0ByHxfPx1k",
     websiteUrl: "https://djal.fr/",
@@ -146,24 +146,24 @@ export const artists = [
       tiktok: "@thomasangelvy",
       youtube: "@ThomasAngelvy"
     },
-    showName: "Première Fois",
+    showName: "",
     showDescription: "Retrouve Thomas sur scène et viens constater par toi-même ! Il te touchera deux mots de cette histoire de cassette VHS quand tu seras devant lui.",
-    videoUrl: "https://www.youtube.com/embed/0GpPaZ7yyhc",
-    websiteUrl: "https://www.thomasangelvy.com/",
+    videoUrl: "https://www.youtube.com/embed/hX-ww6E_h2Y",
+    websiteUrl: "https://thomasangelvy.com/",
     dates: [],
     socialContent: [],
     achievements: [
-      "Humour générationnel qui cartonne",
-      "Viral sur les réseaux sociaux",
-      "Plus de 50 dates en France"
+      "Révélation humour 2023",
+      "Tournée nationale en cours",
+      "Spontanéité légendaire"
     ],
     reviews: [],
     stats: {
-      shows: 65,
+      shows: 60,
       cities: 25,
       followers: 95000
     },
-    prod: "ProdVocation"
+    prod: "Prodvocation"
   },
   {
     id: "lucie",
@@ -237,8 +237,8 @@ export const artists = [
     tagline: "Sur scène, tout est possible !",
     description: "Entre Stand-up et humour décalé, Santini jongle entre poésie et audace. Un show inclassable et phénoménal !",
     longDescription: "Entrer dans l'univers de Santini, c'est découvrir que sur scène tout est possible ! Entre Stand-up et humour décalé, le comédien nous fait part de ses observations et de son parcours, jonglant tout le long du spectacle entre poésie et audace. Ce show est inclassable et phénoménal ! PS : Santini tient à préciser qu'il n'est pas l'auteur de ce pitch. Mention : en accord avec La Tiny Team.",
-    image: "https://26.staticbtf.eno.do/v1/29-default/caa1da7f867fc1ad334621eba4d80b76/media.jpg",
-    posterImage: "https://26.staticbtf.eno.do/v1/29-default/caa1da7f867fc1ad334621eba4d80b76/media.jpg",
+    image: "https://26.staticbtf.eno.do/v1/83-default/7e0b158a73f80dd60dc13c845b7362e7/media.jpg",
+    posterImage: "https://26.staticbtf.eno.do/v1/83-default/7e0b158a73f80dd60dc13c845b7362e7/media.jpg",
     social: {
       instagram: "@julien_santini",
       tiktok: "@juliensantini",
@@ -278,7 +278,7 @@ export const artists = [
     },
     showName: "Jamel Comedy Club - Nouvelle Génération",
     showDescription: "Un spectacle collectif qui présente les talents de demain. Une soirée dynamique où se succèdent les artistes les plus prometteurs de la scène française.",
-    videoUrl: "https://www.youtube.com/embed/UExwlmZ-WYM",
+    videoUrl: "https://www.youtube.com/embed/mu-bEjGOLgg",
     websiteUrl: "https://lecomedyclub.com/",
     dates: [],
     socialContent: [],
@@ -293,7 +293,7 @@ export const artists = [
       cities: 15,
       followers: 300000
     },
-    diff: "diffusion"
+    prod: "Miala"
   },
   {
     id: "sophie-alex",
@@ -309,10 +309,10 @@ export const artists = [
       tiktok: "sophieetalexandra",
       youtube: "sophieetalexandra3231"
     },
-    showName: "Sophie & Alex - Sans Filtre",
+    showName: "Solides",
     showDescription: "Ce spectacle, c'est elles. Mais c'est sûrement vous aussi. Un duo qui transforme les galères du quotidien en moments d'anthologie avec une complicité contagieuse.",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    websiteUrl: "#",
+    videoUrl: "https://www.youtube.com/embed/u7KT9PWI87k",
+    websiteUrl: "https://www.billetreduc.com/spectacle/sophie-et-alex-dans-solides-356406",
     dates: [],
     socialContent: [],
     achievements: [

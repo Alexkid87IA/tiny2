@@ -42,7 +42,7 @@ const teamMembers = [
     name: 'Isabelle',
     lastName: 'Sabatier', 
     role: 'Diffusion & Tournées',
-    image: 'https://static.eno.do/x/fs-207410-default/af6d91411c60335f407220493c043763/media.jpg',
+    image: 'https://26.staticbtf.eno.do/v1/81-default/50f21173d02d28fa4e1ff7ef69c16c44/media.jpg',
     bio: 'Architecte des tournées internationales',
   },
   {
@@ -253,126 +253,146 @@ const TeamCard = memo(({ member, index, isMobile, isTablet }) => {
             left: 0,
             right: 0,
             padding: isMobile ? '20px' : '24px',
+            zIndex: 2,
             transform: !isMobile && isHovered ? 'translateY(-5px)' : 'translateY(0)',
-            transition: 'transform 0.3s ease'
+            transition: 'transform 0.4s ease'
           }}
         >
-          <div>
+          {/* Nom */}
+          <motion.div style={{ marginBottom: '8px' }}>
             <h3 style={{
-              fontSize: isMobile ? '22px' : '24px',
-              fontWeight: 700,
               color: 'white',
-              textShadow: '0 2px 8px rgba(0,0,0,0.5)'
-            }}>{member.name}</h3>
+              fontSize: isMobile ? '20px' : '22px',
+              fontWeight: 800,
+              margin: 0,
+              lineHeight: 1.2
+            }}>
+              {member.name}
+            </h3>
             <h4 style={{
-              fontSize: isMobile ? '18px' : '20px',
-              fontWeight: 600,
-              background: 'linear-gradient(to right, #ec4899, #ec4899)',
+              background: DESIGN.colors.titleGradient,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>{member.lastName}</h4>
+              backgroundClip: 'text',
+              fontSize: isMobile ? '18px' : '20px',
+              fontWeight: 700,
+              margin: 0,
+              lineHeight: 1.2
+            }}>
+              {member.lastName}
+            </h4>
+          </motion.div>
+          
+          {/* Rôle */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            borderRadius: '50px',
+            background: 'rgba(236,72,153,0.2)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid rgba(236,72,153,0.3)',
+            marginBottom: '12px'
+          }}>
+            <span style={{
+              color: 'white',
+              fontSize: isMobile ? '11px' : '12px',
+              fontWeight: 600,
+              letterSpacing: '0.05em'
+            }}>
+              {member.role}
+            </span>
           </div>
-          <p style={{
-            fontSize: isMobile ? '13px' : '14px',
-            color: 'rgba(255,255,255,0.9)',
-            fontWeight: 500,
-            marginTop: isMobile ? '8px' : '12px'
-          }}>{member.role}</p>
-          <motion.p 
+          
+          {/* Bio - Visible au hover sur desktop */}
+          <motion.p
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ 
+              opacity: !isMobile && isHovered ? 1 : 0,
+              height: !isMobile && isHovered ? 'auto' : 0
+            }}
+            transition={{ duration: 0.3 }}
             style={{
-              fontSize: isMobile ? '12px' : '13px',
-              color: 'rgba(255,255,255,0.7)',
-              fontStyle: 'italic',
-              marginTop: '8px',
-              opacity: !isMobile && isHovered ? 1 : 0.7,
-              transition: 'opacity 0.3s ease',
-              lineHeight: 1.4
+              color: DESIGN.colors.textSecondary,
+              fontSize: '13px',
+              lineHeight: 1.4,
+              margin: 0,
+              overflow: 'hidden'
             }}
           >
-            "{member.bio}"
+            {member.bio}
           </motion.p>
         </motion.div>
-        
-        {/* Bordure animée */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          border: '2px solid transparent',
-          borderColor: !isMobile && isHovered ? 'rgba(236,72,153,0.5)' : 'transparent',
-          transition: 'all 0.5s ease',
-          borderRadius: isMobile ? '12px' : '16px',
-          pointerEvents: 'none'
-        }} />
       </div>
     </motion.div>
   );
 });
 
-// Composant Carousel Mobile optimisé
+// Carousel mobile optimisé
 const MobileCarousel = memo(({ members }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const carouselRef = useRef(null);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-  
-  const handlePrev = useCallback(() => {
-    setCurrentIndex(prev => prev === 0 ? members.length - 1 : prev - 1);
-  }, [members.length]);
-  
-  const handleNext = useCallback(() => {
-    setCurrentIndex(prev => prev === members.length - 1 ? 0 : prev + 1);
-  }, [members.length]);
-  
-  // Gestion du swipe
-  const handleTouchStart = (e) => {
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = useCallback((e) => {
+    setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
-  };
-  
-  const handleTouchMove = (e) => {
+  }, []);
+
+  const onTouchMove = useCallback((e) => {
     setTouchEnd(e.targetTouches[0].clientX);
-  };
-  
-  const handleTouchEnd = () => {
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
     if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
     
-    if (isLeftSwipe) handleNext();
-    if (isRightSwipe) handlePrev();
-  };
-  
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && currentIndex < members.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+    }
+    if (isRightSwipe && currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    }
+  }, [touchStart, touchEnd, currentIndex, members.length]);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex(prev => Math.min(prev + 1, members.length - 1));
+  }, [members.length]);
+
+  const goToPrev = useCallback(() => {
+    setCurrentIndex(prev => Math.max(prev - 1, 0));
+  }, []);
+
   return (
     <div style={{ position: 'relative' }}>
-      {/* Carousel Container */}
+      {/* Carousel container */}
       <div 
-        ref={carouselRef}
-        style={{
-          position: 'relative',
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        style={{ 
           overflow: 'hidden',
-          borderRadius: '16px'
+          touchAction: 'pan-y pinch-zoom',
+          WebkitOverflowScrolling: 'touch'
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         <motion.div
+          animate={{ x: `-${currentIndex * 100}%` }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           style={{
             display: 'flex',
             width: `${members.length * 100}%`
           }}
-          animate={{ x: `-${(currentIndex * 100) / members.length}%` }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
           {members.map((member, index) => (
-            <div 
-              key={member.id} 
-              style={{
-                width: `${100 / members.length}%`,
-                padding: '0 8px'
-              }}
-            >
+            <div key={member.id} style={{ width: '100%', padding: '0 8px' }}>
               <TeamCard 
                 member={member} 
                 index={index} 
@@ -383,76 +403,80 @@ const MobileCarousel = memo(({ members }) => {
           ))}
         </motion.div>
       </div>
-      
-      {/* Navigation Buttons */}
+
+      {/* Navigation buttons */}
       <button
-        onClick={handlePrev}
+        onClick={goToPrev}
+        disabled={currentIndex === 0}
         style={{
           position: 'absolute',
-          left: '8px',
+          left: '-12px',
           top: '50%',
           transform: 'translateY(-50%)',
           width: '40px',
           height: '40px',
           borderRadius: '50%',
-          background: 'rgba(0,0,0,0.5)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(236,72,153,0.9)',
+          backdropFilter: 'blur(10px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
+          border: 'none',
           cursor: 'pointer',
-          zIndex: 2,
-          transition: 'all 0.3s ease'
+          opacity: currentIndex === 0 ? 0.3 : 1,
+          transition: 'all 0.3s ease',
+          zIndex: 10,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
         }}
       >
-        <ChevronLeft style={{ width: '20px', height: '20px' }} />
+        <ChevronLeft style={{ width: '24px', height: '24px', color: 'white' }} />
       </button>
-      
+
       <button
-        onClick={handleNext}
+        onClick={goToNext}
+        disabled={currentIndex === members.length - 1}
         style={{
           position: 'absolute',
-          right: '8px',
+          right: '-12px',
           top: '50%',
           transform: 'translateY(-50%)',
           width: '40px',
           height: '40px',
           borderRadius: '50%',
-          background: 'rgba(0,0,0,0.5)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(236,72,153,0.9)',
+          backdropFilter: 'blur(10px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
+          border: 'none',
           cursor: 'pointer',
-          zIndex: 2,
-          transition: 'all 0.3s ease'
+          opacity: currentIndex === members.length - 1 ? 0.3 : 1,
+          transition: 'all 0.3s ease',
+          zIndex: 10,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
         }}
       >
-        <ChevronRight style={{ width: '20px', height: '20px' }} />
+        <ChevronRight style={{ width: '24px', height: '24px', color: 'white' }} />
       </button>
-      
-      {/* Indicators */}
+
+      {/* Dots indicator */}
       <div style={{
         display: 'flex',
         justifyContent: 'center',
-        gap: '6px',
-        marginTop: '20px'
+        gap: '8px',
+        marginTop: '24px'
       }}>
         {members.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
             style={{
-              width: index === currentIndex ? '24px' : '8px',
+              width: currentIndex === index ? '32px' : '8px',
               height: '8px',
               borderRadius: '4px',
-              background: index === currentIndex ? '#ec4899' : 'rgba(255,255,255,0.3)',
+              background: currentIndex === index 
+                ? 'linear-gradient(135deg, #ec4899, #a855f7)' 
+                : 'rgba(255,255,255,0.3)',
               border: 'none',
               cursor: 'pointer',
               transition: 'all 0.3s ease'

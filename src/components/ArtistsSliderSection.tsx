@@ -207,7 +207,7 @@ const ArtistCard = ({ artist, index, isMobile }) => {
           }} />
           
           {/* BADGE CORRIGÉ POUR MOBILE */}
-          {(artist.prod || artist.diff) && (
+          {artist.prod && (
             <div style={{
               position: 'absolute',
               top: '12px',
@@ -225,7 +225,7 @@ const ArtistCard = ({ artist, index, isMobile }) => {
               boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)',
               zIndex: 2, // Au-dessus du gradient
             }}>
-              {artist.prod || 'DIFFUSION'}
+              {artist.prod}
             </div>
           )}
           
@@ -290,7 +290,7 @@ const ArtistCard = ({ artist, index, isMobile }) => {
         background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%)',
       }} />
       
-      {(artist.prod || artist.diff) && (
+      {artist.prod && (
         <div style={{
           position: 'absolute',
           top: '12px',
@@ -307,7 +307,7 @@ const ArtistCard = ({ artist, index, isMobile }) => {
           textAlign: 'center',
           boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)',
         }}>
-          {artist.prod || 'DIFFUSION'}
+          {artist.prod}
         </div>
       )}
       
@@ -362,7 +362,20 @@ export const ArtistsSliderSection = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const topRow = [...artists.slice(0, 5), ...artists.slice(0, 5), ...artists.slice(0, 5)];
+  // Ordre spécifique pour la première ligne : D'Jal, Julien Santini, Lucie Carbone, Urbain, Sophie & Alex, puis les autres
+  const djal = artists.find(a => a.id === "djal");
+  const santini = artists.find(a => a.id === "julien-santini");
+  const lucie = artists.find(a => a.id === "lucie");
+  const urbain = artists.find(a => a.id === "urbain");
+  const sophieAlex = artists.find(a => a.id === "sophie-alex");
+  
+  // Les autres artistes pour compléter
+  const remainingArtists = artists.filter(a => 
+    !["djal", "julien-santini", "lucie", "urbain", "sophie-alex"].includes(a.id)
+  );
+  
+  const firstRowOrder = [djal, santini, lucie, urbain, sophieAlex, ...remainingArtists].filter(Boolean);
+  const topRow = [...firstRowOrder, ...firstRowOrder, ...firstRowOrder];
   const bottomRow = [...artists.slice(5, 10), ...artists.slice(5, 10), ...artists.slice(5, 10)];
 
   return (
