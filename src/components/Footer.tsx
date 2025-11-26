@@ -134,7 +134,7 @@ export const Footer = () => {
                     >
                       <div className="absolute -inset-2 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       <img 
-                        src="https://res.cloudinary.com/diqco2njt/image/upload/v1746189362/Logo_TT_blanc_th9klb.png"
+                        src="https://res.cloudinary.com/dafo6bvhc/image/upload/v1764182992/Logo_TT_blanc_1_tlyut9.png"
                         alt="Tiny Team"
                         className="relative h-14 w-auto"
                       />

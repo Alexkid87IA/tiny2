@@ -19,7 +19,7 @@ const menuItems = [
       { title: 'Management d\'Artistes', href: '/services/management', icon: '⭐' },
       { title: 'Développement Digital', href: '/services/digital', icon: '🚀' },
       { title: 'Communication & Image', href: '/services/communication', icon: '📸' },
-      { title: 'Diffusion & Tournées', href: '/services/diffusion', icon: '🌐' },
+      { title: 'Diffusion & Tournées', href: '/services/diffusion', icon: '🌍' },
       { title: 'Événements Spéciaux', href: '/services/evenements', icon: '✨' },
     ]
   },
@@ -155,7 +155,7 @@ export const Navigation = () => {
             <div className="flex justify-start">
               <Link to="/" className="inline-flex">
                 <motion.img 
-                  src="https://res.cloudinary.com/diqco2njt/image/upload/v1746189362/Logo_TT_blanc_th9klb.png" 
+                  src="https://res.cloudinary.com/dafo6bvhc/image/upload/v1764182992/Logo_TT_blanc_1_tlyut9.png" 
                   alt="Tiny Team"
                   className="h-20 w-auto"
                   whileHover={{ scale: 1.05 }}
@@ -239,7 +239,7 @@ export const Navigation = () => {
           <div className="lg:hidden flex items-center justify-between h-16">
             <Link to="/">
               <img 
-                src="https://res.cloudinary.com/diqco2njt/image/upload/v1746189362/Logo_TT_blanc_th9klb.png" 
+                src="https://res.cloudinary.com/dafo6bvhc/image/upload/v1764182992/Logo_TT_blanc_1_tlyut9.png" 
                 alt="Tiny Team"
                 className="h-10 w-auto"
               />
