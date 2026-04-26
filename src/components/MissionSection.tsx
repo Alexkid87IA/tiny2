@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -13,9 +12,6 @@ const services = [
 ];
 
 export const MissionSection = () => {
-  const headRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(headRef, { once: true, margin: '-80px' });
-
   return (
     <section className="perf-section mission relative py-28 md:py-40 lg:py-48 bg-deep overflow-hidden">
 
@@ -43,13 +39,13 @@ export const MissionSection = () => {
         6
       </span>
 
-      <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
+      <div className="relative max-w-container mx-auto px-6 md:px-12">
 
-        {/* ── Header — same style as section 3 ── */}
         <motion.span
           className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3"
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           Nos métiers
@@ -57,7 +53,8 @@ export const MissionSection = () => {
         <motion.p
           className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10"
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
           Production, management, diffusion, digital — tout ce qu'il faut pour qu'un artiste brille.
@@ -66,7 +63,8 @@ export const MissionSection = () => {
         <motion.h2
           className="font-display font-black text-paper tracking-tight leading-[0.88]"
           initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
         >
           <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
@@ -80,7 +78,8 @@ export const MissionSection = () => {
         <motion.p
           className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.25 }}
         >
           Six métiers, une obsession : que l'artiste soit au bon endroit,

@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -51,9 +50,6 @@ const caseStudies = [
 const formats = ['Séminaires', 'Team Building', 'Conventions', 'Soirées privées'];
 
 export const BrandSection = () => {
-  const headRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(headRef, { once: true, margin: '-80px' });
-
   return (
     <section id="entreprises" className="perf-section relative py-28 md:py-40 lg:py-48 bg-deep overflow-hidden">
       <div
@@ -64,11 +60,12 @@ export const BrandSection = () => {
         }}
       />
 
-      <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
+      <div className="relative max-w-container mx-auto px-6 md:px-12">
         <motion.span
           className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3"
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           Entreprises
@@ -76,7 +73,8 @@ export const BrandSection = () => {
         <motion.p
           className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10"
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
           Séminaire, convention, soirée — on transforme vos événements avec l'humour qu'il faut.
@@ -85,7 +83,8 @@ export const BrandSection = () => {
         <motion.h2
           className="font-display font-black text-paper tracking-tight leading-[0.88]"
           initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
         >
           <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
@@ -99,7 +98,8 @@ export const BrandSection = () => {
         <motion.p
           className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.25 }}
         >
           Pas de formule toute faite. On écoute, on comprend, on adapte — pour des événements qui marquent.

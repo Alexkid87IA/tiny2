@@ -1,6 +1,5 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { ArrowRight, Mail } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const stats = [
@@ -38,9 +37,6 @@ const teamMembers = [
 ];
 
 export const StorySection = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, { once: true, margin: '-80px' });
-
   return (
     <section className="perf-section story relative bg-deep overflow-hidden py-28 md:py-40 lg:py-48">
 
@@ -58,7 +54,8 @@ export const StorySection = () => {
         <motion.span
           className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3"
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           Qui sommes-nous
@@ -66,7 +63,8 @@ export const StorySection = () => {
         <motion.p
           className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10"
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
           Cinq personnes, zéro process impersonnel — juste une obsession pour le détail.
@@ -76,7 +74,8 @@ export const StorySection = () => {
         <motion.h2
           className="font-display font-black text-paper tracking-tight leading-[0.88]"
           initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
         >
           <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
@@ -150,11 +149,11 @@ export const StorySection = () => {
 
         {/* ── Glass card ── */}
         <motion.div
-          ref={cardRef}
           className="story-glass mt-10 md:mt-14"
           initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.25, ease: [0.23, 1, 0.32, 1] }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
         >
           <div className="grid grid-cols-1 lg:grid-cols-12">
 
@@ -197,8 +196,9 @@ export const StorySection = () => {
                   key={s.label}
                   className="story-stat group flex-1 flex items-center p-8 md:px-10 lg:px-8"
                   initial={{ opacity: 0, x: 30 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.4 + i * 0.1, ease: [0.23, 1, 0.32, 1] }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1, ease: [0.23, 1, 0.32, 1] }}
                 >
                   <div>
                     <span className="story-stat-val font-display font-black text-5xl md:text-6xl leading-none tracking-tighter block">
