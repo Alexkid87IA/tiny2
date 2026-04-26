@@ -1,304 +1,163 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, MapPin, MessageSquare } from 'lucide-react';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { ArrowRight, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
-const DESIGN = {
-  colors: {
-    titleGradient: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%)',
-    buttonGradient: 'linear-gradient(135deg, #ec4899, #a855f7)',
-    backgroundGradient: 'linear-gradient(180deg, #0A0F29 0%, #16213e 100%)',
-    white: '#FFFFFF',
-    textSecondary: 'rgba(255, 255, 255, 0.7)',
-    glass: 'rgba(255, 255, 255, 0.05)',
-    glassBorder: 'rgba(255, 255, 255, 0.15)'
-  },
-  typography: {
-    h1Desktop: 'clamp(4rem, 8vw, 7rem)',
-    h1Mobile: 'clamp(2.5rem, 12vw, 3.5rem)',
-    bodyDesktop: '18px',
-    bodyMobile: '15px'
-  }
-};
-
-const contactInfo = [
+const paths = [
   {
-    icon: Mail,
-    title: "Email",
-    value: "contact@tinyteam.fr",
-    href: "mailto:contact@tinyteam.fr",
-    gradient: "from-pink-500/20 to-purple-500/20"
+    eyebrow: 'Artistes',
+    num: '01',
+    title: 'Vous êtes artiste',
+    desc: 'Vous cherchez une équipe qui comprend votre univers et sait le défendre. De la création à la scène, on construit ensemble.',
+    link: '/artistes',
+    linkLabel: 'Découvrir nos artistes',
   },
   {
-    icon: MapPin,
-    title: "Adresse",
-    value: "Paris, France",
-    href: "#",
-    gradient: "from-purple-500/20 to-blue-500/20"
-  }
+    eyebrow: 'Pro',
+    num: '02',
+    title: 'Vous programmez ou organisez',
+    desc: 'Salle, festival, corporate — on a les artistes, vous avez la scène. Trouvons le bon spectacle pour votre public.',
+    link: '/programmateur',
+    linkLabel: 'Espace programmateurs',
+  },
 ];
 
-// Composant titre uniformisé
-const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
-  <>
-    <motion.h2
-      initial={{ y: 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      style={{
-        fontSize: isMobile ? DESIGN.typography.h1Mobile : DESIGN.typography.h1Desktop,
-        fontWeight: 900,
-        lineHeight: 0.9,
-        letterSpacing: '-0.02em',
-        textAlign: 'center'
-      }}
-    >
-      <span style={{ 
-        display: 'block',
-        color: DESIGN.colors.white,
-        marginBottom: isMobile ? '-2px' : '-8px'
-      }}>
-        {line1}
-      </span>
-      <span style={{ 
-        display: 'block',
-        background: DESIGN.colors.titleGradient,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-        paddingBottom: '0.15em'
-      }}>
-        {line2}
-      </span>
-    </motion.h2>
-    
-    {subtitle && (
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        style={{
-          fontSize: isMobile ? DESIGN.typography.bodyMobile : DESIGN.typography.bodyDesktop,
-          color: DESIGN.colors.textSecondary,
-          maxWidth: '600px',
-          margin: '0 auto',
-          lineHeight: 1.6,
-          marginTop: '1.5rem',
-          textAlign: 'center'
-        }}
-      >
-        {subtitle}
-      </motion.p>
-    )}
-  </>
-);
+export const ContactSection = () => {
+  const headRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(headRef, { once: true, margin: '-80px' });
 
-const ContactInfoCard = ({ info, index, isMobile }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-    >
-      <a
-        href={info.href}
-        target={info.href.startsWith('http') ? '_blank' : undefined}
-        rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-        style={{
-          display: 'block',
-          textDecoration: 'none',
-          transform: isHovered && !isMobile ? 'scale(1.05)' : 'scale(1)',
-          transition: 'transform 0.3s ease'
-        }}
-        onMouseEnter={() => !isMobile && setIsHovered(true)}
-        onMouseLeave={() => !isMobile && setIsHovered(false)}
-      >
-        <div style={{
-          position: 'relative',
-          background: DESIGN.colors.glass,
-          border: `1px solid ${DESIGN.colors.glassBorder}`,
-          borderRadius: '16px',
-          padding: '32px',
-          overflow: 'hidden',
-        }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              margin: '0 auto 24px',
-              borderRadius: '16px',
-              background: DESIGN.colors.glass,
-              border: `1px solid ${DESIGN.colors.glassBorder}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: isHovered && !isMobile ? 'scale(1.1)' : 'scale(1)',
-              transition: 'transform 0.5s ease'
-            }}>
-              <info.icon style={{
-                width: '32px',
-                height: '32px',
-                color: '#ec4899',
-              }} />
-            </div>
-            <div>
-              <h3 style={{
-                fontSize: '18px',
-                fontWeight: 500,
-                color: 'rgba(255,255,255,0.7)',
-                marginBottom: '8px'
-              }}>{info.title}</h3>
-              <p style={{
-                fontSize: '20px',
-                color: 'white',
-                fontWeight: 600
-              }}>{info.value}</p>
-            </div>
-          </div>
-        </div>
-      </a>
-    </motion.div>
-  );
-};
+    <section id="contact" className="perf-section contact relative bg-deep overflow-hidden py-28 md:py-40 lg:py-48">
 
-const FloatingParticles = () => (
-  <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-    {[...Array(15)].map((_, i) => (
-      <motion.div
-        key={i}
+      {/* Orbs */}
+      <div
+        className="absolute w-[500px] h-[500px] rounded-full pointer-events-none blur-[80px]"
         style={{
-          position: 'absolute',
-          width: '1px',
-          height: '1px',
-          background: 'rgba(255,255,255,0.2)',
-          borderRadius: '50%',
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-        }}
-        animate={{
-          y: [`0%`, `${Math.random() * 30 - 15}%`],
-          x: [`0%`, `${Math.random() * 30 - 15}%`],
-          opacity: [0.2, 0.6, 0.2]
-        }}
-        transition={{
-          duration: Math.random() * 5 + 3,
-          repeat: Infinity,
-          ease: 'easeInOut'
+          top: '10%', right: '-10%',
+          background: 'radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%)',
         }}
       />
-    ))}
-  </div>
-);
+      <div
+        className="absolute w-[400px] h-[400px] rounded-full pointer-events-none blur-[80px]"
+        style={{
+          bottom: '15%', left: '-8%',
+          background: 'radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%)',
+        }}
+      />
 
-export const ContactSection = () => {
-  const [isMobile, setIsMobile] = useState(false);
+      <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+        {/* Header */}
+        <motion.span
+          className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5 }}
+        >
+          Contact
+        </motion.span>
+        <motion.p
+          className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5, delay: 0.05 }}
+        >
+          Artiste, programmateur ou marque — on commence toujours par un café (ou un appel).
+        </motion.p>
 
-  return (
-    <section style={{
-      position: 'relative',
-      minHeight: '100vh',
-      padding: isMobile ? '80px 0' : '120px 0',
-      background: DESIGN.colors.backgroundGradient,
-      overflow: 'hidden'
-    }}>
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'radial-gradient(ellipse at center,rgba(44,62,153,0.15),transparent 70%)'
-      }} />
-      <FloatingParticles />
+        <motion.h2
+          className="font-display font-black text-paper tracking-tight leading-[0.88]"
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+        >
+          <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
+            Vous avez un
+          </span>
+          <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
+            <span className="font-serif italic font-normal text-accent-light">projet ?</span>
+          </span>
+        </motion.h2>
 
-      <div style={{
-        position: 'relative',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 32px'
-      }}>
-        {/* Header avec titre uniformisé */}
-        <div style={{ textAlign: 'center', marginBottom: isMobile ? '48px' : '80px' }}>
-          <SectionTitle 
-            line1="Contactez-nous,"
-            line2="Sans filtre"
-            subtitle="Pas de formulaire de 15 champs. Pas de bot. Des vrais gens qui répondent vraiment."
-            isMobile={isMobile}
-          />
-        </div>
+        <motion.p
+          className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.25 }}
+        >
+          Artiste, programmateur ou entreprise — on commence toujours par une conversation.
+        </motion.p>
 
-        {/* Contact Info Cards */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
-          gap: '32px',
-          maxWidth: '600px',
-          margin: '0 auto 64px'
-        }}>
-          {contactInfo.map((info, index) => (
-            <ContactInfoCard key={info.title} info={info} index={index} isMobile={isMobile} />
+        {/* Two paths */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-16 md:mt-24" style={{ gridAutoRows: '1fr' }}>
+          {paths.map((path, i) => (
+            <motion.div
+              key={path.eyebrow}
+              className="h-full"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <Link to={path.link} className="contact-card group block relative h-full">
+                <div className="contact-card-inner relative p-8 md:p-10 lg:p-12 h-full">
+                  {/* Number */}
+                  <span className="mission-card-num font-display font-black absolute top-8 right-9 md:top-10 md:right-10">
+                    {path.num}
+                  </span>
+
+                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent/50 block mb-4">
+                    {path.eyebrow}
+                  </span>
+
+                  <h3 className="font-display font-bold text-paper text-xl md:text-2xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12">
+                    {path.title}
+                  </h3>
+
+                  <p className="font-body text-paper/30 text-sm md:text-base leading-relaxed mt-3 max-w-sm">
+                    {path.desc}
+                  </p>
+
+                  {/* CTA */}
+                  <div className="mt-8 inline-flex items-center gap-3">
+                    <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
+                      {path.linkLabel}
+                    </span>
+                    <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
+                      <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
 
-        {/* Additional CTA */}
+        {/* Email CTA */}
         <motion.div
+          className="contact-email mt-20 md:mt-28 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          style={{ textAlign: 'center', marginTop: '80px' }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div style={{
-            position: 'relative',
-            background: DESIGN.colors.glass,
-            border: `1px solid ${DESIGN.colors.glassBorder}`,
-            borderRadius: '16px',
-            padding: '32px',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '16px',
-              marginBottom: '24px'
-            }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '16px',
-                background: DESIGN.colors.glass,
-                border: `1px solid ${DESIGN.colors.glassBorder}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <MessageSquare style={{ width: '32px', height: '32px', color: '#ec4899' }} />
-              </div>
-              <div style={{ textAlign: 'left' }}>
-                <h3 style={{
-                  fontSize: '24px',
-                  fontWeight: 700,
-                  color: 'white'
-                }}>On préfère les vraies conversations</h3>
-                <p style={{ color: 'rgba(255,255,255,0.7)' }}>Appelez, écrivez, passez nous voir</p>
-              </div>
-            </div>
-            <p style={{
-              color: 'rgba(255,255,255,0.8)',
-              lineHeight: 1.6
-            }}>
-              Le café est toujours chaud et la porte toujours ouverte.
-            </p>
-          </div>
+          <div className="contact-email-line mx-auto mb-10" />
+
+          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-paper/25 block mb-6">
+            Ou écrivez-nous directement
+          </span>
+
+          <a
+            href="mailto:contact@tinyteam.fr"
+            className="contact-email-link group inline-flex items-center gap-4"
+          >
+            <span className="w-14 h-14 rounded-full border border-accent/20 flex items-center justify-center group-hover:bg-accent/10 group-hover:border-accent/40 transition-all duration-300">
+              <Mail size={22} className="text-accent" />
+            </span>
+            <span className="font-display font-bold text-paper/60 text-2xl md:text-4xl lg:text-5xl tracking-tight group-hover:text-accent transition-colors duration-300">
+              contact@tinyteam.fr
+            </span>
+          </a>
         </motion.div>
       </div>
     </section>

@@ -1,489 +1,136 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { artists } from '../data/artists';
 
-// DESIGN SYSTEM UNIFIÉ BASÉ SUR HEROSECTION
-const DESIGN = {
-  colors: {
-    // Gradient exact du Hero
-    titleGradient: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%)',
-    buttonGradient: 'linear-gradient(135deg, #ec4899, #a855f7)',
-    backgroundGradient: 'linear-gradient(180deg, #0A0F29 0%, #16213e 100%)',
-    white: '#FFFFFF',
-    textSecondary: 'rgba(255, 255, 255, 0.7)',
-    glass: 'rgba(255, 255, 255, 0.05)',
-    glassBorder: 'rgba(255, 255, 255, 0.15)'
-  },
-  typography: {
-    // Tailles exactes du Hero
-    h1Desktop: 'clamp(4rem, 8vw, 7rem)',
-    h1Mobile: 'clamp(2.5rem, 12vw, 3.5rem)',
-    bodyDesktop: '18px',
-    bodyMobile: '15px'
-  },
-  spacing: {
-    sectionDesktop: '120px 0',
-    sectionMobile: '80px 0',
-    container: '1200px',
-    containerPadding: '0 32px',
-    gap: '24px'
-  },
-  animation: {
-    duration: 0.8,
-    easing: [0.16, 1, 0.3, 1],
-    delay: 0.1
-  }
-};
+const all = artists.filter(a => a.image);
+const row1 = all.slice(0, 5);
+const row2 = [...all.slice(5), ...all.slice(0, Math.max(0, 5 - (all.length - 5)))];
 
-// Composant titre standardisé EXACT comme le Hero
-const SectionTitle = ({ line1, line2, subtitle, isMobile }) => (
-  <>
-    <motion.h2
-      initial={{ y: 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      style={{
-        fontSize: isMobile ? DESIGN.typography.h1Mobile : DESIGN.typography.h1Desktop,
-        fontWeight: 900,
-        lineHeight: 0.9,
-        letterSpacing: '-0.02em'
-      }}
-    >
-      <span style={{ 
-        display: 'block',
-        color: DESIGN.colors.white,
-        marginBottom: isMobile ? '-2px' : '-8px'
-      }}>
-        {line1}
-      </span>
-      <span style={{ 
-        display: 'block',
-        background: DESIGN.colors.titleGradient,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-        paddingBottom: '0.15em'
-      }}>
-        {line2}
-      </span>
-    </motion.h2>
-    
-    {subtitle && (
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        style={{
-          fontSize: isMobile ? DESIGN.typography.bodyMobile : DESIGN.typography.bodyDesktop,
-          color: DESIGN.colors.textSecondary,
-          maxWidth: '600px',
-          margin: '0 auto',
-          lineHeight: 1.6,
-          paddingInline: isMobile ? '0' : '20px',
-          marginTop: '1.5rem'
-        }}
-      >
-        {subtitle}
-      </motion.p>
-    )}
-  </>
-);
-
-// Composant bouton identique au Hero
-const PrimaryButton = ({ to, children, isMobile }) => {
-  const buttonStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '10px',
-    padding: isMobile ? '14px 28px' : '16px 36px',
-    background: DESIGN.colors.buttonGradient,
-    color: 'white',
-    borderRadius: '100px',
-    fontWeight: 600,
-    fontSize: isMobile ? '14px' : '16px',
-    textDecoration: 'none',
-    boxShadow: '0 8px 32px rgba(236,72,153,0.35)',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-  };
-  
-  return (
-    <Link
-      to={to}
-      style={buttonStyle}
-      onMouseEnter={(e) => {
-        if (!isMobile) {
-          e.currentTarget.style.boxShadow = '0 12px 40px rgba(236,72,153,0.5)';
-          e.currentTarget.style.transform = 'translateY(-2px)';
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isMobile) {
-          e.currentTarget.style.boxShadow = '0 8px 32px rgba(236,72,153,0.35)';
-          e.currentTarget.style.transform = 'translateY(0)';
-        }
-      }}
-    >
-      {children}
-    </Link>
-  );
-};
-
-// Particules minimales
-const StandardParticles = () => (
-  <>
-    {[...Array(10)].map((_, i) => (
-      <motion.div
-        key={i}
-        style={{
-          position: 'absolute',
-          width: '2px',
-          height: '2px',
-          background: 'rgba(255, 255, 255, 0.3)',
-          borderRadius: '50%',
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-        }}
-        animate={{
-          y: [0, -30, 0],
-          opacity: [0, 1, 0],
-        }}
-        transition={{
-          duration: 3 + Math.random() * 2,
-          repeat: Infinity,
-          delay: Math.random() * 5,
-          ease: 'easeInOut',
-        }}
-      />
-    ))}
-  </>
-);
-
-// Carte d'artiste standardisée - CORRECTION DU BADGE MOBILE
-const ArtistCard = ({ artist, index, isMobile }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  // FIX: Pour mobile, utiliser une structure différente pour garantir l'affichage du badge
-  if (isMobile) {
-    return (
-      <Link 
-        to={`/artiste/${artist.id}`}
-        style={{
-          display: 'block',
-          width: '100%',
-          borderRadius: '20px',
-          overflow: 'hidden',
-          position: 'relative',
-          background: DESIGN.colors.glass,
-          border: `1px solid ${DESIGN.colors.glassBorder}`,
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-        }}
-      >
-        {/* Container avec ratio fixe pour mobile */}
-        <div style={{
-          position: 'relative',
-          paddingBottom: '150%', // Ratio aspect pour garder la hauteur
-        }}>
-          <img
-            src={artist.posterImage || artist.image}
-            alt={artist.name}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              zIndex: 0, // Base layer
-            }}
-          />
-          
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%)',
-            zIndex: 1, // Au-dessus de l'image
-          }} />
-          
-          {/* BADGE CORRIGÉ POUR MOBILE */}
-          {artist.prod && (
-            <div style={{
-              position: 'absolute',
-              top: '12px',
-              left: '12px',
-              right: '12px',
-              background: DESIGN.colors.buttonGradient,
-              padding: '8px 12px',
-              borderRadius: '8px',
-              fontSize: '0.65rem',
-              color: 'white',
-              fontWeight: 600,
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-              textAlign: 'center',
-              boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)',
-              zIndex: 2, // Au-dessus du gradient
-            }}>
-              {artist.prod}
-            </div>
-          )}
-          
-          <div style={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '20px',
-            right: '20px',
-            zIndex: 2, // Au même niveau que le badge
-          }}>
-            <h3 style={{
-              fontSize: '1.2rem',
-              fontWeight: 700,
-              color: 'white',
-              marginBottom: '8px',
-            }}>
-              {artist.name}
-            </h3>
-          </div>
-        </div>
-      </Link>
-    );
-  }
-  
-  // Version desktop inchangée
-  return (
-    <Link 
-      to={`/artiste/${artist.id}`}
-      style={{
-        display: 'block',
-        width: '220px',
-        height: '330px',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        position: 'relative',
-        background: DESIGN.colors.glass,
-        border: `1px solid ${DESIGN.colors.glassBorder}`,
-        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-        transform: isHovered ? 'scale(1.05) translateY(-10px)' : 'scale(1)',
-        boxShadow: isHovered 
-          ? '0 25px 50px rgba(0, 0, 0, 0.5)' 
-          : '0 10px 30px rgba(0, 0, 0, 0.3)',
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <img
-        src={artist.posterImage || artist.image}
-        alt={artist.name}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-          transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-        }}
-      />
-      
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%)',
-      }} />
-      
-      {artist.prod && (
-        <div style={{
-          position: 'absolute',
-          top: '12px',
-          left: '12px',
-          right: '12px',
-          background: DESIGN.colors.buttonGradient,
-          padding: '8px 12px',
-          borderRadius: '8px',
-          fontSize: '0.65rem',
-          color: 'white',
-          fontWeight: 600,
-          letterSpacing: '0.05em',
-          textTransform: 'uppercase',
-          textAlign: 'center',
-          boxShadow: '0 4px 20px rgba(236, 72, 153, 0.4)',
-        }}>
-          {artist.prod}
-        </div>
-      )}
-      
-      <div style={{
-        position: 'absolute',
-        bottom: '20px',
-        left: '20px',
-        right: '20px',
-      }}>
-        <h3 style={{
-          fontSize: '1.1rem',
-          fontWeight: 700,
-          color: 'white',
-          marginBottom: '8px',
-        }}>
-          {artist.name}
-        </h3>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '6px 12px',
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '50px',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            color: 'white',
-          }}
-        >
-          Découvrir
-          <ArrowRight size={12} />
-        </motion.div>
+const Card = ({ artist }: { artist: typeof all[0] }) => (
+    <div className="mq-card w-[280px] md:w-[340px] flex-shrink-0 relative rounded-[20px] overflow-hidden">
+      <div className="aspect-[3/4] overflow-hidden rounded-[20px]">
+        <img
+          src={artist.image}
+          alt={artist.name}
+          className="w-full h-full object-cover"
+          loading="lazy"
+          draggable={false}
+        />
       </div>
-    </Link>
-  );
-};
+
+      <div className="mq-overlay absolute inset-0 rounded-[20px]" />
+
+      {artist.prod && (
+        <span className="absolute top-5 left-5 z-[4] px-3 py-1.5 rounded-full bg-ink/80 border border-paper/10 font-mono text-[9px] tracking-[0.14em] uppercase text-paper/70">
+          {artist.prod}
+        </span>
+      )}
+
+      <div className="mq-name absolute bottom-6 left-6 right-6 z-[3]">
+        <span className="font-display font-black text-paper text-xl md:text-2xl tracking-tight leading-tight block">
+          {artist.name}
+        </span>
+      </div>
+
+      <Link
+        to={`/artiste/${artist.id}`}
+        className="mq-cta absolute top-5 right-5 z-[4] w-11 h-11 rounded-full bg-accent flex items-center justify-center text-ink hover:scale-110 transition-transform duration-300"
+      >
+        <ArrowUpRight size={18} strokeWidth={2.5} />
+      </Link>
+
+      <div className="mq-border absolute inset-0 rounded-[20px] pointer-events-none z-[5]" />
+    </div>
+);
 
 export const ArtistsSliderSection = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Ordre spécifique pour la première ligne : D'Jal, Julien Santini, Lucie Carbone, Urbain, Sophie & Alex, puis les autres
-  const djal = artists.find(a => a.id === "djal");
-  const santini = artists.find(a => a.id === "julien-santini");
-  const lucie = artists.find(a => a.id === "lucie");
-  const urbain = artists.find(a => a.id === "urbain");
-  const sophieAlex = artists.find(a => a.id === "sophie-alex");
-  
-  // Les autres artistes pour compléter
-  const remainingArtists = artists.filter(a => 
-    !["djal", "julien-santini", "lucie", "urbain", "sophie-alex"].includes(a.id)
-  );
-  
-  const firstRowOrder = [djal, santini, lucie, urbain, sophieAlex, ...remainingArtists].filter(Boolean);
-  const topRow = [...firstRowOrder, ...firstRowOrder, ...firstRowOrder];
-  const bottomRow = [...artists.slice(5, 10), ...artists.slice(5, 10), ...artists.slice(5, 10)];
+  const textRef = useRef<HTMLDivElement>(null);
+  const textInView = useInView(textRef, { once: true, margin: '-15%' });
 
   return (
-    <section style={{
-      position: 'relative',
-      minHeight: '100vh',
-      padding: isMobile ? DESIGN.spacing.sectionMobile : DESIGN.spacing.sectionDesktop,
-      background: DESIGN.colors.backgroundGradient,
-      overflow: 'hidden',
-    }}>
-      {!isMobile && <StandardParticles />}
-      
-      <div style={{
-        position: 'relative',
-        maxWidth: DESIGN.spacing.container,
-        margin: '0 auto',
-        padding: DESIGN.spacing.containerPadding,
-      }}>
-        {/* Header avec style exact du Hero */}
-        <div style={{ 
-          textAlign: 'center', 
-          marginBottom: isMobile ? '3rem' : '4rem',
-        }}>
-          <SectionTitle 
-            line1="Nos artistes,"
-            line2="Notre fierté"
-            subtitle="Chaque talent est choisi, accompagné et révélé avec soin"
-            isMobile={isMobile}
+    <>
+      {/* ── Statement ── */}
+      <section className="perf-section relative bg-deep overflow-hidden" ref={textRef}>
+        <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 md:px-12 py-24 md:py-32">
+          <motion.span
+            className="font-display font-black text-paper text-[clamp(2.4rem,8vw,7rem)] tracking-tight leading-[0.92] text-center block"
+            initial={{ opacity: 0, y: 50 }}
+            animate={textInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+          >
+            Des talents singuliers,
+          </motion.span>
+          <motion.span
+            className="font-serif italic font-normal text-accent-light text-[clamp(2.4rem,8vw,7rem)] leading-[0.92] text-center block mt-2 md:mt-4"
+            initial={{ opacity: 0, y: 50 }}
+            animate={textInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.25, ease: [0.23, 1, 0.32, 1] }}
+          >
+            des univers entiers.
+          </motion.span>
+          <motion.div
+            className="mx-auto mt-10 md:mt-14 h-px w-20 bg-accent"
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={textInView ? { opacity: 0.4, scaleX: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.5 }}
           />
         </div>
+      </section>
 
-        {/* Content : Rivière d'artistes desktop */}
-        {!isMobile && (
-          <div style={{ 
-            position: 'relative',
-            margin: '0 -32px',
-            padding: '2rem 0',
-          }}>
-            <motion.div
-              style={{
-                display: 'flex',
-                gap: DESIGN.spacing.gap,
-                marginBottom: DESIGN.spacing.gap,
-                width: 'fit-content',
-              }}
-              animate={{ x: [0, '-50%'] }}
-              transition={{
-                duration: 60,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
+      {/* ── Marquee section ── */}
+      <section id="artists" className="perf-section mq-section relative bg-deep overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-accent/[0.04] rounded-full blur-[80px] pointer-events-none" />
+
+        <div className="max-w-container mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-14 md:pb-20">
+          <span className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3">
+            {all.length} artistes
+          </span>
+          <p className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10">
+            Des humoristes qu'on connaît par cœur — leurs doutes, leurs forces, leur façon de voir la scène.
+          </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <h3 className="font-display font-black text-paper tracking-tight leading-[0.88]">
+              <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
+                Ceux qu'on
+              </span>
+              <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
+                <span className="font-serif italic font-normal text-accent-light">accompagne.</span>
+              </span>
+            </h3>
+            <Link
+              to="/artistes"
+              className="group inline-flex items-center gap-3 flex-shrink-0 mb-2"
             >
-              {topRow.map((artist, index) => (
-                <ArtistCard key={`top-${index}`} artist={artist} index={0} isMobile={false} />
-              ))}
-            </motion.div>
-            
-            <motion.div
-              style={{
-                display: 'flex',
-                gap: DESIGN.spacing.gap,
-                width: 'fit-content',
-              }}
-              initial={{ x: '-50%' }}
-              animate={{ x: ['-50%', 0] }}
-              transition={{
-                duration: 55,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-            >
-              {bottomRow.map((artist, index) => (
-                <ArtistCard key={`bottom-${index}`} artist={artist} index={0} isMobile={false} />
-              ))}
-            </motion.div>
+              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
+                Voir tout
+              </span>
+              <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
+                <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+              </span>
+            </Link>
           </div>
-        )}
+        </div>
 
-        {/* Content mobile : grille verticale */}
-        {isMobile && (
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: DESIGN.spacing.gap 
-          }}>
-            {artists.map((artist, index) => (
-              <ArtistCard key={artist.id} artist={artist} index={index} isMobile={true} />
-            ))}
+        <div className="mq-tilt pb-24 md:pb-36">
+          <div className="mq-row mb-5 md:mb-7">
+            <div className="mq-track mq-ltr">
+              {[...row1, ...row1, ...row1].map((artist, i) => (
+                <Card key={`a-${i}`} artist={artist} />
+              ))}
+            </div>
           </div>
-        )}
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          style={{ 
-            textAlign: 'center', 
-            marginTop: isMobile ? '3rem' : '4rem',
-          }}
-        >
-          <PrimaryButton to="/artistes" isMobile={isMobile}>
-            <span>Voir tous nos artistes</span>
-            <ArrowRight size={18} />
-          </PrimaryButton>
-        </motion.div>
-      </div>
-    </section>
+          <div className="mq-row">
+            <div className="mq-track mq-rtl">
+              {[...row2, ...row2, ...row2].map((artist, i) => (
+                <Card key={`b-${i}`} artist={artist} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 };

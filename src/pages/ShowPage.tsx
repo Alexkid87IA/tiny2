@@ -1,90 +1,37 @@
-import React from 'react';
+import { useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Calendar, MapPin, Clock, Users, Ticket, ArrowLeft, Star, Heart, Share2 } from 'lucide-react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
-
-const shows = [
-  {
-    id: 'sans-filtre',
-    title: "Sans Filtre",
-    artist: "Clara Martin",
-    type: "Stand-up Comedy",
-    description: "Un regard acéré sur notre société, entre humour et réflexion. Clara Martin nous livre un spectacle sans concession où rires et émotions se mêlent avec justesse.",
-    longDescription: `Dans "Sans Filtre", Clara Martin pose un regard sans concession mais toujours bienveillant sur notre époque. À travers des observations fines et un humour intelligent, elle aborde les grands thèmes de notre société : les réseaux sociaux, les relations humaines à l'ère du numérique, l'écologie, et bien d'autres sujets qui nous touchent tous.
-
-    Formée à l'école du one-woman-show, Clara a perfectionné son art pendant plusieurs années sur les scènes des cafés-théâtres parisiens avant de rejoindre la Tiny Team en 2022. Son spectacle "Sans Filtre" est le fruit de cette expérience riche et variée.
-
-    Un spectacle qui fait rire, réfléchir, et parfois même pleurer, mais qui ne laisse jamais indifférent.`,
-    image: 'https://static.eno.do/x/fs-200336-default/f5fcb736ef4f4b4854368f6aa4d32c0d/media.jpg',
-    nextShow: "15 Mars 2024",
-    time: "20:30",
-    duration: "75 minutes",
-    location: "Théâtre du Rire, Paris",
-    capacity: "300 places",
-    price: "À partir de 25€",
-    status: "Bientôt complet",
-    reviews: [
-      { author: "Le Monde", quote: "Une révélation de l'humour qui fait mouche à chaque réplique." },
-      { author: "Télérama", quote: "Intelligent, drôle et profondément humain." },
-      { author: "Les Inrocks", quote: "Clara Martin redéfinit les codes du stand-up à la française." }
-    ],
-    withTinyTeam: "Depuis 2022",
-    achievements: [
-      "Festival d'Humour de Paris 2023 - Prix du Public",
-      "Plus de 100 représentations en France",
-      "Spectacle nommé aux Molières 2023"
-    ],
-    gradient: "from-purple-500/20 to-blue-500/20"
-  },
-  // ... autres spectacles
-];
-
-const FloatingParticles = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(50)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 bg-white/20 rounded-full"
-        initial={{
-          x: Math.random() * 100 + "%",
-          y: Math.random() * 100 + "%",
-          scale: 0,
-          opacity: 0
-        }}
-        animate={{
-          y: [null, `${Math.random() * 30 - 15}%`],
-          x: [null, `${Math.random() * 30 - 15}%`],
-          scale: [0, 1, 0],
-          opacity: [0, 0.8, 0]
-        }}
-        transition={{
-          duration: Math.random() * 5 + 3,
-          repeat: Infinity,
-          repeatDelay: Math.random() * 2
-        }}
-      />
-    ))}
-  </div>
-);
+import { artists } from '../data/artists';
 
 export const ShowPage = () => {
   const { id } = useParams();
-  const show = shows.find(s => s.id === id);
+  const artist = artists.find(a => a.id === id);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(headRef, { once: true, margin: '-80px' });
 
-  if (!show) {
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const orbY = useTransform(scrollYProgress, [0, 1], [40, -40]);
+
+  if (!artist) {
     return (
-      <main className="min-h-screen bg-[#0A0F29]">
+      <main className="min-h-screen bg-deep">
         <Navigation />
-        <div className="container mx-auto px-4 py-32 text-center">
-          <h1 className="text-4xl text-white mb-8">Spectacle non trouvé</h1>
+        <div className="max-w-container mx-auto px-6 md:px-12 py-32 text-center">
+          <h1 className="font-display font-black text-paper text-4xl mb-6">Spectacle non trouvé</h1>
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300"
+            className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/50 hover:text-accent transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Retour à l'accueil</span>
+            <ArrowLeft size={12} />
+            Retour à l'accueil
           </Link>
         </div>
         <Footer />
@@ -93,185 +40,110 @@ export const ShowPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[#0A0F29]">
+    <main className="min-h-screen bg-deep">
       <Navigation />
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen py-32">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />
-          <FloatingParticles />
-        </div>
+      <section ref={heroRef} className="relative pt-28 pb-28 md:pt-36 md:pb-40 overflow-hidden">
+        <motion.div
+          className="absolute w-[400px] h-[400px] rounded-full pointer-events-none blur-[100px]"
+          style={{
+            top: '20%', right: '-5%',
+            background: 'radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)',
+            y: orbY,
+          }}
+        />
 
-        <div className="relative container mx-auto px-4">
-          {/* Back Button */}
+        <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
           <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300 mb-12"
+            to={`/artiste/${artist.id}`}
+            className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/40 hover:text-accent transition-colors mb-10"
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Retour aux spectacles</span>
+            <ArrowLeft size={12} />
+            Retour au profil
           </Link>
 
-          {/* Main Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            {/* Left Column - Image */}
+            {/* Poster */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="relative aspect-[2/3] rounded-2xl overflow-hidden group"
+              transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+              className="mq-card rounded-[20px] overflow-hidden"
             >
-              <img
-                src={show.image}
-                alt={show.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-              <div className="absolute inset-0 ring-1 ring-white/10 group-hover:ring-white/30 transition-all duration-300 rounded-2xl" />
+              <div className="aspect-[3/4] overflow-hidden rounded-[20px]">
+                <img
+                  src={artist.posterImage || artist.image}
+                  alt={artist.showName || artist.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="mq-overlay absolute inset-0 rounded-[20px]" />
+              <div className="mq-border absolute inset-0 rounded-[20px] pointer-events-none z-[5]" />
             </motion.div>
 
-            {/* Right Column - Information */}
+            {/* Info */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="space-y-8"
+              className="flex flex-col justify-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
             >
-              {/* Header */}
-              <div>
-                <h1 className="text-5xl font-bold text-white mb-4">
-                  {show.title}
-                </h1>
-                <div className="flex items-center gap-3 text-xl text-white/80">
-                  <span>{show.artist}</span>
-                  <span className="text-white/30">|</span>
-                  <span className="text-white/60">{show.type}</span>
-                </div>
-              </div>
+              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-6">
+                {artist.type}
+              </span>
 
-              {/* Description */}
-              <div className="space-y-4">
-                {show.longDescription.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="text-lg text-white/80 leading-relaxed">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+              <h1 className="font-display font-black text-paper tracking-tight leading-[0.88]">
+                <span className="block text-[clamp(2.2rem,5vw,4.5rem)]">
+                  {artist.showName || artist.name}
+                </span>
+              </h1>
 
-              {/* Show Details */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="glass-card rounded-xl p-4 flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-yellow-300" />
-                  <div>
-                    <div className="text-sm text-white/60">Prochaine date</div>
-                    <div className="text-white">{show.nextShow}</div>
-                  </div>
-                </div>
-                <div className="glass-card rounded-xl p-4 flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-yellow-300" />
-                  <div>
-                    <div className="text-sm text-white/60">Horaire</div>
-                    <div className="text-white">{show.time}</div>
-                  </div>
-                </div>
-                <div className="glass-card rounded-xl p-4 flex items-center gap-3">
-                  <MapPin className="w-5 h-5 text-yellow-300" />
-                  <div>
-                    <div className="text-sm text-white/60">Lieu</div>
-                    <div className="text-white">{show.location}</div>
-                  </div>
-                </div>
-                <div className="glass-card rounded-xl p-4 flex items-center gap-3">
-                  <Users className="w-5 h-5 text-yellow-300" />
-                  <div>
-                    <div className="text-sm text-white/60">Capacité</div>
-                    <div className="text-white">{show.capacity}</div>
-                  </div>
-                </div>
-              </div>
+              {artist.showName && (
+                <span className="font-body text-paper/50 text-lg mt-3 block">{artist.name}</span>
+              )}
 
-              {/* Price and Booking */}
-              <div className="glass-card rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <div className="text-sm text-white/60">Prix</div>
-                    <div className="text-2xl font-bold text-white">{show.price}</div>
-                  </div>
-                  <div className="px-3 py-1 rounded-full text-sm font-medium bg-white/10 border border-white/20">
-                    {show.status}
+              <div className="h-px w-16 bg-accent/30 my-8" />
+
+              <p className="font-body text-paper/45 text-base md:text-lg leading-[1.7]">
+                {artist.showDescription || artist.description}
+              </p>
+
+              {artist.longDescription && (
+                <p className="font-body text-paper/30 text-sm leading-[1.7] mt-5">
+                  {artist.longDescription}
+                </p>
+              )}
+
+              {artist.achievements.length > 0 && (
+                <div className="mt-8">
+                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-paper/25 block mb-3">
+                    Parcours
+                  </span>
+                  <div className="space-y-2">
+                    {artist.achievements.map((a, i) => (
+                      <div key={i} className="flex items-center gap-2.5">
+                        <div className="w-1 h-1 rounded-full bg-accent/50" />
+                        <span className="font-body text-sm text-paper/40">{a}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <button className="w-full py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300">
-                  Réserver
-                </button>
-              </div>
+              )}
 
-              {/* Social Actions */}
-              <div className="flex gap-4">
-                <button className="flex-1 py-3 rounded-xl glass-card flex items-center justify-center gap-2 text-white/70 hover:text-white transition-colors duration-300">
-                  <Heart className="w-5 h-5" />
-                  <span>Favoris</span>
-                </button>
-                <button className="flex-1 py-3 rounded-xl glass-card flex items-center justify-center gap-2 text-white/70 hover:text-white transition-colors duration-300">
-                  <Share2 className="w-5 h-5" />
-                  <span>Partager</span>
-                </button>
+              <div className="flex flex-wrap gap-4 mt-10">
+                <a
+                  href="mailto:contact@tinyteam.fr"
+                  className="group inline-flex items-center gap-3"
+                >
+                  <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
+                    Réserver cet artiste
+                  </span>
+                  <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
+                    <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+                  </span>
+                </a>
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Sections */}
-      <section className="relative py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            {/* Reviews */}
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-8">La presse en parle</h2>
-              <div className="space-y-6">
-                {show.reviews.map((review, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="glass-card rounded-xl p-6"
-                  >
-                    <div className="text-lg text-white/90 italic mb-3">"{review.quote}"</div>
-                    <div className="text-sm text-white/60">— {review.author}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Achievements */}
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-8">Récompenses & Succès</h2>
-              <div className="space-y-4">
-                <div className="glass-card rounded-xl p-6 mb-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Star className="w-6 h-6 text-yellow-300" />
-                    <div className="text-lg text-white">Avec Tiny Team depuis {show.withTinyTeam}</div>
-                  </div>
-                </div>
-                {show.achievements.map((achievement, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="glass-card rounded-xl p-4 flex items-center gap-3"
-                  >
-                    <div className="w-2 h-2 rounded-full bg-yellow-300" />
-                    <div className="text-white/80">{achievement}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </section>

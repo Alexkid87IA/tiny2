@@ -102,7 +102,7 @@ export const artists = [
     type: "Stand-up",
     tagline: "Entre marché du dimanche et soirées du samedi",
     description: "À 24 ans, Morgane jette un regard corrosif sur ses ainés sans épargner sa génération. Un humour impertinent qui questionne sa place dans cette société.",
-    longDescription: "Elle a 24 ans et se demande comment elle se positionne dans cette société, sans se priver de nous dire comment elle la perçoit. Avec un humour impertinent Morgane Berling fait le bilan de sa jeune vie : de l'enfance à aujourd'hui. Elle jette un regard corrosif sur ses ainés sans épargner sa génération. Partagée entre les soirées du samedi soir et le marché du dimanche matin, Morgane ne sait plus dans quelle case de la société elle se place. Un « seule en scène », interprété à la première personne et dans lequel interviennent toute une galerie de personnages. Écrit à quatre mains et deux générations, ce spectacle permet à toute la famille de se retrouver autour de souvenirs ou de projections : la vingtaine ! Spectacle présent au festival Off d'Avignon en 2024 et 2025.",
+    longDescription: "Elle a 24 ans et se demande comment elle se positionne dans cette société, sans se priver de nous dire comment elle la perçoit. Avec un humour impertinent Morgane Berling fait le bilan de sa jeune vie : de l'enfance à aujourd'hui. Elle jette un regard corrosif sur ses ainés sans épargner sa génération. Partagée entre les soirées du samedi soir et le marché du dimanche matin, Morgane ne sait plus dans quelle case de la société elle se place. Un « seule en scène », interprété à la première personne et dans lequel interviennent toute une galerie de personnages. Écrit à quatre mains et deux générations, ce spectacle permet à toute la famille de se retrouver autour de souvenirs ou de projections : la vingtaine ! Spectacle présent au festival Off d'Avignon en 2024, 2025 et 2026.",
     image: "https://i.imgur.com/munE7s3.jpeg",
     posterImage: "https://i.imgur.com/munE7s3.jpeg",
     social: {
@@ -122,7 +122,7 @@ export const artists = [
       "Prix du Public - Festival D'Un Rire à l'Autre de Pierre-Bénite",
       "Prix du Public - Festival Drôlement Bien de Besançon",
       "Prix spécial du jury - Festival Rire de Cavaillon",
-      "Présente au Festival Off d'Avignon 2024 et 2025"
+      "Présente au Festival Off d'Avignon 2024, 2025 et 2026"
     ],
     reviews: [],
     stats: {

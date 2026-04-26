@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Mail } from 'lucide-react';
 import { Navigation } from '../components/Navigation';
@@ -9,10 +9,6 @@ import { artists } from '../data/artists';
 const all = artists.filter(a => a.image);
 const row1 = all.slice(0, 5);
 const row2 = [...all.slice(5), ...all.slice(0, Math.max(0, 5 - (all.length - 5)))];
-
-const colCount = 4;
-const columns: (typeof all)[] = Array.from({ length: colCount }, () => []);
-all.forEach((artist, i) => columns[i % colCount].push(artist));
 
 const Card = ({ artist }: { artist: typeof all[0] }) => (
   <div className="mq-card w-[280px] md:w-[340px] flex-shrink-0 relative rounded-[20px] overflow-hidden">
@@ -28,6 +24,9 @@ const Card = ({ artist }: { artist: typeof all[0] }) => (
     <div className="mq-name absolute bottom-6 left-6 right-6 z-[3]">
       <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1.5">{artist.type}</span>
       <span className="font-display font-black text-paper text-xl md:text-2xl tracking-tight leading-tight block">{artist.name}</span>
+      {artist.showName && (
+        <span className="inline-block mt-2 px-3 py-1 rounded-full text-[11px] bg-accent/15 text-accent-light/80 border border-accent/10">{artist.showName}</span>
+      )}
     </div>
     <Link to={`/artiste/${artist.id}`} className="mq-cta absolute top-5 right-5 z-[4] w-11 h-11 rounded-full bg-accent flex items-center justify-center text-ink hover:scale-110 transition-transform duration-300">
       <ArrowUpRight size={18} strokeWidth={2.5} />
@@ -36,74 +35,47 @@ const Card = ({ artist }: { artist: typeof all[0] }) => (
   </div>
 );
 
-const solutions = [
+const commitments = [
   {
     num: '01',
-    title: 'Soirées corporate',
-    desc: 'Séminaires, team buildings, galas — des shows calibrés pour votre public interne.',
-    features: ['Spectacles personnalisés', 'Animation de soirées', 'Concepts clé en main'],
+    title: 'Des artistes prêts pour la scène',
+    desc: 'Accompagnés, préparés, rodés. Chaque humoriste arrive avec une énergie et une maîtrise qui font la différence.',
+    features: ['Artistes accompagnés et préparés', 'Performances calibrées', 'Expérience scénique confirmée'],
   },
   {
     num: '02',
-    title: 'Conventions & lancements',
-    desc: 'Présentateurs, sketches sur mesure, formats hybrides — de l\'humour pour marquer les esprits.',
-    features: ['Présentateurs humoristes', 'Sketches sur mesure', 'Formats hybrides'],
+    title: 'Une logistique fluide',
+    desc: 'Un seul interlocuteur, un planning clair, zéro surprise. On gère tout pour que vous n\'ayez rien à gérer.',
+    features: ['Interlocuteur dédié', 'Process simplifié', 'Fiches techniques fournies'],
   },
   {
     num: '03',
-    title: 'Contenu de marque',
-    desc: 'Associez votre image à celle de nos artistes pour des campagnes qui résonnent.',
-    features: ['Partenariats artistes', 'Création de contenu', 'Activation digitale'],
+    title: 'Un marketing qui remplit',
+    desc: 'Chaque date est portée par notre équipe com\' : visuels, réseaux, presse. On remplit vos salles.',
+    features: ['Stratégie marketing dédiée', 'Kits com\' clé en main', 'Visibilité amplifiée'],
   },
 ];
 
 const process = [
-  { num: '01', title: 'Vous nous racontez', desc: 'Votre événement, votre public, vos objectifs, votre budget. On écoute tout.' },
-  { num: '02', title: 'On vous propose', desc: 'L\'artiste adapté, le format qui fonctionne, un devis clair et transparent.' },
-  { num: '03', title: 'On co-construit', desc: 'Contenus personnalisés, répétitions, ajustements — rien n\'est laissé au hasard.' },
-  { num: '04', title: 'Le jour J', desc: 'L\'artiste est prêt, votre public est conquis, vos objectifs sont atteints.' },
+  { num: '01', title: 'Vous nous appelez', desc: 'On écoute votre projet, votre salle, votre public, vos contraintes.' },
+  { num: '02', title: 'On vous propose', desc: 'L\'artiste adapté, le format qui fonctionne, le budget qui tient.' },
+  { num: '03', title: 'On prépare tout', desc: 'Contrat, technique, communication, billetterie — on s\'en occupe.' },
+  { num: '04', title: 'Le soir J', desc: 'L\'artiste est là, votre salle est pleine, votre public est ravi.' },
 ];
 
 const stats = [
-  { value: '150+', label: 'Événements réalisés' },
-  { value: '96%', label: 'Taux de satisfaction' },
-  { value: '10', label: 'Artistes disponibles' },
+  { value: '300+', label: 'Salles partenaires' },
+  { value: '95%', label: 'Taux de remplissage' },
   { value: '48h', label: 'Délai de réponse' },
+  { value: '10', label: 'Artistes disponibles' },
 ];
 
-const caseStudies = [
-  {
-    type: 'Séminaire annuel',
-    sector: 'Groupe bancaire français',
-    context: '400 collaborateurs réunis pour le séminaire stratégique annuel.',
-    result: '96% de satisfaction globale (vs 72% année précédente)',
-  },
-  {
-    type: 'Communication interne',
-    sector: 'Leader retail',
-    context: 'Changement d\'ERP complexe à faire accepter à 2 000 employés.',
-    result: 'Adoption de l\'outil 3 semaines plus rapide que prévu',
-  },
-  {
-    type: 'Team Building',
-    sector: 'Cabinet de conseil',
-    context: 'Équipe de 50 consultants en télétravail depuis 2 ans.',
-    result: 'Score de cohésion d\'équipe +35% à 3 mois',
-  },
-  {
-    type: 'Convention commerciale',
-    sector: 'Industrie pharmaceutique',
-    context: 'Lancement d\'une nouvelle gamme devant 300 commerciaux.',
-    result: 'Mémorisation des messages clés : 89%',
-  },
-];
+const colCount = 4;
+const columns: (typeof all)[] = Array.from({ length: colCount }, () => []);
+all.forEach((artist, i) => columns[i % colCount].push(artist));
 
-const formats = ['Séminaires', 'Team Building', 'Conventions', 'Galas', 'Soirées privées', 'Lancements produit'];
-
-export const BrandPage = () => {
+export const ProducerPage = () => {
   const marqueeRef = useRef<HTMLDivElement>(null);
-  const processRef = useRef<HTMLDivElement>(null);
-  const processInView = useInView(processRef, { once: true, margin: '-80px' });
 
   const { scrollY } = useScroll();
   const contentOpacity = useTransform(scrollY, [0, 500], [1, 0]);
@@ -162,177 +134,58 @@ export const BrandPage = () => {
           style={{ opacity: contentOpacity, y: contentY }}
         >
           <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-4">
-            Entreprises & marques
+            Espace programmateurs
           </span>
 
           <h1 className="font-display font-black tracking-tight leading-[0.88]">
             <span className="block text-paper text-[clamp(2.8rem,9vw,7.5rem)]">
-              L'humour au service
+              Nos artistes,
             </span>
             <span className="block text-[clamp(2.8rem,9vw,7.5rem)]">
-              <span className="font-serif italic font-normal text-accent-light">de votre marque.</span>
+              <span className="font-serif italic font-normal text-accent-light">votre prochain</span>
+              <span className="text-paper"> succès.</span>
             </span>
           </h1>
 
           <p className="font-body text-paper/45 text-base md:text-lg max-w-lg leading-relaxed mt-8 md:mt-12">
-            Séminaires, conventions, soirées de gala — on transforme vos événements
-            d'entreprise avec des artistes qui savent parler à votre public.
+            Des spectacles clé en main, une logistique fluide, un marketing
+            qui remplit vos salles. On s'occupe de tout.
           </p>
 
           <div className="flex flex-wrap items-center gap-6 mt-10 md:mt-14">
             <a
-              href="mailto:contact@tinyteam.fr"
+              href="mailto:diffusion@tinyteam.fr"
               className="group inline-flex items-center gap-3"
             >
               <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                Discuter de votre projet
+                Demander le catalogue
               </span>
               <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
                 <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
               </span>
             </a>
             <a
-              href="mailto:contact@tinyteam.fr"
+              href="mailto:diffusion@tinyteam.fr"
               className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/40 hover:text-accent transition-colors duration-300"
             >
               <Mail size={14} />
-              <span>contact@tinyteam.fr</span>
+              <span>diffusion@tinyteam.fr</span>
             </a>
           </div>
         </motion.div>
       </section>
 
-      {/* ── Solutions ── */}
-      <section className="relative py-28 md:py-40 overflow-hidden">
-        <motion.div
-          className="absolute w-[450px] h-[450px] rounded-full pointer-events-none blur-[100px]"
-          style={{
-            top: '15%', left: '-8%',
-            background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)',
-          }}
-        />
-
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <motion.span
-            className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-2"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            Nos solutions
-          </motion.span>
-          <motion.p
-            className="font-serif italic text-paper/30 text-base md:text-lg mb-8 md:mb-10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-          >
-            Corporate, lancement, contenu — chaque format a sa recette.
-          </motion.p>
-
-          <motion.h2
-            className="font-display font-black text-paper tracking-tight leading-[0.88] mb-16 md:mb-20"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          >
-            <span className="block text-[clamp(2rem,5vw,4rem)]">
-              L'humour
-            </span>
-            <span className="block text-[clamp(2rem,5vw,4rem)] mt-1">
-              <span className="font-serif italic font-normal text-accent-light">sur mesure.</span>
-            </span>
-          </motion.h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6" style={{ gridAutoRows: '1fr' }}>
-            {solutions.map((s, i) => (
-              <motion.div
-                key={s.title}
-                className="mission-card group block relative"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <div className="mission-card-inner relative p-7 md:p-9 h-full">
-                  <span className="mission-card-num font-display font-black absolute top-7 right-8 md:top-9 md:right-9">
-                    {s.num}
-                  </span>
-                  <h3 className="font-display font-bold text-paper text-lg md:text-xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12 mb-3">
-                    {s.title}
-                  </h3>
-                  <p className="font-body text-paper/30 text-sm leading-relaxed mb-6">{s.desc}</p>
-                  <div className="space-y-2.5 pt-5 border-t border-paper/[0.06]">
-                    {s.features.map(f => (
-                      <div key={f} className="flex items-center gap-2.5">
-                        <div className="w-1 h-1 rounded-full bg-accent/50" />
-                        <span className="font-body text-sm text-paper/25">{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            className="flex flex-wrap gap-3 mt-12"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            {formats.map((f, i) => (
-              <motion.span
-                key={f}
-                className="px-5 py-2.5 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/50"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.15 + i * 0.05 }}
-              >
-                {f}
-              </motion.span>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Artists carousel ── */}
+      {/* Artists carousel — 2 rows like homepage */}
       <section ref={marqueeRef} className="mq-section relative bg-deep overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-accent/[0.04] rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="max-w-container mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-14 md:pb-20">
+        <div className="max-w-container mx-auto px-6 md:px-12 pt-8 pb-14 md:pb-20">
           <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-2">
             {all.length} artistes disponibles
           </span>
-          <p className="font-serif italic text-paper/30 text-base md:text-lg mb-8 md:mb-10">
-            Stand-up, one-man-show, animation — chaque artiste s'adapte à votre événement.
+          <p className="font-serif italic text-paper/30 text-base md:text-lg mb-0">
+            Stand-up, one-man-show, improvisation — chaque artiste a son univers.
           </p>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <h3 className="font-display font-black text-paper tracking-tight leading-[0.88]">
-              <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
-                Des artistes qui
-              </span>
-              <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
-                <span className="font-serif italic font-normal text-accent-light">font la différence.</span>
-              </span>
-            </h3>
-            <Link
-              to="/artistes"
-              className="group inline-flex items-center gap-3 flex-shrink-0 mb-2"
-            >
-              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                Voir tout
-              </span>
-              <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-                <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
-              </span>
-            </Link>
-          </div>
         </div>
 
         <div className="mq-tilt pb-24 md:pb-36">
@@ -354,38 +207,33 @@ export const BrandPage = () => {
         </div>
       </section>
 
-      {/* ── How it works ── */}
-      <section className="relative py-28 md:py-40 overflow-hidden" ref={processRef}>
-        <motion.div
-          className="absolute w-[350px] h-[350px] rounded-full pointer-events-none blur-[90px]"
-          style={{
-            bottom: '10%', right: '-5%',
-            background: 'radial-gradient(circle, rgba(236,72,153,0.10) 0%, transparent 70%)',
-          }}
-        />
-
+      {/* How it works */}
+      <section className="relative py-28 md:py-40 overflow-hidden">
         <div className="max-w-container mx-auto px-6 md:px-12">
           <motion.span
             className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-2"
             initial={{ opacity: 0 }}
-            animate={processInView ? { opacity: 1 } : {}}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Notre approche
+            Comment ça marche
           </motion.span>
           <motion.p
             className="font-serif italic text-paper/30 text-base md:text-lg mb-8 md:mb-10"
             initial={{ opacity: 0 }}
-            animate={processInView ? { opacity: 1 } : {}}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.05 }}
           >
-            De votre brief à la standing ovation, en quatre étapes.
+            Du premier appel au dernier applaudissement, en quatre étapes.
           </motion.p>
 
           <motion.h2
             className="font-display font-black text-paper tracking-tight leading-[0.88] mb-16 md:mb-20"
             initial={{ opacity: 0, y: 30 }}
-            animate={processInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
             <span className="block text-[clamp(2rem,5vw,4rem)]">
@@ -396,11 +244,11 @@ export const BrandPage = () => {
             </span>
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0 max-w-4xl">
+          <div className="max-w-3xl">
             {process.map((step, i) => (
               <motion.div
                 key={step.num}
-                className="relative pl-10 pb-12"
+                className="relative pl-10 pb-12 last:pb-0"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -423,7 +271,7 @@ export const BrandPage = () => {
         </div>
       </section>
 
-      {/* ── Stats ── */}
+      {/* Stats */}
       <section className="relative py-20 md:py-28">
         <div className="max-w-container mx-auto px-6 md:px-12">
           <div className="story-glass">
@@ -452,16 +300,8 @@ export const BrandPage = () => {
         </div>
       </section>
 
-      {/* ── Case studies ── */}
-      <section className="relative py-28 md:py-40 overflow-hidden">
-        <motion.div
-          className="absolute w-[500px] h-[500px] rounded-full pointer-events-none blur-[120px]"
-          style={{
-            top: '10%', right: '-10%',
-            background: 'radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)',
-          }}
-        />
-
+      {/* Commitments */}
+      <section className="relative py-28 md:py-40">
         <div className="max-w-container mx-auto px-6 md:px-12">
           <motion.span
             className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-2"
@@ -470,7 +310,7 @@ export const BrandPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Études de cas
+            Nos engagements
           </motion.span>
           <motion.p
             className="font-serif italic text-paper/30 text-base md:text-lg mb-8 md:mb-10"
@@ -479,7 +319,7 @@ export const BrandPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.05 }}
           >
-            Des résultats concrets, pas des promesses en l'air.
+            Ce qu'on promet — et ce qu'on tient.
           </motion.p>
 
           <motion.h2
@@ -490,37 +330,39 @@ export const BrandPage = () => {
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
             <span className="block text-[clamp(2rem,5vw,4rem)]">
-              Ils nous ont
+              Chaque spectacle devient
             </span>
             <span className="block text-[clamp(2rem,5vw,4rem)] mt-1">
-              <span className="font-serif italic font-normal text-accent-light">fait confiance.</span>
+              <span className="font-serif italic font-normal text-accent-light">une expérience.</span>
             </span>
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ gridAutoRows: '1fr' }}>
-            {caseStudies.map((study, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6" style={{ gridAutoRows: '1fr' }}>
+            {commitments.map((c, i) => (
               <motion.div
-                key={study.sector}
+                key={c.title}
                 className="mission-card group block relative"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.07, ease: [0.23, 1, 0.32, 1] }}
+                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.23, 1, 0.32, 1] }}
               >
-                <div className="mission-card-inner relative p-7 md:p-9 h-full flex flex-col">
-                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent block mb-3">
-                    {study.type}
+                <div className="mission-card-inner relative p-7 md:p-9 h-full">
+                  <span className="mission-card-num font-display font-black absolute top-7 right-8 md:top-9 md:right-9">
+                    {c.num}
                   </span>
-                  <h4 className="font-display font-bold text-paper text-lg md:text-xl tracking-tight mb-3">
-                    {study.sector}
-                  </h4>
-                  <p className="font-body text-paper/30 text-sm leading-relaxed mb-4 flex-1">
-                    {study.context}
-                  </p>
-                  <div className="pt-4 border-t border-paper/[0.06]">
-                    <p className="font-body text-accent-light/80 text-sm font-medium">
-                      {study.result}
-                    </p>
+
+                  <h3 className="font-display font-bold text-paper text-lg md:text-xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12 mb-3">
+                    {c.title}
+                  </h3>
+                  <p className="font-body text-paper/30 text-sm leading-relaxed mb-6">{c.desc}</p>
+                  <div className="space-y-2.5 pt-5 border-t border-paper/[0.06]">
+                    {c.features.map(f => (
+                      <div key={f} className="flex items-center gap-2.5">
+                        <div className="w-1 h-1 rounded-full bg-accent/50" />
+                        <span className="font-body text-sm text-paper/25">{f}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </motion.div>
@@ -529,34 +371,34 @@ export const BrandPage = () => {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <section className="relative py-20 md:py-28">
         <div className="max-w-container mx-auto px-6 md:px-12 text-center">
           <h2 className="font-display font-black text-paper text-2xl md:text-4xl tracking-tight leading-[0.92] mb-4">
-            Un événement
-            <span className="font-serif italic font-normal text-accent-light"> à imaginer ?</span>
+            Prêt à programmer
+            <span className="font-serif italic font-normal text-accent-light"> votre prochaine date ?</span>
           </h2>
           <p className="font-body text-paper/40 text-base max-w-md mx-auto mb-10">
-            Racontez-nous votre projet — on trouve l'artiste et le format qui vous correspondent.
+            Catalogue artistes, fiches techniques, disponibilités — on vous envoie tout sous 48h.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <a
-              href="mailto:contact@tinyteam.fr"
+              href="mailto:diffusion@tinyteam.fr"
               className="group inline-flex items-center gap-3"
             >
               <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                Discuter de votre projet
+                Recevoir le catalogue
               </span>
               <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
                 <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
               </span>
             </a>
             <a
-              href="mailto:contact@tinyteam.fr"
+              href="mailto:diffusion@tinyteam.fr"
               className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/40 hover:text-accent transition-colors duration-300"
             >
               <Mail size={14} />
-              <span>contact@tinyteam.fr</span>
+              <span>diffusion@tinyteam.fr</span>
             </a>
           </div>
         </div>

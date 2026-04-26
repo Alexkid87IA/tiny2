@@ -1,184 +1,110 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Sparkles } from 'lucide-react';
+import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
 
-interface Artist {
-  id: string;
-  name: string;
-  posterImage: string;
-  showName: string;
-  showDescription: string;
-  longDescription?: string;
-  websiteUrl?: string;
-  achievements?: string[];
-}
-
-interface ShowSectionProps {
-  artist: Artist;
-}
-
-export const ShowSection: React.FC<ShowSectionProps> = ({ artist }) => {
+export const ShowSection = ({ artist }: { artist: any }) => {
   return (
-    <section className="relative py-32 bg-gradient-to-b from-[#0A0F29] to-[#080C20]">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(236,72,153,0.1),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(168,85,247,0.1),transparent_50%)]" />
-        
-        {/* Grid animée */}
-        <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(236, 72, 153, 0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-            animation: 'gridFloat 30s linear infinite'
-          }}
-        />
-      </div>
+    <section className="relative py-28 md:py-40 bg-deep overflow-hidden">
+      <div className="absolute w-[400px] h-[400px] rounded-full pointer-events-none blur-[100px] top-[20%] right-[-5%] bg-[radial-gradient(circle,rgba(236,72,153,0.08)_0%,transparent_70%)]" />
 
-      <style jsx>{`
-        @keyframes gridFloat {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(50px, 50px); }
-        }
-      `}</style>
-
-      <div className="relative container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start max-w-7xl mx-auto">
-          
-          {/* Colonne gauche - Affiche */}
+      <div className="max-w-container mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Poster */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:sticky lg:top-32"
+            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+            className="mq-card relative rounded-[20px] overflow-hidden"
           >
-            <div className="relative group">
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              
-              {/* Card container */}
-              <div className="relative rounded-3xl overflow-hidden glass-card border border-white/10">
-                <motion.img
-                  src={artist.posterImage}
-                  alt={`Affiche du spectacle ${artist.showName}`}
-                  className="w-full h-auto aspect-[3/4] object-cover"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.5 }}
-                />
-                
-                {/* Shine effect on hover */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full"
-                  whileHover={{ translateX: '100%' }}
-                  transition={{ duration: 0.8 }}
-                />
-                
-                {/* Badge "Disponible" */}
-                <div className="absolute top-6 right-6 px-4 py-2 bg-green-500/90 backdrop-blur-sm rounded-full">
-                  <span className="text-xs font-bold text-white uppercase tracking-wide">
-                    Disponible
-                  </span>
-                </div>
-              </div>
+            <div className="aspect-[2/3] overflow-hidden rounded-[20px]">
+              <img
+                src={artist.posterImage}
+                alt={`Affiche ${artist.showName}`}
+                className="w-full h-full object-cover"
+              />
             </div>
+            <div className="mq-overlay absolute inset-0 rounded-[20px]" />
+            <div className="mq-border absolute inset-0 rounded-[20px] pointer-events-none z-[5]" />
           </motion.div>
 
-          {/* Colonne droite - Détails */}
+          {/* Content */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-8"
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
           >
-            {/* Header */}
-            <div>
-              <motion.div 
-                className="inline-flex items-center gap-2 px-4 py-2 glass-card rounded-full mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <Sparkles className="w-4 h-4 text-pink-400" />
-                <span className="text-xs text-white/70 uppercase tracking-wider">
-                  Spectacle en tournée
-                </span>
-              </motion.div>
-              
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-                <span className="text-gradient from-pink-300 via-pink-200 to-pink-300">
-                  {artist.showName}
-                </span>
-              </h2>
-            </div>
+            <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-6">
+              Spectacle
+            </span>
 
-            {/* Description */}
+            <h2 className="font-display font-black text-paper tracking-tight leading-[0.88]">
+              <span className="block text-[clamp(2rem,5vw,4rem)]">{artist.showName}</span>
+            </h2>
+
+            <div className="h-px w-16 bg-accent/30 my-8" />
+
             <div className="space-y-4">
-              <p className="text-xl text-white/90 leading-relaxed font-light">
+              <p className="font-body text-paper/50 text-base md:text-lg leading-[1.7]">
+                {artist.longDescription}
+              </p>
+              <p className="font-body text-paper/40 text-base leading-[1.7]">
                 {artist.showDescription}
               </p>
-              {artist.longDescription && (
-                <p className="text-lg text-white/70 leading-relaxed">
-                  {artist.longDescription}
-                </p>
-              )}
             </div>
 
-            {/* CTA Section */}
-            <motion.div 
-              className="relative glass-card rounded-3xl p-8 text-center overflow-hidden group"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              {/* Background gradient animation */}
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <h3 className="text-2xl font-bold text-white mb-3">
-                Intéressé par ce spectacle ?
-              </h3>
-              <p className="text-white/70 mb-6">
-                Découvrez toutes les dates et réservez vos places
-              </p>
-              
-              {artist.websiteUrl && (
-                <motion.a
-                  href={artist.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/btn relative inline-flex items-center gap-3 px-8 py-4 rounded-full overflow-hidden"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <motion.div
-                    className="absolute inset-0"
-                    animate={{
-                      background: [
-                        "linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6)",
-                        "linear-gradient(225deg, #ec4899, #8b5cf6, #3b82f6)",
-                        "linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6)"
-                      ]
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500/50 via-transparent to-blue-500/50 rounded-full blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" />
-                  
-                  <span className="relative font-bold text-white text-lg">Voir les dates</span>
-                  <ExternalLink className="relative w-5 h-5 text-white group-hover/btn:translate-x-1 transition-transform duration-300" />
-                </motion.a>
-              )}
-            </motion.div>
+            {artist.achievements?.length > 0 && (
+              <div className="mt-8">
+                <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-paper/25 block mb-3">
+                  Parcours
+                </span>
+                <div className="space-y-2">
+                  {artist.achievements.map((a: string, i: number) => (
+                    <div key={i} className="flex items-center gap-2.5">
+                      <div className="w-1 h-1 rounded-full bg-accent/50" />
+                      <span className="font-body text-sm text-paper/40">{a}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {artist.dates?.[0] && (
+              <div className="story-glass mt-10 p-6 md:p-8">
+                <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent/50 block mb-4">
+                  Prochaine date
+                </span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3">
+                    <Calendar size={16} className="text-accent/60" />
+                    <span className="font-body text-sm text-paper/50">{artist.dates[0].date}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Clock size={16} className="text-accent/60" />
+                    <span className="font-body text-sm text-paper/50">{artist.dates[0].time}</span>
+                  </div>
+                  <div className="flex items-center gap-3 col-span-2">
+                    <MapPin size={16} className="text-accent/60" />
+                    <span className="font-body text-sm text-paper/50">{artist.dates[0].venue}</span>
+                  </div>
+                </div>
+                {artist.dates[0].link && (
+                  <a
+                    href={artist.dates[0].link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-3 mt-6"
+                  >
+                    <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
+                      Réserver
+                    </span>
+                    <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
+                      <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+                    </span>
+                  </a>
+                )}
+              </div>
+            )}
           </motion.div>
         </div>
       </div>

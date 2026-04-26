@@ -41,6 +41,5 @@ export interface Artist {
     cities?: number;
     followers?: number;
   };
-  production?: string;
-  diffusion?: string;
+  prod?: string;
 }

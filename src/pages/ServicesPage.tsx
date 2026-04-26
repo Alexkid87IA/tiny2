@@ -1,248 +1,131 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
-import { ArrowRight, Star, Shield, Rocket, Layout, Globe, Users } from 'lucide-react';
 
-const expertises = [
-  {
-    id: "production",
-    title: "Production de Spectacles",
-    description: "De la conception à la réalisation, nous donnons vie à vos projets artistiques avec excellence et créativité.",
-    icon: Star,
-    gradient: "from-pink-500/20 to-pink-300/20",
-    features: [
-      "Direction artistique complète",
-      "Mise en scène professionnelle",
-      "Production technique",
-      "Gestion logistique"
-    ]
-  },
-  {
-    id: "diffusion",
-    title: "Diffusion & Tournées",
-    description: "Portez votre spectacle aux quatre coins de la France avec une organisation millimétrée.",
-    icon: Globe,
-    gradient: "from-pink-400/20 to-pink-600/20",
-    features: [
-      "Booking",
-      "Gestion de tournées",
-      "Relations salles",
-      "Support technique"
-    ]
-  },
-  {
-    id: "digital",
-    title: "Développement Digital",
-    description: "Construisez votre présence en ligne et engagez votre communauté avec des stratégies innovantes.",
-    icon: Rocket,
-    gradient: "from-pink-300/20 to-pink-500/20",
-    features: [
-      "Stratégie réseaux sociaux",
-      "Création de contenu",
-      "Community management",
-      "Marketing digital"
-    ]
-  },
-  {
-    id: "communication",
-    title: "Communication & Image",
-    description: "Développez une image forte et cohérente qui vous distingue dans l'univers du spectacle.",
-    icon: Layout,
-    gradient: "from-pink-500/20 to-purple-500/20",
-    features: [
-      "Relations presse",
-      "Identité visuelle",
-      "Communication événementielle",
-      "Relations publiques"
-    ]
-  },
-  {
-    id: "management",
-    title: "Management d'Artistes",
-    description: "Un accompagnement complet et personnalisé pour développer votre carrière et maximiser votre potentiel.",
-    icon: Shield,
-    gradient: "from-purple-500/20 to-pink-500/20",
-    features: [
-      "Développement de carrière",
-      "Stratégie artistique",
-      "Gestion administrative",
-      "Relations professionnelles"
-    ]
-  },
-  {
-    id: "evenements",
-    title: "Événements Spéciaux",
-    description: "Créez des moments uniques et mémorables pour des occasions exceptionnelles.",
-    icon: Users,
-    gradient: "from-pink-400/20 to-pink-600/20",
-    features: [
-      "Conception événementielle",
-      "Production sur mesure",
-      "Coordination complète",
-      "Gestion technique"
-    ]
-  }
+const services = [
+  { id: 'production', title: 'Production', desc: 'De l\'idée griffonnée au spectacle debout. On construit, on teste, on ajuste — jusqu\'à ce que ça tienne.' },
+  { id: 'management', title: 'Management', desc: 'Stratégie, négociation, positionnement. On trace la route avec chaque artiste, pas pour lui.' },
+  { id: 'digital', title: 'Digital', desc: 'Réseaux, contenus, communautés. On fait exister les artistes là où les gens regardent.' },
+  { id: 'communication', title: 'Communication', desc: 'Presse, image, relations. On raconte les bonnes histoires aux bonnes personnes.' },
+  { id: 'diffusion', title: 'Diffusion', desc: '300 salles partenaires. On remplit des dates, pas des tableaux Excel.' },
+  { id: 'evenements', title: 'Événements', desc: 'Corporate, festivals, soirées. On crée des moments qui restent.' },
 ];
 
-const ExpertiseCard = ({ expertise, index }) => {
-  const Icon = expertise.icon;
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative"
-    >
-      <div className="relative h-full glass-card rounded-2xl p-8 overflow-hidden">
-        <div className="absolute inset-0">
-          <div className={`absolute inset-0 bg-gradient-to-br ${expertise.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        </div>
-
-        <div className="relative">
-          {/* Icon */}
-          <div className="mb-6">
-            <div className="relative w-16 h-16 rounded-2xl glass-effect flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-              <Icon className="w-8 h-8 text-pink-400 group-hover:text-pink-300 transition-colors duration-300" />
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-white group-hover:text-glow transition-all duration-300">
-              {expertise.title}
-            </h3>
-            
-            <p className="text-white/70 group-hover:text-white/90 transition-colors duration-300">
-              {expertise.description}
-            </p>
-
-            {/* Features */}
-            <div className="space-y-3 pt-4">
-              {expertise.features.map((feature, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-pink-400/40" />
-                  <span className="text-sm text-white/60 group-hover:text-white/80 transition-colors duration-300">
-                    {feature}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Action Link */}
-            <div className="pt-6">
-              <Link
-                to={`/services/${expertise.id}`}
-                className="inline-flex items-center gap-2 text-white/70 group-hover:text-white transition-colors duration-300"
-              >
-                <span>En savoir plus</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-const FloatingParticles = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(50)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 bg-white/20 rounded-full"
-        initial={{
-          x: Math.random() * 100 + "%",
-          y: Math.random() * 100 + "%",
-          scale: 0,
-          opacity: 0
-        }}
-        animate={{
-          y: [null, `${Math.random() * 30 - 15}%`],
-          x: [null, `${Math.random() * 30 - 15}%`],
-          scale: [0, 1, 0],
-          opacity: [0, 0.8, 0]
-        }}
-        transition={{
-          duration: Math.random() * 5 + 3,
-          repeat: Infinity,
-          repeatDelay: Math.random() * 2
-        }}
-      />
-    ))}
-  </div>
-);
-
 export const ServicesPage = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(headRef, { once: true, margin: '-80px' });
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const orbY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const counterY = useTransform(scrollYProgress, [0, 1], ['12%', '-12%']);
+
   return (
-    <main className="min-h-screen bg-[#0A0F29]">
+    <main className="min-h-screen bg-deep">
       <Navigation />
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center py-32">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />
-          <motion.div
-            className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(236,72,153,0.1),transparent_50%)]"
-          />
-          <FloatingParticles />
-        </div>
+      <section ref={heroRef} className="relative pt-32 pb-28 md:pt-40 md:pb-40 overflow-hidden">
+        {/* Orbs */}
+        <motion.div
+          className="absolute w-[450px] h-[450px] rounded-full pointer-events-none blur-[100px]"
+          style={{
+            top: '15%', left: '-8%',
+            background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%)',
+            y: orbY,
+          }}
+        />
+        <motion.div
+          className="absolute w-[350px] h-[350px] rounded-full pointer-events-none blur-[90px]"
+          style={{
+            bottom: '10%', right: '-5%',
+            background: 'radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)',
+            y: useTransform(scrollYProgress, [0, 1], [-40, 40]),
+          }}
+        />
 
-        <div className="relative container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-              className="relative px-2 md:px-0"
-            >
+        {/* Decorative "6" */}
+        <motion.span
+          className="mission-bg-num absolute right-[-2%] md:right-[3%] top-[12%]"
+          style={{ y: counterY }}
+          aria-hidden
+        >
+          6
+        </motion.span>
+
+        <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
+          {/* Header */}
+          <motion.span
+            className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            Nos métiers
+          </motion.span>
+
+          <motion.h1
+            className="font-display font-black text-paper tracking-tight leading-[0.88]"
+            initial={{ opacity: 0, y: 50 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
+              Ce qu'on
+            </span>
+            <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
+              <span className="font-serif italic font-normal text-accent-light">sait faire.</span>
+            </span>
+          </motion.h1>
+
+          <motion.p
+            className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.25 }}
+          >
+            Six métiers, une obsession : que l'artiste soit au bon endroit,
+            au bon moment, dans les bonnes conditions.
+          </motion.p>
+
+          {/* Services grid */}
+          <div className="mission-grid mt-16 md:mt-24" style={{ gridAutoRows: '1fr' }}>
+            {services.map((service, i) => (
               <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1 }}
-                className="absolute -inset-x-4 -inset-y-8 md:-inset-y-16 bg-gradient-to-r from-pink-500/10 via-pink-500/5 to-pink-500/10 rounded-[40px] blur-3xl"
-              />
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative"
+                key={service.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.6, delay: i * 0.07, ease: [0.23, 1, 0.32, 1] }}
               >
-                <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.9] md:leading-[0.9]">
-                  <span className="inline-block bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent">
-                    Nos expertises
-                  </span>
-                  <br />
-                  <span className="inline-block bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 bg-clip-text text-transparent">
-                    sur mesure
-                  </span>
-                </h1>
+                <Link
+                  to={`/services/${service.id}`}
+                  className="mission-card group block relative"
+                >
+                  <div className="mission-card-inner relative p-7 md:p-9">
+                    <span className="mission-card-num font-display font-black absolute top-7 right-8 md:top-9 md:right-9">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+
+                    <h3 className="font-display font-bold text-paper text-xl md:text-2xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12">
+                      {service.title}
+                    </h3>
+                    <p className="font-body text-paper/30 text-sm md:text-base leading-relaxed mt-3 max-w-xs">
+                      {service.desc}
+                    </p>
+
+                    <div className="mission-card-arrow mt-6">
+                      <ArrowRight size={15} />
+                    </div>
+                  </div>
+                </Link>
               </motion.div>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mt-8"
-            >
-              Une expertise complète pour accompagner votre carrière artistique.
-              Des solutions adaptées à chaque étape de votre développement.
-            </motion.p>
-          </div>
-        </div>
-      </section>
-
-      {/* Expertises Grid */}
-      <section className="relative py-32">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {expertises.map((expertise, index) => (
-              <ExpertiseCard key={expertise.id} expertise={expertise} index={index} />
             ))}
           </div>
         </div>

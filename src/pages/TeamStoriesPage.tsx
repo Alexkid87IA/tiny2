@@ -1,210 +1,160 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
-import { Star, Heart, Sparkles, Music, Camera, Coffee, Book, Palette } from 'lucide-react';
 
 const teamStories = [
   {
-    name: "Bénédicte Lecoq",
-    role: "Fondatrice",
-    story: "Après 15 ans dans l'industrie du spectacle, j'ai réalisé que les artistes avaient besoin d'un accompagnement plus humain, plus personnalisé. C'est ainsi qu'est née Tiny Team.",
-    passions: ["Théâtre contemporain", "Photographie", "Voyages culturels"],
-    quote: "L'art est un pont entre les rêves et la réalité.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=1024",
-    icons: [Star, Heart, Camera],
-    gradient: "from-purple-500/20 to-blue-500/20"
+    name: 'Bénédicte Lecoq',
+    role: 'Fondatrice',
+    story: 'Après 15 ans dans l\'industrie du spectacle, j\'ai réalisé que les artistes avaient besoin d\'un accompagnement plus humain, plus personnalisé. C\'est ainsi qu\'est née Tiny Team.',
+    quote: 'L\'art est un pont entre les rêves et la réalité.',
   },
   {
-    name: "Isabelle Sabatier",
-    role: "Responsable Diffusion & Tournées",
-    story: "Mon parcours dans la production m'a appris que chaque spectacle est une aventure unique. Chez Tiny Team, nous créons des tournées qui respectent l'essence de chaque artiste.",
-    passions: ["Musique live", "Organisation d'événements", "Arts de la scène"],
-    quote: "Chaque ville est une nouvelle scène à conquérir.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=1024",
-    icons: [Music, Star, Heart],
-    gradient: "from-blue-500/20 to-cyan-500/20"
+    name: 'Isabelle Sabatier',
+    role: 'Responsable Diffusion',
+    story: 'Mon parcours dans la production m\'a appris que chaque spectacle est une aventure unique. Chez Tiny Team, nous créons des tournées qui respectent l\'essence de chaque artiste.',
+    quote: 'Chaque ville est une nouvelle scène à conquérir.',
   },
   {
-    name: "Elodie Biffi",
-    role: "Responsable Administrative",
-    story: "La gestion administrative dans le spectacle vivant est un art en soi. Je veille à ce que nos artistes puissent se concentrer sur leur créativité en toute sérénité.",
-    passions: ["Littérature", "Danse contemporaine", "Gestion de projet"],
-    quote: "L'organisation est la clé de la liberté artistique.",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1024",
-    icons: [Book, Coffee, Palette],
-    gradient: "from-cyan-500/20 to-teal-500/20"
+    name: 'Elodie Biffi',
+    role: 'Responsable Administrative',
+    story: 'La gestion administrative dans le spectacle vivant est un art en soi. Je veille à ce que nos artistes puissent se concentrer sur leur créativité en toute sérénité.',
+    quote: 'L\'organisation est la clé de la liberté artistique.',
   },
   {
-    name: "Jérémy Dravigny",
-    role: "Responsable Billetterie & Communication",
-    story: "La communication digitale est devenue essentielle dans le spectacle vivant. Je m'assure que chaque artiste trouve son public et que chaque spectateur vive une expérience unique.",
-    passions: ["Marketing digital", "Nouvelles technologies", "Stand-up"],
-    quote: "L'innovation au service de l'émotion.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=1024",
-    icons: [Sparkles, Star, Heart],
-    gradient: "from-teal-500/20 to-green-500/20"
+    name: 'Jérémy Dravigny',
+    role: 'Responsable Communication',
+    story: 'La communication digitale est devenue essentielle dans le spectacle vivant. Je m\'assure que chaque artiste trouve son public et que chaque spectateur vive une expérience unique.',
+    quote: 'L\'innovation au service de l\'émotion.',
   },
   {
-    name: "Margaux Morel",
-    role: "Chargée de Production & Booking",
-    story: "Le booking est un mélange subtil d'intuition et de stratégie. Je travaille chaque jour pour créer des opportunités qui correspondent parfaitement à nos artistes.",
-    passions: ["Musique", "Art contemporain", "Production événementielle"],
-    quote: "Créer des connexions, construire des ponts.",
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=1024",
-    icons: [Music, Star, Palette],
-    gradient: "from-green-500/20 to-yellow-500/20"
-  }
+    name: 'Margaux Morel',
+    role: 'Chargée de Production',
+    story: 'Le booking est un mélange subtil d\'intuition et de stratégie. Je travaille chaque jour pour créer des opportunités qui correspondent parfaitement à nos artistes.',
+    quote: 'Créer des connexions, construire des ponts.',
+  },
 ];
 
-const StoryCard = ({ story, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.8, delay: index * 0.2 }}
-    className="group"
-  >
-    <div className="relative glass-card rounded-2xl overflow-hidden">
-      {/* Background Image & Overlay */}
-      <div className="relative h-64">
-        <img
-          src={story.image}
-          alt={story.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className={`absolute inset-0 bg-gradient-to-t ${story.gradient} mix-blend-overlay opacity-40`} />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F29] via-transparent to-transparent" />
-      </div>
-
-      {/* Content */}
-      <div className="relative p-8">
-        {/* Header */}
-        <div className="mb-6">
-          <h3 className="text-2xl font-bold text-white group-hover:text-glow transition-all duration-300">
-            {story.name}
-          </h3>
-          <p className="text-white/70 group-hover:text-white/90 transition-colors duration-300">
-            {story.role}
-          </p>
-        </div>
-
-        {/* Story */}
-        <p className="text-white/80 mb-6 leading-relaxed">
-          {story.story}
-        </p>
-
-        {/* Passions */}
-        <div className="mb-6">
-          <h4 className="text-sm font-medium text-white/70 mb-3">Passions</h4>
-          <div className="flex flex-wrap gap-2">
-            {story.passions.map((passion, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 rounded-full text-xs bg-white/5 text-white/60 border border-white/10 group-hover:border-white/20 transition-colors duration-300"
-              >
-                {passion}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Quote */}
-        <div className="pt-6 border-t border-white/10 group-hover:border-white/20 transition-colors duration-300">
-          <div className="flex gap-4 items-center">
-            <div className="flex -space-x-2">
-              {story.icons.map((Icon, i) => (
-                <div
-                  key={i}
-                  className="w-8 h-8 rounded-full glass-effect flex items-center justify-center relative z-[${i}]"
-                >
-                  <Icon className="w-4 h-4 text-blue-400" />
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-white/80 italic">
-              "{story.quote}"
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </motion.div>
-);
-
-const FloatingParticles = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(50)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 bg-white/20 rounded-full"
-        initial={{
-          x: Math.random() * 100 + "%",
-          y: Math.random() * 100 + "%",
-          scale: 0,
-          opacity: 0
-        }}
-        animate={{
-          y: [null, `${Math.random() * 30 - 15}%`],
-          x: [null, `${Math.random() * 30 - 15}%`],
-          scale: [0, 1, 0],
-          opacity: [0, 0.8, 0]
-        }}
-        transition={{
-          duration: Math.random() * 5 + 3,
-          repeat: Infinity,
-          repeatDelay: Math.random() * 2
-        }}
-      />
-    ))}
-  </div>
-);
-
 export const TeamStoriesPage = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(headRef, { once: true, margin: '-80px' });
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const orbY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+
   return (
-    <main className="min-h-screen bg-[#0A0F29]">
+    <main className="min-h-screen bg-deep">
       <Navigation />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center py-32">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(44,62,153,0.15),transparent_70%)]" />
-          <FloatingParticles />
-        </div>
+      {/* Hero */}
+      <section ref={heroRef} className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+        <motion.div
+          className="absolute w-[500px] h-[500px] rounded-full pointer-events-none blur-[120px]"
+          style={{
+            top: '10%', left: '-8%',
+            background: 'radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%)',
+            y: orbY,
+          }}
+        />
 
-        <div className="relative container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="mb-8"
-            >
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8">
-                <span className="block text-gradient from-white via-blue-100 to-white">
-                  Les visages derrière
-                </span>
-                <span className="block text-gradient from-yellow-200 via-yellow-100 to-yellow-200">
-                  les succès
-                </span>
-              </h1>
-              <p className="text-xl text-white/80 leading-relaxed">
-                Découvrez les parcours inspirants de ceux qui font vivre Tiny Team au quotidien.
-                Des histoires uniques, une passion commune.
-              </p>
-            </motion.div>
-          </div>
+        <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
+          <motion.span
+            className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            L'équipe
+          </motion.span>
+
+          <motion.h1
+            className="font-display font-black text-paper tracking-tight leading-[0.88]"
+            initial={{ opacity: 0, y: 50 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
+              Les visages derrière
+            </span>
+            <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
+              <span className="font-serif italic font-normal text-accent-light">les succès.</span>
+            </span>
+          </motion.h1>
+
+          <motion.p
+            className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.25 }}
+          >
+            Découvrez les parcours de ceux qui font vivre Tiny Team au quotidien.
+          </motion.p>
         </div>
       </section>
 
-      {/* Stories Grid */}
-      <section className="relative py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
-            {teamStories.map((story, index) => (
-              <StoryCard key={story.name} story={story} index={index} />
+      {/* Stories */}
+      <section className="relative pb-28 md:pb-40">
+        <div className="max-w-container mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {teamStories.map((story, i) => (
+              <motion.div
+                key={story.name}
+                className="mission-card group block relative"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.6, delay: i * 0.07, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <div className="mission-card-inner relative p-7 md:p-9">
+                  <span className="mission-card-num font-display font-black absolute top-7 right-8 md:top-9 md:right-9">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+
+                  <h3 className="font-display font-bold text-paper text-xl md:text-2xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12">
+                    {story.name}
+                  </h3>
+                  <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent/50 block mt-1 mb-5">
+                    {story.role}
+                  </span>
+
+                  <p className="font-body text-paper/35 text-sm md:text-base leading-relaxed mb-6">
+                    {story.story}
+                  </p>
+
+                  <div className="pt-5 border-t border-paper/[0.06]">
+                    <p className="font-serif italic text-accent-light/60 text-sm">
+                      « {story.quote} »
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
+
+          <motion.div
+            className="mt-14 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link to="/equipe" className="group inline-flex items-center gap-3">
+              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
+                Rencontrer l'équipe
+              </span>
+              <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
+                <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+              </span>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
