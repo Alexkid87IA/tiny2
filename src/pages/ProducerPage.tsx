@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { artists } from '../data/artists';
@@ -99,31 +99,43 @@ export const ProducerPage = () => {
             {visibleArtists.length} artistes disponibles
           </span>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7">
+          {/* Mobile: carousel */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:hidden">
+            {visibleArtists.map((artist) => (
+              <Link key={artist.id} to={`/artiste/${artist.id}`} className="mq-card relative shrink-0 w-[200px] snap-start rounded-[16px] overflow-hidden">
+                <div className="aspect-square overflow-hidden rounded-[16px]">
+                  <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <div className="mq-overlay absolute inset-0 rounded-[16px]" />
+                <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
+                  <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1">{artist.type}</span>
+                  <span className="font-display font-black text-paper text-sm tracking-tight leading-tight block">{artist.name}</span>
+                </div>
+                <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop: 2 rows of 5 */}
+          <div className="hidden md:grid md:grid-cols-5 gap-4">
             {visibleArtists.map((artist, i) => (
               <motion.div
                 key={artist.id}
                 initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.6, delay: i * 0.05, ease: [0.23, 1, 0.32, 1] }}
+                transition={{ duration: 0.5, delay: i * 0.04, ease: [0.23, 1, 0.32, 1] }}
               >
-                <Link to={`/artiste/${artist.id}`} className="mq-card block relative rounded-[20px] overflow-hidden">
-                  <div className="aspect-[3/4] overflow-hidden rounded-[20px]">
+                <Link to={`/artiste/${artist.id}`} className="mq-card block relative rounded-[16px] overflow-hidden">
+                  <div className="aspect-square overflow-hidden rounded-[16px]">
                     <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
                   </div>
-                  <div className="mq-overlay absolute inset-0 rounded-[20px]" />
-                  <div className="mq-name absolute bottom-6 left-6 right-6 z-[3]">
-                    <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1.5">{artist.type}</span>
-                    <span className="font-display font-black text-paper text-xl md:text-2xl tracking-tight leading-tight block">{artist.name}</span>
-                    {artist.showName && (
-                      <span className="inline-block mt-2 px-3 py-1 rounded-full text-[11px] bg-accent/15 text-accent-light/80 border border-accent/10">{artist.showName}</span>
-                    )}
+                  <div className="mq-overlay absolute inset-0 rounded-[16px]" />
+                  <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
+                    <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1">{artist.type}</span>
+                    <span className="font-display font-black text-paper text-base tracking-tight leading-tight block">{artist.name}</span>
                   </div>
-                  <div className="mq-cta absolute top-5 right-5 z-[4] w-11 h-11 rounded-full bg-accent flex items-center justify-center text-ink">
-                    <ArrowUpRight size={18} strokeWidth={2.5} />
-                  </div>
-                  <div className="mq-border absolute inset-0 rounded-[20px] pointer-events-none z-[5]" />
+                  <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
                 </Link>
               </motion.div>
             ))}

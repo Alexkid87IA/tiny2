@@ -6,7 +6,7 @@ import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { artists } from '../data/artists';
 
-const visibleArtists = artists.filter(a => a.image).slice(0, 6);
+const visibleArtists = artists.filter(a => a.image);
 
 const solutions = [
   {
@@ -150,24 +150,41 @@ export const BrandPage = () => {
             </span>
           </motion.h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
+          {/* Mobile: carousel */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:hidden">
+            {visibleArtists.map((artist) => (
+              <Link key={artist.id} to={`/artiste/${artist.id}`} className="mq-card relative shrink-0 w-[200px] snap-start rounded-[16px] overflow-hidden">
+                <div className="aspect-square overflow-hidden rounded-[16px]">
+                  <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <div className="mq-overlay absolute inset-0 rounded-[16px]" />
+                <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
+                  <span className="font-display font-black text-paper text-sm tracking-tight leading-tight block">{artist.name}</span>
+                </div>
+                <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop: 2 rows of 5 */}
+          <div className="hidden md:grid md:grid-cols-5 gap-4">
             {visibleArtists.map((artist, i) => (
               <motion.div
                 key={artist.id}
                 initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
+                transition={{ duration: 0.5, delay: i * 0.04 }}
               >
-                <Link to={`/artiste/${artist.id}`} className="mq-card block relative rounded-[20px] overflow-hidden">
-                  <div className="aspect-[3/4] overflow-hidden rounded-[20px]">
+                <Link to={`/artiste/${artist.id}`} className="mq-card block relative rounded-[16px] overflow-hidden">
+                  <div className="aspect-square overflow-hidden rounded-[16px]">
                     <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
                   </div>
-                  <div className="mq-overlay absolute inset-0 rounded-[20px]" />
-                  <div className="mq-name absolute bottom-5 left-5 right-5 z-[3]">
-                    <span className="font-display font-black text-paper text-lg md:text-xl tracking-tight leading-tight block">{artist.name}</span>
+                  <div className="mq-overlay absolute inset-0 rounded-[16px]" />
+                  <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
+                    <span className="font-display font-black text-paper text-base tracking-tight leading-tight block">{artist.name}</span>
                   </div>
-                  <div className="mq-border absolute inset-0 rounded-[20px] pointer-events-none z-[5]" />
+                  <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
                 </Link>
               </motion.div>
             ))}
