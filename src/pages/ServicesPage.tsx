@@ -275,13 +275,13 @@ export const ServicesPage = () => {
             <div className="grid grid-cols-2">
               <div className="border-t border-r border-paper/12 px-5 py-4 md:px-6 md:py-5">
                 <span className="premium-kicker text-paper/42">Salles partenaires</span>
-                <strong className="mt-2 block font-display text-5xl font-black tracking-tight text-paper md:text-6xl">
+                <strong className="mt-2 block font-display text-3xl font-black tracking-tight text-paper">
                   300<span className="text-accent-light">+</span>
                 </strong>
               </div>
               <div className="border-t border-paper/12 px-5 py-4 md:px-6 md:py-5">
                 <span className="premium-kicker text-paper/42">Métiers intégrés</span>
-                <strong className="mt-2 block font-display text-5xl font-black tracking-tight text-paper md:text-6xl">
+                <strong className="mt-2 block font-display text-3xl font-black tracking-tight text-paper">
                   6
                 </strong>
               </div>
