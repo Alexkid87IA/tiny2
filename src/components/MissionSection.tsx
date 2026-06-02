@@ -1,129 +1,208 @@
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  CalendarDays,
+  Handshake,
+  ImagePlus,
+  Megaphone,
+  RadioTower,
+  Route,
+  Smartphone,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const services = [
-  { id: 'production', title: 'Production', desc: 'De l\'idée au rideau final. On construit, on teste, on ajuste.' },
-  { id: 'management', title: 'Management', desc: 'Stratégie, négociation, positionnement. On trace la route avec chaque artiste, pas pour lui.' },
-  { id: 'digital', title: 'Digital', desc: 'Réseaux, contenus, communautés. On fait exister les artistes là où les gens regardent.' },
-  { id: 'communication', title: 'Communication', desc: 'Presse, image, relations. On raconte les bonnes histoires aux bonnes personnes.' },
-  { id: 'diffusion', title: 'Diffusion', desc: '300 salles partenaires. On remplit des dates, pas des tableaux Excel.' },
-  { id: 'evenements', title: 'Événements', desc: 'Corporate, festivals, soirées. On crée des moments qui restent.' },
+  {
+    id: 'production',
+    title: 'Production',
+    desc: 'Transformer une intuition de plateau en spectacle solide, répétable, vendable.',
+    scope: 'Création',
+    Icon: Route,
+  },
+  {
+    id: 'management',
+    title: 'Management',
+    desc: 'Construire la trajectoire, cadrer les décisions et protéger le temps artistique.',
+    scope: 'Trajectoire',
+    Icon: Handshake,
+  },
+  {
+    id: 'diffusion',
+    title: 'Diffusion',
+    desc: 'Activer les bonnes salles, au bon moment, avec une lecture claire du marché.',
+    scope: 'Réseau',
+    Icon: RadioTower,
+  },
+  {
+    id: 'communication',
+    title: 'Communication',
+    desc: 'Installer l’image, les messages et les prises de parole sans lisser l’artiste.',
+    scope: 'Image',
+    Icon: Megaphone,
+  },
+  {
+    id: 'digital',
+    title: 'Digital',
+    desc: 'Faire vivre les contenus là où le public découvre, suit, partage et revient.',
+    scope: 'Audience',
+    Icon: Smartphone,
+  },
+  {
+    id: 'evenements',
+    title: 'Événements',
+    desc: 'Composer des formats scène, entreprise ou festival avec la bonne intensité.',
+    scope: 'Formats',
+    Icon: CalendarDays,
+  },
 ];
 
 export const MissionSection = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
+
   return (
-    <section className="perf-section mission relative py-28 md:py-40 lg:py-48 bg-deep overflow-hidden">
+    <section ref={sectionRef} className="relative overflow-hidden bg-paper py-20 text-ink md:py-28 lg:py-32">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-ink/10" />
+      <div className="mx-auto max-w-container px-6 md:px-12">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start">
+          <motion.div
+            className="lg:sticky lg:top-28"
+            initial={false}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <div className="rounded-[14px] border border-ink/10 bg-white/[0.55] p-6 md:p-8 lg:p-9">
+              <span className="premium-kicker text-accent-dark/70">Nos métiers</span>
+              <h2 className="premium-title mt-5 max-w-xl text-[52px] md:text-[72px] lg:text-[82px]">
+                Une équipe,
+                <span className="block font-serif font-normal italic text-accent-dark">
+                  six leviers.
+                </span>
+              </h2>
+              <p className="premium-copy mt-7 max-w-lg text-lg text-ink/[0.66] md:text-xl">
+                On ne sépare pas l’artistique, la diffusion et l’image. Les métiers
+                avancent ensemble, pour éviter les angles morts et les décisions hors-sol.
+              </p>
 
-      {/* ── Orbs ── */}
-      <div
-        className="absolute w-[450px] h-[450px] rounded-full pointer-events-none blur-[80px]"
-        style={{
-          top: '15%', left: '-8%',
-          background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%)',
-        }}
-      />
-      <div
-        className="absolute w-[350px] h-[350px] rounded-full pointer-events-none blur-[80px]"
-        style={{
-          bottom: '10%', right: '-5%',
-          background: 'radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)',
-        }}
-      />
+              <div className="mt-9 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                {[
+                  ['01', 'Produire juste'],
+                  ['02', 'Défendre fort'],
+                  ['03', 'Diffuser mieux'],
+                ].map(([num, label]) => (
+                  <div key={num} className="flex items-center justify-between rounded-full border border-ink/10 px-4 py-3">
+                    <span className="premium-kicker text-ink/[0.38]">{num}</span>
+                    <span className="font-body text-sm font-semibold text-ink">{label}</span>
+                  </div>
+                ))}
+              </div>
 
-      {/* ── Decorative "6" ── */}
-      <span
-        className="mission-bg-num absolute right-[-2%] md:right-[3%] top-[12%]"
-        aria-hidden
-      >
-        6
-      </span>
-
-      <div className="relative max-w-container mx-auto px-6 md:px-12">
-
-        <motion.span
-          className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          Nos métiers
-        </motion.span>
-        <motion.p
-          className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-        >
-          Production, management, diffusion, digital — tout ce qu'il faut pour qu'un artiste brille.
-        </motion.p>
-
-        <motion.h2
-          className="font-display font-black text-paper tracking-tight leading-[0.88]"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-        >
-          <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
-            Ce qu'on
-          </span>
-          <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
-            <span className="font-serif italic font-normal text-accent-light">sait faire.</span>
-          </span>
-        </motion.h2>
-
-        <motion.p
-          className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.25 }}
-        >
-          Six métiers, une obsession : que l'artiste soit au bon endroit,
-          au bon moment, dans les bonnes conditions.
-        </motion.p>
-
-        {/* ── Services grid ── */}
-        <div className="mission-grid mt-16 md:mt-24" style={{ gridAutoRows: '1fr' }}>
-          {services.map((service, i) => (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, delay: i * 0.07, ease: [0.23, 1, 0.32, 1] }}
-            >
-              <Link
-                to={`/services/${service.id}`}
-                className="mission-card group block relative"
-              >
-                <div className="mission-card-inner relative p-7 md:p-9">
-                  {/* Number */}
-                  <span className="mission-card-num font-display font-black absolute top-7 right-8 md:top-9 md:right-9">
-                    {String(i + 1).padStart(2, '0')}
+              <div className="mt-9">
+                <Link to="/services" className="premium-btn premium-btn-dark group">
+                  Voir tous les services
+                  <span className="premium-btn-icon">
+                    <ArrowUpRight size={15} strokeWidth={2.4} />
                   </span>
+                </Link>
+              </div>
 
-                  {/* Content */}
-                  <h3 className="font-display font-bold text-paper text-xl md:text-2xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12">
-                    {service.title}
-                  </h3>
-                  <p className="font-body text-paper/30 text-sm md:text-base leading-relaxed mt-3 max-w-xs">
-                    {service.desc}
-                  </p>
-
-                  {/* Arrow */}
-                  <div className="mission-card-arrow mt-6">
-                    <ArrowRight size={15} />
+              <div className="mt-9 overflow-hidden rounded-[16px] border border-dashed border-ink/[0.16] bg-[linear-gradient(135deg,rgba(10,10,10,0.035),rgba(236,72,153,0.055))] p-3">
+                <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden rounded-[12px] border border-ink/[0.08] bg-paper">
+                  <div className="absolute inset-0 opacity-[0.42] [background-image:linear-gradient(rgba(10,10,10,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(10,10,10,0.08)_1px,transparent_1px)] [background-size:36px_36px]" />
+                  <div className="relative flex flex-col items-center gap-3 text-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-paper">
+                      <ImagePlus size={20} strokeWidth={2.2} />
+                    </span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/[0.48]">
+                      Photo équipe
+                    </span>
                   </div>
                 </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+              </div>
+            </div>
+          </motion.div>
 
+          <div className="min-w-0">
+            <motion.div
+              className="mb-4 rounded-[14px] bg-ink p-6 text-paper md:p-8"
+              initial={false}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.08, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+                <div>
+                  <span className="premium-kicker text-paper/[0.5]">Système intégré</span>
+                  <p className="premium-copy mt-4 max-w-2xl text-2xl leading-[1.22] text-paper md:text-[34px]">
+                    Chaque métier a son rôle, mais personne ne travaille dans son coin.
+                  </p>
+                </div>
+                <div className="flex gap-3 md:flex-col">
+                  <span className="rounded-full border border-paper/[0.14] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-paper/[0.68]">
+                    6 métiers
+                  </span>
+                  <span className="rounded-full border border-paper/[0.14] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-paper/[0.68]">
+                    1 équipe
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+
+            <div className="grid gap-4 xl:grid-cols-2">
+              {services.map((service, i) => {
+                const Icon = service.Icon;
+                const hasLongTitle = service.title.length > 12;
+
+                return (
+                  <motion.div
+                    key={service.id}
+                    initial={false}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.55, delay: i * 0.04, ease: [0.23, 1, 0.32, 1] }}
+                  >
+                    <Link
+                      to={`/services#${service.id}`}
+                      className={`group flex min-h-[252px] flex-col justify-between rounded-[14px] border p-6 transition duration-200 md:p-7 ${
+                        i === 0
+                          ? 'border-accent/[0.35] bg-accent/10'
+                          : 'border-ink/10 bg-paper hover:border-ink/[0.22] hover:bg-white'
+                      }`}
+                    >
+                      <div>
+                        <div className="mb-9 flex items-center justify-between gap-4">
+                          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-paper">
+                            <Icon size={18} strokeWidth={2.2} />
+                          </span>
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-ink/10 text-ink/[0.42] transition group-hover:border-accent/40 group-hover:bg-accent group-hover:text-ink">
+                            <ArrowRight size={14} />
+                          </span>
+                        </div>
+                        <span className="premium-kicker text-accent-dark/70">
+                          {String(i + 1).padStart(2, '0')} · {service.scope}
+                        </span>
+                        <h3
+                          className="premium-title mt-3 max-w-full text-ink"
+                          style={{
+                            fontSize: hasLongTitle
+                              ? 'clamp(1.85rem, 2.1vw, 2rem)'
+                              : 'clamp(2.05rem, 2.7vw, 2.45rem)',
+                          }}
+                        >
+                          {service.title}
+                        </h3>
+                      </div>
+                      <p className="premium-copy mt-8 max-w-sm text-base text-ink/[0.62]">
+                        {service.desc}
+                      </p>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

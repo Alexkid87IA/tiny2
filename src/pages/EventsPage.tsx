@@ -38,7 +38,7 @@ export const EventsPage = () => {
         <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
           <motion.span
             className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.5 }}
           >
@@ -47,7 +47,7 @@ export const EventsPage = () => {
 
           <motion.h1
             className="font-display font-black text-paper tracking-tight leading-[0.88]"
-            initial={{ opacity: 0, y: 50 }}
+            initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
           >
@@ -61,7 +61,7 @@ export const EventsPage = () => {
 
           <motion.p
             className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.25 }}
           >
@@ -77,7 +77,7 @@ export const EventsPage = () => {
             {visibleArtists.map((artist, i) => (
               <motion.div
                 key={artist.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.6, delay: i * 0.05, ease: [0.23, 1, 0.32, 1] }}
@@ -87,11 +87,6 @@ export const EventsPage = () => {
                     <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
                   </div>
                   <div className="mq-overlay absolute inset-0 rounded-[20px]" />
-                  {artist.prod && (
-                    <span className="absolute top-5 left-5 z-[4] px-3 py-1.5 rounded-full bg-ink/60 backdrop-blur-sm border border-paper/10 font-mono text-[9px] tracking-[0.14em] uppercase text-paper/70">
-                      {artist.prod}
-                    </span>
-                  )}
                   <div className="mq-name absolute bottom-6 left-6 right-6 z-[3]">
                     <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1.5">{artist.type}</span>
                     <span className="font-display font-black text-paper text-xl md:text-2xl tracking-tight leading-tight block">{artist.name}</span>
@@ -131,13 +126,11 @@ export const EventsPage = () => {
           </p>
           <Link
             to="/programmateur"
-            className="group inline-flex items-center gap-3"
+            className="premium-btn premium-btn-paper group"
           >
-            <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-              Espace programmateurs
-            </span>
-            <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-              <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+            Espace programmateurs
+            <span className="premium-btn-icon">
+              <ArrowRight size={15} strokeWidth={2.4} />
             </span>
           </Link>
         </div>

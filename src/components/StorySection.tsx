@@ -1,218 +1,238 @@
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { ArrowUpRight, Mail } from 'lucide-react';
 
 const stats = [
-  { value: '9', label: 'Artistes' },
-  { value: '50+', label: 'Villes' },
-  { value: '95%', label: 'Remplissage' },
+  {
+    value: '10',
+    label: 'artistes accompagnés',
+    detail: 'Un plateau resserré, suivi de près.',
+  },
+  {
+    value: '5',
+    label: 'personnes dans l’équipe',
+    detail: 'Production, management, diffusion.',
+  },
+  {
+    value: '300+',
+    label: 'salles partenaires',
+    detail: 'Un réseau de diffusion actif, utile, entretenu.',
+  },
+];
+
+const principles = [
+  'Un accompagnement proche, précis, jamais standardisé.',
+  'Des décisions artistiques et business prises ensemble.',
+  'Une vision long terme : produire, diffuser, installer.',
 ];
 
 const teamMembers = [
   {
     name: 'Bénédicte Lecoq',
     role: 'Fondatrice & Directrice',
+    email: 'benedicte@tinyteam.fr',
     image: 'https://static.eno.do/x/fs-207406-default/2584a08dbb3b3d9c470bee9fb6019dd1/media.jpg',
   },
   {
     name: 'Isabelle Sabatier',
     role: 'Responsable Diffusion',
+    email: 'booking@tinyteam.fr',
     image: 'https://static.eno.do/x/fs-207410-default/af6d91411c60335f407220493c043763/media.jpg',
   },
   {
-    name: 'Elodie Biffi',
+    name: 'Élodie Biffi',
     role: 'Responsable Administrative',
+    email: 'administratif@tinyteam.fr',
     image: 'https://static.eno.do/x/fs-207411-default/0ed25e6fe47508a9f55ceb7a0ee6fc4c/media.jpg',
   },
   {
     name: 'Jérémy Dravigny',
     role: 'Responsable Communication',
+    email: 'tourmanager@tinyteam.fr',
     image: 'https://static.eno.do/x/fs-207412-default/b0bd97d300f452b564d515009f33562b/media.jpg',
   },
   {
     name: 'Margaux Morel',
     role: 'Chargée de Production',
+    email: 'diffusion@tinyteam.fr',
     image: 'https://static.eno.do/x/fs-207407-default/6f534256453179693776055b70110e0e/media.jpg',
   },
 ];
 
 export const StorySection = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
+
   return (
-    <section className="perf-section story relative bg-deep overflow-hidden py-28 md:py-40 lg:py-48">
-
-      {/* ── Floating orbs ── */}
-      <div className="story-orb story-orb-1" />
-      <div className="story-orb story-orb-2" />
-      <div className="story-orb story-orb-3" />
-
-      {/* ── Diagonal accent line ── */}
-      <div className="story-diag" style={{ width: '100%' }} />
-
-      <div className="relative max-w-container mx-auto px-6 md:px-12">
-
-        {/* ── Eyebrow ── */}
-        <motion.span
-          className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          Qui sommes-nous
-        </motion.span>
-        <motion.p
-          className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-        >
-          Cinq personnes, zéro process impersonnel — juste une obsession pour le détail.
-        </motion.p>
-
-        {/* ── Headline ── */}
-        <motion.h2
-          className="font-display font-black text-paper tracking-tight leading-[0.88]"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-        >
-          <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
-            Une petite équipe,
-          </span>
-          <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
-            <span className="font-serif italic font-normal text-accent-light">de grandes</span>{' '}
-            ambitions.
-          </span>
-        </motion.h2>
-
-        {/* ── Team cards ── */}
-        <div className="mt-14 md:mt-20">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
-            {teamMembers.map((member, i) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.06 }}
-              >
-                <div className="relative rounded-[16px] overflow-hidden group">
-                  <div className="aspect-[3/4] overflow-hidden rounded-[16px]">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="absolute inset-0 rounded-[16px] bg-gradient-to-t from-ink via-ink/60 to-ink/30" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 z-[3]">
-                    <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-accent block mb-1">
-                      {member.role}
-                    </span>
-                    <span className="font-display font-black text-paper text-sm md:text-base tracking-tight leading-tight block">
-                      {member.name}
-                    </span>
-                  </div>
-                  <div className="absolute inset-0 rounded-[16px] border border-paper/[0.06] group-hover:border-accent/20 transition-colors duration-300 pointer-events-none z-[5]" />
-                </div>
-              </motion.div>
-            ))}
-
-            {/* 6th card — text, mobile/tablet only */}
-            <motion.div
-              className="lg:hidden"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <div className="relative rounded-[16px] overflow-hidden h-full">
-                <div className="aspect-[3/4] rounded-[16px] bg-surface border border-paper/[0.06] flex flex-col items-center justify-center p-5 text-center">
-                  <span className="font-display font-black text-paper text-lg leading-tight tracking-tight">
-                    On n'est pas une grosse machine.
-                  </span>
-                  <span className="font-display font-black text-accent text-lg leading-tight tracking-tight mt-1">
-                    On est cinq.
-                  </span>
-                  <div className="w-8 h-px bg-accent/30 mt-4 mb-3" />
-                  <span className="font-body text-paper/30 text-xs leading-relaxed">
-                    Et c'est notre force.
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* ── Glass card ── */}
-        <motion.div
-          className="story-glass mt-10 md:mt-14"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12">
-
-            {/* Left — text */}
-            <div className="lg:col-span-7 p-8 md:p-12 lg:p-14">
-              <p className="font-body text-paper/55 text-lg md:text-xl leading-[1.75] max-w-lg">
-                On n'est pas une grosse machine. On est cinq — et c'est notre force.
-                Chaque artiste qu'on accompagne, on le connaît. Ses doutes, ses envies,
-                sa façon de voir la scène.
-              </p>
-              <p className="font-body text-paper/30 text-base leading-[1.75] mt-5 max-w-lg">
-                C'est comme ça qu'on travaille&nbsp;: de près. Pas de process impersonnel,
-                juste les bonnes personnes, au bon moment.
-              </p>
-
-              <div className="mt-10">
-                <Link
-                  to="/equipe"
-                  className="group inline-flex items-center gap-3"
-                >
-                  <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                    Rencontrer l'équipe
-                  </span>
-                  <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-                    <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
-                  </span>
-                </Link>
-              </div>
+    <section ref={sectionRef} className="relative overflow-hidden bg-paper py-20 text-ink md:py-28 lg:py-32">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-ink/10" />
+      <div className="mx-auto max-w-container px-6 md:px-12">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+          <motion.div
+            className="space-y-8"
+            initial={false}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <div>
+              <span className="premium-kicker text-ink/[0.46]">Qui sommes-nous</span>
+              <h2 className="premium-title mt-5 text-[54px] md:text-[72px] lg:text-[82px]">
+                Une petite équipe,
+                <span className="block font-serif font-normal italic text-accent-dark">
+                  de grandes ambitions.
+                </span>
+              </h2>
             </div>
 
-            {/* Divider */}
-            <div className="hidden lg:block lg:col-span-1 relative">
-              <div className="absolute top-8 bottom-8 left-1/2 w-px bg-gradient-to-b from-transparent via-accent/25 to-transparent" />
-            </div>
-
-            {/* Right — stats */}
-            <div className="lg:col-span-4 flex flex-col border-t lg:border-t-0 border-paper/[0.06]">
-              {stats.map((s, i) => (
-                <motion.div
-                  key={s.label}
-                  className="story-stat group flex-1 flex items-center p-8 md:px-10 lg:px-8"
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.1, ease: [0.23, 1, 0.32, 1] }}
-                >
+            <div className="relative overflow-hidden rounded-[22px] bg-ink p-4 text-paper shadow-[0_24px_90px_rgba(10,10,10,0.18)] md:p-5">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(236,72,153,0.34),transparent_32%),radial-gradient(circle_at_82%_24%,rgba(247,245,240,0.2),transparent_26%),linear-gradient(135deg,#0A0A0A_0%,#111833_58%,#291322_100%)]" />
+              <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(247,245,240,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(247,245,240,0.18)_1px,transparent_1px)] [background-size:48px_48px]" />
+              <div className="relative">
+                <div className="flex items-center justify-between border-b border-paper/[0.14] px-2 pb-4">
                   <div>
-                    <span className="story-stat-val font-display font-black text-5xl md:text-6xl leading-none tracking-tighter block">
-                      {s.value}
-                    </span>
-                    <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-paper/25 block mt-2">
-                      {s.label}
-                    </span>
+                    <span className="premium-kicker text-paper/[0.64]">Une petite équipe</span>
+                    <p className="mt-2 font-display text-2xl font-black leading-none text-paper md:text-3xl">
+                      5 contacts directs
+                    </p>
                   </div>
-                </motion.div>
+                </div>
+
+                <div className="mt-4 grid gap-2.5">
+                  {teamMembers.map((member, index) => (
+                    <a
+                      key={member.email}
+                      href={`mailto:${member.email}`}
+                      className={`group relative grid min-w-0 grid-cols-[64px_minmax(0,1fr)] items-center gap-3 rounded-[14px] border p-2.5 pr-3 transition duration-200 hover:-translate-y-0.5 hover:border-accent/[0.55] hover:bg-paper/[0.09] sm:pr-12 ${
+                        index === 0
+                          ? 'border-accent/[0.42] bg-paper/[0.105]'
+                          : 'border-paper/[0.1] bg-paper/[0.045]'
+                      }`}
+                    >
+                      <span className="h-16 w-16 overflow-hidden rounded-[11px] bg-paper/[0.08]">
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="h-full w-full object-cover grayscale-[0.18] transition duration-300 group-hover:scale-105 group-hover:grayscale-0"
+                          loading="lazy"
+                        />
+                      </span>
+
+                      <span className="min-w-0">
+                        <span className="block truncate font-mono text-[9px] uppercase tracking-[0.14em] text-accent-light/[0.76]">
+                          {member.role}
+                        </span>
+                        <span className="mt-1 block font-display text-[20px] font-black leading-[0.98] text-paper md:text-[22px]">
+                          {member.name}
+                        </span>
+                        <span className="mt-1.5 block truncate font-mono text-[10px] tracking-[0.04em] text-paper/[0.54]">
+                          {member.email}
+                        </span>
+                      </span>
+
+                      <span className="absolute right-2.5 top-1/2 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-paper/[0.12] text-paper/[0.58] transition group-hover:border-accent group-hover:bg-accent group-hover:text-ink sm:flex">
+                        <Mail size={14} strokeWidth={2.2} />
+                      </span>
+                    </a>
+                  ))}
+                </div>
+
+                <div className="mt-4 grid gap-3 rounded-[14px] border border-paper/[0.1] bg-ink/[0.36] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+                  <p className="premium-copy text-sm leading-[1.45] text-paper/[0.68]">
+                    Le format est volontairement compact : moins d’intermédiaires,
+                    plus d’attention sur les artistes et les salles.
+                  </p>
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-accent-light transition hover:text-paper"
+                  >
+                    Contact
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper text-ink">
+                      <ArrowUpRight size={13} strokeWidth={2.3} />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="min-w-0"
+            initial={false}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.12, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <div className="rounded-[22px] border border-ink/10 bg-white/50 p-6 md:p-8 lg:p-10">
+              <p className="premium-copy max-w-3xl text-[24px] leading-[1.35] text-ink md:text-[32px]">
+                On n’est pas une grosse machine. On est cinq, et c’est notre force :
+                chaque artiste qu’on accompagne, on le connaît vraiment.
+              </p>
+              <p className="premium-copy mt-6 max-w-2xl text-base text-ink/60 md:text-lg">
+                Ses doutes, ses envies, sa façon de voir la scène. On travaille de près,
+                avec les bonnes personnes au bon moment, pour faire tenir les spectacles
+                et les trajectoires.
+              </p>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {stats.map((stat, index) => (
+                <div
+                  key={stat.label}
+                  className={`min-w-0 rounded-[18px] border p-6 md:p-7 ${
+                    index === 2
+                      ? 'border-ink bg-ink text-paper sm:col-span-2 md:grid md:grid-cols-[auto_1fr] md:items-end md:gap-8'
+                      : 'border-ink/10 bg-paper text-ink'
+                  }`}
+                >
+                  <span
+                    className={`premium-title block whitespace-nowrap ${
+                      index === 2
+                        ? 'text-[76px] md:text-[104px]'
+                        : 'text-[68px] md:text-[82px]'
+                    }`}
+                  >
+                    {stat.value}
+                  </span>
+                  <div className="min-w-0">
+                    <span
+                      className={`mt-3 block font-mono text-[11px] uppercase leading-[1.55] tracking-[0.16em] md:text-xs ${
+                        index === 2 ? 'text-paper/[0.62]' : 'text-ink/[0.48]'
+                      }`}
+                    >
+                      {stat.label}
+                    </span>
+                    <p
+                      className={`premium-copy mt-3 text-sm md:text-base ${
+                        index === 2 ? 'text-paper/[0.72]' : 'text-ink/[0.58]'
+                      }`}
+                    >
+                      {stat.detail}
+                    </p>
+                  </div>
+                </div>
               ))}
             </div>
-          </div>
-        </motion.div>
+
+            <div className="mt-8 grid gap-3">
+              {principles.map((principle, i) => (
+                <div key={principle} className="flex gap-4 border-b border-ink/[0.08] pb-3 last:border-b-0">
+                  <span className="premium-kicker text-accent-dark/70">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <p className="premium-copy text-ink/[0.68]">{principle}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-9">
+              <a href="#contact" className="premium-btn premium-btn-dark group">
+                Nous contacter
+                <span className="premium-btn-icon">
+                  <ArrowUpRight size={15} strokeWidth={2.4} />
+                </span>
+              </a>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

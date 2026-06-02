@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
@@ -68,7 +67,7 @@ export const TeamStoriesPage = () => {
         <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
           <motion.span
             className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.5 }}
           >
@@ -77,7 +76,7 @@ export const TeamStoriesPage = () => {
 
           <motion.h1
             className="font-display font-black text-paper tracking-tight leading-[0.88]"
-            initial={{ opacity: 0, y: 50 }}
+            initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
           >
@@ -91,7 +90,7 @@ export const TeamStoriesPage = () => {
 
           <motion.p
             className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.25 }}
           >
@@ -108,7 +107,7 @@ export const TeamStoriesPage = () => {
               <motion.div
                 key={story.name}
                 className="mission-card group block relative"
-                initial={{ opacity: 0, y: 30 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.6, delay: i * 0.07, ease: [0.23, 1, 0.32, 1] }}
@@ -141,19 +140,17 @@ export const TeamStoriesPage = () => {
 
           <motion.div
             className="mt-14 text-center"
-            initial={{ opacity: 0 }}
+            initial={false}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Link to="/equipe" className="group inline-flex items-center gap-3">
-              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                Rencontrer l'équipe
+            <a href="mailto:contact@tinyteam.fr" className="premium-btn premium-btn-paper group">
+              Nous contacter
+              <span className="premium-btn-icon">
+                <ArrowRight size={15} strokeWidth={2.4} />
               </span>
-              <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-                <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
-              </span>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </section>

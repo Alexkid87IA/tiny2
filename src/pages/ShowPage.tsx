@@ -65,7 +65,7 @@ export const ShowPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Poster */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
               className="mq-card rounded-[20px] overflow-hidden"
@@ -84,7 +84,7 @@ export const ShowPage = () => {
             {/* Info */}
             <motion.div
               className="flex flex-col justify-center"
-              initial={{ opacity: 0, y: 30 }}
+              initial={false}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
             >
@@ -133,13 +133,11 @@ export const ShowPage = () => {
               <div className="flex flex-wrap gap-4 mt-10">
                 <a
                   href="mailto:contact@tinyteam.fr"
-                  className="group inline-flex items-center gap-3"
+                  className="premium-btn premium-btn-paper group"
                 >
-                  <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                    Réserver cet artiste
-                  </span>
-                  <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-                    <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+                  Réserver cet artiste
+                  <span className="premium-btn-icon">
+                    <ArrowRight size={15} strokeWidth={2.4} />
                   </span>
                 </a>
               </div>

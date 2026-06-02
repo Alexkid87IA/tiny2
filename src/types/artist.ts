@@ -15,7 +15,6 @@ export interface Artist {
   showName: string;
   showDescription: string;
   videoUrl: string;
-  websiteUrl?: string;
   dates: Array<{
     date: string;
     time: string;
@@ -41,5 +40,4 @@ export interface Artist {
     cities?: number;
     followers?: number;
   };
-  prod?: string;
 }

@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { Instagram, BookText as TikTok, Youtube } from 'lucide-react';
+import type { Artist } from '../../types/artist';
 
-export const SocialContentSection = ({ artist }: { artist: any }) => {
+type SocialContentItem = Artist['socialContent'][number];
+
+export const SocialContentSection = ({ artist }: { artist: Artist }) => {
   if (!artist.socialContent?.length) return null;
 
   const content = [...artist.socialContent];
@@ -15,7 +18,7 @@ export const SocialContentSection = ({ artist }: { artist: any }) => {
     <section className="relative py-28 md:py-40 bg-deep overflow-hidden">
       <div className="max-w-container mx-auto px-6 md:px-12">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -33,12 +36,12 @@ export const SocialContentSection = ({ artist }: { artist: any }) => {
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {content.map((item: any, i: number) => {
+          {content.map((item: SocialContentItem, i: number) => {
             const Icon = PlatformIcon(item.platform);
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}

@@ -1,13 +1,16 @@
 import { motion } from 'framer-motion';
+import type { Artist } from '../../types/artist';
 
-export const ReviewsSection = ({ artist }: { artist: any }) => {
+type ArtistReview = NonNullable<Artist['reviews']>[number];
+
+export const ReviewsSection = ({ artist }: { artist: Artist }) => {
   if (!artist.reviews?.length) return null;
 
   return (
     <section className="relative py-28 md:py-40 bg-deep overflow-hidden">
       <div className="max-w-container mx-auto px-6 md:px-12">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -25,11 +28,11 @@ export const ReviewsSection = ({ artist }: { artist: any }) => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {artist.reviews.map((review: any, i: number) => (
+          {artist.reviews.map((review: ArtistReview, i: number) => (
             <motion.div
               key={i}
               className="mission-card group block relative"
-              initial={{ opacity: 0, y: 30 }}
+              initial={false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.08, ease: [0.23, 1, 0.32, 1] }}

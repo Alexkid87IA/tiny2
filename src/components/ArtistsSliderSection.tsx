@@ -1,136 +1,252 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, ArrowUpRight, Mic2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { artists } from '../data/artists';
+import type { Artist } from '../types/artist';
 
-const all = artists.filter(a => a.image);
-const row1 = all.slice(0, 5);
-const row2 = [...all.slice(5), ...all.slice(0, Math.max(0, 5 - (all.length - 5)))];
+const artistsWithImages = artists.filter((artist): artist is Artist => Boolean(artist.image));
 
-const Card = ({ artist }: { artist: typeof all[0] }) => (
-    <div className="mq-card w-[280px] md:w-[340px] flex-shrink-0 relative rounded-[20px] overflow-hidden">
-      <div className="aspect-[3/4] overflow-hidden rounded-[20px]">
-        <img
-          src={artist.image}
-          alt={artist.name}
-          className="w-full h-full object-cover"
-          loading="lazy"
-          draggable={false}
-        />
-      </div>
+const preferredArtistIds = [
+  'djal',
+  'santini',
+  'lucie',
+  'edouard',
+  'marc-antoine',
+  'thomas',
+  'sophie-et-alex',
+  'djamel-comedy-club',
+  'morgane',
+  'urbain',
+];
 
-      <div className="mq-overlay absolute inset-0 rounded-[20px]" />
+const preferredArtistIdSet = new Set(preferredArtistIds);
 
-      {artist.prod && (
-        <span className="absolute top-5 left-5 z-[4] px-3 py-1.5 rounded-full bg-ink/80 border border-paper/10 font-mono text-[9px] tracking-[0.14em] uppercase text-paper/70">
-          {artist.prod}
-        </span>
-      )}
+const orderedArtists = [
+  ...preferredArtistIds
+    .map((id) => artistsWithImages.find((artist) => artist.id === id))
+    .filter((artist): artist is Artist => Boolean(artist)),
+  ...artistsWithImages.filter((artist) => !preferredArtistIdSet.has(artist.id)),
+];
 
-      <div className="mq-name absolute bottom-6 left-6 right-6 z-[3]">
-        <span className="font-display font-black text-paper text-xl md:text-2xl tracking-tight leading-tight block">
-          {artist.name}
-        </span>
-      </div>
+const posterAspectRatioByArtistId: Record<string, string> = {
+  djal: '1600 / 2400',
+  santini: '1080 / 1350',
+  lucie: '1200 / 1801',
+  edouard: '1600 / 2400',
+  'marc-antoine': '1600 / 2388',
+  thomas: '1200 / 1797',
+  'sophie-et-alex': '1600 / 2400',
+  'djamel-comedy-club': '1200 / 1600',
+  morgane: '1600 / 2166',
+  urbain: '1600 / 2400',
+};
 
-      <Link
-        to={`/artiste/${artist.id}`}
-        className="mq-cta absolute top-5 right-5 z-[4] w-11 h-11 rounded-full bg-accent flex items-center justify-center text-ink hover:scale-110 transition-transform duration-300"
-      >
-        <ArrowUpRight size={18} strokeWidth={2.5} />
-      </Link>
-
-      <div className="mq-border absolute inset-0 rounded-[20px] pointer-events-none z-[5]" />
-    </div>
+const Stat = ({ value, label }: { value: string; label: string }) => (
+  <div className="border-l border-paper/10 pl-4">
+    <span className="block font-display text-2xl font-black leading-none text-paper">
+      {value}
+    </span>
+    <span className="mt-1.5 block font-mono text-[10px] uppercase tracking-[0.14em] text-paper/45">
+      {label}
+    </span>
+  </div>
 );
 
 export const ArtistsSliderSection = () => {
-  const textRef = useRef<HTMLDivElement>(null);
-  const textInView = useInView(textRef, { once: true, margin: '-15%' });
+  const [activeArtistId, setActiveArtistId] = useState(() => orderedArtists[0]?.id ?? '');
+  const activeArtist =
+    orderedArtists.find((artist) => artist.id === activeArtistId) ?? orderedArtists[0];
+
+  const typeCount = useMemo(
+    () => new Set(orderedArtists.map((artist) => artist.type)).size,
+    []
+  );
+
+  if (!activeArtist) {
+    return null;
+  }
+
+  const achievements = activeArtist.achievements?.slice(0, 3) ?? [];
+  const posterAspectRatio = posterAspectRatioByArtistId[activeArtist.id] ?? '2 / 3';
 
   return (
-    <>
-      {/* ── Statement ── */}
-      <section className="perf-section relative bg-deep overflow-hidden" ref={textRef}>
-        <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 md:px-12 py-24 md:py-32">
-          <motion.span
-            className="font-display font-black text-paper text-[clamp(2.4rem,8vw,7rem)] tracking-tight leading-[0.92] text-center block"
-            initial={{ opacity: 0, y: 50 }}
-            animate={textInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-          >
-            Des talents singuliers,
-          </motion.span>
-          <motion.span
-            className="font-serif italic font-normal text-accent-light text-[clamp(2.4rem,8vw,7rem)] leading-[0.92] text-center block mt-2 md:mt-4"
-            initial={{ opacity: 0, y: 50 }}
-            animate={textInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.25, ease: [0.23, 1, 0.32, 1] }}
-          >
-            des univers entiers.
-          </motion.span>
-          <motion.div
-            className="mx-auto mt-10 md:mt-14 h-px w-20 bg-accent"
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={textInView ? { opacity: 0.4, scaleX: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          />
-        </div>
-      </section>
+    <section
+      id="artists"
+      className="relative overflow-hidden scroll-mt-5 bg-deep py-10 md:py-12 lg:min-h-screen lg:py-6"
+    >
+      <div className="section-rule absolute left-0 right-0 top-0" />
+      <div className="pointer-events-none absolute left-[-14%] top-[12%] h-[360px] w-[360px] rounded-full bg-accent/[0.06] blur-[100px]" />
+      <div className="pointer-events-none absolute bottom-[8%] right-[-10%] h-[420px] w-[420px] rounded-full bg-[#45D4C5]/[0.045] blur-[110px]" />
 
-      {/* ── Marquee section ── */}
-      <section id="artists" className="perf-section mq-section relative bg-deep overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-accent/[0.04] rounded-full blur-[80px] pointer-events-none" />
-
-        <div className="max-w-container mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-14 md:pb-20">
-          <span className="font-mono text-[13px] tracking-[0.18em] uppercase text-accent block mb-3">
-            {all.length} artistes
-          </span>
-          <p className="font-body text-paper/40 text-base md:text-lg mb-8 md:mb-10">
-            Des humoristes qu'on connaît par cœur — leurs doutes, leurs forces, leur façon de voir la scène.
-          </p>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <h3 className="font-display font-black text-paper tracking-tight leading-[0.88]">
-              <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
-                Ceux qu'on
-              </span>
-              <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
-                <span className="font-serif italic font-normal text-accent-light">accompagne.</span>
-              </span>
-            </h3>
-            <Link
-              to="/artistes"
-              className="group inline-flex items-center gap-3 flex-shrink-0 mb-2"
-            >
-              <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                Voir tout
-              </span>
-              <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-                <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
-              </span>
-            </Link>
-          </div>
-        </div>
-
-        <div className="mq-tilt pb-24 md:pb-36">
-          <div className="mq-row mb-5 md:mb-7">
-            <div className="mq-track mq-ltr">
-              {[...row1, ...row1, ...row1].map((artist, i) => (
-                <Card key={`a-${i}`} artist={artist} />
-              ))}
-            </div>
+      <div className="relative mx-auto flex max-w-container flex-col justify-center px-6 md:px-12 lg:min-h-[calc(100vh-80px)] lg:justify-start lg:pt-6">
+        <div className="grid gap-5 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-6">
+            <span className="mb-4 block font-mono text-[11px] uppercase tracking-[0.14em] text-accent">
+              {orderedArtists.length} artistes accompagnés
+            </span>
+            <h2 className="artists-section-title max-w-3xl">
+              Le plateau <span className="font-serif italic font-normal text-accent-light">complet.</span>
+            </h2>
           </div>
 
-          <div className="mq-row">
-            <div className="mq-track mq-rtl">
-              {[...row2, ...row2, ...row2].map((artist, i) => (
-                <Card key={`b-${i}`} artist={artist} />
-              ))}
+          <div className="lg:col-span-6 lg:pb-1">
+            <p className="max-w-xl font-body text-base leading-[1.5] text-paper/70 md:text-lg lg:text-base">
+              Une sélection lisible, complète, et prête à être parcourue sans perdre
+              le fil entre artistes, formats et spectacles.
+            </p>
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              <Stat value={String(orderedArtists.length)} label="Artistes" />
+              <Stat value={String(typeCount)} label="Registres" />
+              <Stat value="1" label="Équipe" />
             </div>
           </div>
         </div>
-      </section>
-    </>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-12 lg:items-stretch">
+          <Link
+            to={`/artiste/${activeArtist.id}`}
+            aria-label={`Voir le profil de ${activeArtist.name}`}
+            style={{ aspectRatio: posterAspectRatio }}
+            className="group relative mx-auto flex w-full max-w-[420px] items-center justify-center overflow-hidden rounded-[10px] border border-paper/10 bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:max-w-[460px] lg:col-span-5 lg:h-[520px] lg:w-auto lg:max-w-none lg:justify-self-center"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.img
+                key={activeArtist.id}
+                src={activeArtist.image}
+                alt={activeArtist.name}
+                className="absolute inset-0 h-full w-full object-contain"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+              />
+            </AnimatePresence>
+          </Link>
+
+          <div className="flex min-h-0 flex-col gap-3 overflow-hidden rounded-[10px] border border-paper/10 bg-paper/[0.035] p-4 lg:col-span-7 lg:h-[520px]">
+            <div className="flex items-center justify-between gap-4">
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent/80">
+                Plateau complet
+              </span>
+              <Link
+                to="/artistes"
+                className="group inline-flex items-center gap-2 text-paper/60 transition hover:text-paper"
+              >
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em]">
+                  Tous
+                </span>
+                <ArrowRight size={13} className="transition group-hover:translate-x-0.5 group-hover:text-accent" />
+              </Link>
+            </div>
+
+            <div className="grid shrink-0 grid-cols-1 gap-1.5 sm:grid-cols-3">
+              {orderedArtists.map((artist) => {
+                const isActive = activeArtist.id === artist.id;
+                return (
+                  <button
+                    key={artist.id}
+                    type="button"
+                    onClick={() => setActiveArtistId(artist.id)}
+                    aria-pressed={isActive}
+                    className={`group flex min-w-0 items-center gap-2 rounded-[9px] border px-2 py-1 text-left transition duration-300 ${
+                      isActive
+                        ? 'border-accent/45 bg-accent/[0.11] shadow-[0_14px_34px_rgba(236,72,153,0.08)]'
+                        : 'border-paper/[0.07] bg-deep/20 hover:border-paper/[0.16] hover:bg-paper/[0.04]'
+                    }`}
+                  >
+                    <span className="h-7 w-7 shrink-0 overflow-hidden rounded-[6px] bg-paper/5">
+                      <img
+                        src={artist.image}
+                        alt=""
+                        className="h-full w-full object-contain"
+                        loading="lazy"
+                        draggable={false}
+                      />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-display text-[13px] font-black leading-tight text-paper">
+                        {artist.name}
+                      </span>
+                      <span className="mt-0.5 block truncate font-body text-[10px] text-paper/[0.58]">
+                        {artist.showName || artist.type}
+                      </span>
+                    </span>
+                    {isActive && <span className="h-2 w-2 shrink-0 rounded-full bg-accent" />}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[10px] border border-paper/10 bg-[#f7f5f0] p-4 text-ink md:p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex min-w-0 items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-paper">
+                    <Mic2 size={17} />
+                  </span>
+                  <div className="min-w-0">
+                    <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-ink/45">
+                      {activeArtist.type}
+                    </span>
+                    <span className="mt-1 block truncate font-display text-2xl font-black leading-none">
+                      {activeArtist.name}
+                    </span>
+                    <span className="mt-1.5 block truncate font-body text-sm leading-tight text-ink/[0.6]">
+                      {activeArtist.tagline}
+                    </span>
+                    <span className="mt-2.5 block font-mono text-[10px] uppercase tracking-[0.14em] text-ink/40">
+                      Spectacle
+                    </span>
+                    <span className="mt-0.5 block truncate font-display text-lg font-black leading-tight">
+                      {activeArtist.showName || activeArtist.type}
+                    </span>
+                  </div>
+                </div>
+                <Link
+                  to={`/artiste/${activeArtist.id}`}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-paper transition duration-300 hover:bg-accent hover:text-ink"
+                  aria-label={`Voir le profil de ${activeArtist.name}`}
+                >
+                  <ArrowUpRight size={15} />
+                </Link>
+              </div>
+
+              <p className="mt-3 font-body text-[13px] leading-[1.42] text-ink/[0.72] md:text-sm">
+                {activeArtist.description}
+              </p>
+
+              <div className="mt-3 border-t border-ink/10 pt-3">
+                {achievements.length > 0 && (
+                  <div className="grid gap-2 md:grid-cols-3">
+                    {achievements.map((achievement) => (
+                      <div key={achievement} className="flex gap-2.5">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                        <span className="font-body text-[11px] leading-snug text-ink/[0.68]">
+                          {achievement}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-auto pt-3">
+                <Link
+                  to={`/artiste/${activeArtist.id}`}
+                  className="group inline-flex items-center gap-3"
+                >
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/[0.68] transition group-hover:text-ink">
+                    Voir le profil
+                  </span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-ink transition duration-300 group-hover:scale-105">
+                    <ArrowRight size={14} />
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };

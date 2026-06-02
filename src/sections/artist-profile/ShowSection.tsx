@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
+import type { Artist } from '../../types/artist';
 
-export const ShowSection = ({ artist }: { artist: any }) => {
+export const ShowSection = ({ artist }: { artist: Artist }) => {
   return (
     <section className="relative py-28 md:py-40 bg-deep overflow-hidden">
       <div className="absolute w-[400px] h-[400px] rounded-full pointer-events-none blur-[100px] top-[20%] right-[-5%] bg-[radial-gradient(circle,rgba(236,72,153,0.08)_0%,transparent_70%)]" />
@@ -10,7 +11,7 @@ export const ShowSection = ({ artist }: { artist: any }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Poster */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
@@ -29,7 +30,7 @@ export const ShowSection = ({ artist }: { artist: any }) => {
 
           {/* Content */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
@@ -93,13 +94,11 @@ export const ShowSection = ({ artist }: { artist: any }) => {
                     href={artist.dates[0].link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-3 mt-6"
+                    className="premium-btn premium-btn-paper group mt-6"
                   >
-                    <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-                      Réserver
-                    </span>
-                    <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-                      <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
+                    Réserver
+                    <span className="premium-btn-icon">
+                      <ArrowRight size={15} strokeWidth={2.4} />
                     </span>
                   </a>
                 )}

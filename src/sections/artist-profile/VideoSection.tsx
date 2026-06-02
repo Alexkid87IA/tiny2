@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
+import type { Artist } from '../../types/artist';
 
-export const VideoSection = ({ artist }: { artist: any }) => {
+export const VideoSection = ({ artist }: { artist: Artist }) => {
   if (!artist.videoUrl) return null;
 
   return (
     <section className="relative py-28 md:py-40 bg-deep overflow-hidden">
       <div className="max-w-container mx-auto px-6 md:px-12">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -24,11 +25,11 @@ export const VideoSection = ({ artist }: { artist: any }) => {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          className="relative max-w-4xl mx-auto"
+          className="relative max-w-4xl"
         >
           <div className="relative aspect-video rounded-[20px] overflow-hidden border border-paper/[0.06]">
             <iframe

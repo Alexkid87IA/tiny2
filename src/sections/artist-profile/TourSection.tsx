@@ -1,14 +1,17 @@
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, ArrowRight } from 'lucide-react';
+import type { Artist } from '../../types/artist';
 
-export const TourSection = ({ artist }: { artist: any }) => {
+type TourDate = Artist['dates'][number];
+
+export const TourSection = ({ artist }: { artist: Artist }) => {
   if (!artist.dates?.length) return null;
 
   return (
     <section className="relative py-28 md:py-40 bg-deep overflow-hidden">
       <div className="max-w-container mx-auto px-6 md:px-12">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -26,11 +29,11 @@ export const TourSection = ({ artist }: { artist: any }) => {
         </motion.div>
 
         <div className="max-w-3xl space-y-4">
-          {artist.dates.map((date: any, i: number) => (
+          {artist.dates.map((date: TourDate, i: number) => (
             <motion.div
               key={i}
               className="mission-card group block relative"
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.06 }}
@@ -56,13 +59,11 @@ export const TourSection = ({ artist }: { artist: any }) => {
                       href={date.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group/btn inline-flex items-center gap-2"
+                      className="premium-btn premium-btn-glass premium-btn-sm group"
                     >
-                      <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover/btn:text-paper group-hover/btn:border-accent/40 group-hover/btn:bg-accent/[0.06] transition-all duration-300">
-                        Réserver
-                      </span>
-                      <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover/btn:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-                        <ArrowRight size={15} className="text-ink group-hover/btn:translate-x-0.5 transition-transform duration-300" />
+                      Réserver
+                      <span className="premium-btn-icon">
+                        <ArrowRight size={13} strokeWidth={2.4} />
                       </span>
                     </a>
                   )}

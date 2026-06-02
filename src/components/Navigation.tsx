@@ -1,53 +1,56 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown } from 'lucide-react';
-
-const serviceItems = [
-  { title: 'Production', href: '/services/production' },
-  { title: 'Management', href: '/services/management' },
-  { title: 'Digital', href: '/services/digital' },
-  { title: 'Communication', href: '/services/communication' },
-  { title: 'Diffusion', href: '/services/diffusion' },
-  { title: 'Événements', href: '/services/evenements' },
-];
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 
 const menuItems = [
-  { title: 'Artistes', href: '/artistes' },
-  { title: 'L\'équipe', href: '/equipe' },
-  { title: 'Services', href: '/services', hasDropdown: true },
-  { title: 'Programmateurs', href: '/programmateur' },
-  { title: 'Entreprises', href: '/marque' },
+  { title: 'Artistes', eyebrow: 'Plateau', href: '/artistes' },
+  { title: 'Services', eyebrow: 'Métiers', href: '/services' },
+  { title: 'Programmateurs', eyebrow: 'Salles', href: '/programmateur' },
+  { title: 'Entreprises', eyebrow: 'Marques', href: '/marque' },
 ];
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const lastScrollYRef = useRef(0);
+  const [isOverLight, setIsOverLight] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
-  const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const location = useLocation();
 
   useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const y = window.scrollY;
-          setIsScrolled(y > 20);
-          if (y <= 50) setIsVisible(true);
-          else if (y > lastScrollYRef.current && y > 100) setIsVisible(false);
-          else if (y < lastScrollYRef.current) setIsVisible(true);
-          lastScrollYRef.current = y;
-          ticking = false;
-        });
-        ticking = true;
+    const getReadableBackground = (element: Element | null): string => {
+      let current = element;
+
+      while (current && current !== document.documentElement) {
+        const backgroundColor = window.getComputedStyle(current).backgroundColor;
+        if (backgroundColor && !backgroundColor.endsWith(', 0)') && backgroundColor !== 'transparent') {
+          return backgroundColor;
+        }
+        current = current.parentElement;
       }
+
+      return window.getComputedStyle(document.body).backgroundColor;
     };
+
+    const isLightBackground = (backgroundColor: string) => {
+      const match = backgroundColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (!match) return false;
+      const [, r, g, b] = match.map(Number);
+      return (0.299 * r + 0.587 * g + 0.114 * b) > 150;
+    };
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 12);
+      const elementBehindNav = document.elementFromPoint(window.innerWidth / 2, 104);
+      setIsOverLight(isLightBackground(getReadableBackground(elementBehindNav)));
+    };
+
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -57,138 +60,83 @@ export const Navigation = () => {
 
   return (
     <>
-      <motion.nav
-        initial={{ y: 0 }}
-        animate={{ y: isVisible ? 0 : -100 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="fixed top-0 left-0 right-0 z-[100] transition-all duration-300"
-        style={{
-          backgroundColor: isScrolled ? 'rgba(10, 15, 41, 0.88)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(24px) saturate(1.4)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(24px) saturate(1.4)' : 'none',
-          borderBottom: 'none',
-          boxShadow: isScrolled ? '0 4px 30px rgba(0,0,0,0.25)' : 'none',
-        }}
+      <nav
+        className="fixed left-0 right-0 top-0 z-[100] px-3 pt-3 transition-all duration-300"
       >
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <div className="flex items-center justify-between h-24">
-            {/* Logo */}
-            <Link to="/" className="flex-shrink-0">
-              <img
-                src="/logo_tiny_team.png"
-                alt="Tiny Team"
-                className="h-14 md:h-20 w-auto"
-              />
+        <div className="mx-auto max-w-container md:px-4">
+          <div
+            className={`grid h-[76px] grid-cols-[auto_1fr_auto] items-center gap-4 rounded-full border px-4 shadow-[0_22px_80px_rgba(0,0,0,0.26)] backdrop-blur-2xl transition-all duration-300 md:px-6 ${
+              isOverLight
+                ? 'border-ink/[0.08] bg-paper/[0.78] text-ink shadow-[0_22px_80px_rgba(10,10,10,0.12)]'
+                : isScrolled
+                  ? 'border-paper/[0.16] bg-deep/[0.58] text-paper'
+                  : 'border-paper/[0.12] bg-deep/[0.34] text-paper shadow-[0_22px_80px_rgba(0,0,0,0.18)]'
+            }`}
+          >
+            <Link
+              to="/"
+              className="group flex min-w-[148px] flex-shrink-0 items-center gap-3"
+              aria-label="Tiny Team - Accueil"
+            >
+              <span className={`h-12 w-12 rounded-full shadow-[0_0_0_1px_rgba(247,245,240,0.16),0_12px_36px_rgba(236,72,153,0.16)] transition-transform duration-300 group-hover:scale-105 ${
+                isOverLight ? 'bg-ink' : 'bg-paper'
+              }`} />
+              <span className={`font-display text-[15px] font-black uppercase leading-[0.82] tracking-[0] ${
+                isOverLight ? 'text-ink' : 'text-paper'
+              }`}>
+                <span className="block">La Tiny</span>
+                <span className="block">Team</span>
+              </span>
             </Link>
 
-            {/* Desktop Nav */}
-            <div className="hidden lg:flex items-center gap-1">
-              {menuItems.map((item) => {
-                if (item.hasDropdown) {
-                  const isActive = location.pathname.startsWith('/services');
-                  return (
-                    <div
-                      key={item.href}
-                      className="relative px-4 py-2 group cursor-pointer"
-                      onMouseEnter={() => {
-                        clearTimeout(servicesTimeoutRef.current);
-                        setIsServicesOpen(true);
-                      }}
-                      onMouseLeave={() => {
-                        servicesTimeoutRef.current = setTimeout(() => setIsServicesOpen(false), 150);
-                      }}
-                    >
-                      <span className={`font-body text-sm font-medium transition-colors duration-200 ${
-                        isActive ? 'text-paper' : 'text-paper/50 group-hover:text-paper/80'
-                      }`}>
-                        {item.title}
-                      </span>
-                      <ChevronDown size={14} className={`inline-block ml-1 align-middle transition-all duration-200 ${
-                        isActive ? 'text-paper' : 'text-paper/30 group-hover:text-paper/60'
-                      } ${isServicesOpen ? 'rotate-180' : ''}`} />
-                      {isActive && (
-                        <motion.div
-                          layoutId="nav-active"
-                          className="absolute bottom-0 left-4 right-4 h-px bg-accent"
-                          transition={{ duration: 0.25 }}
-                        />
-                      )}
-
-                      <AnimatePresence>
-                        {isServicesOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 8 }}
-                            transition={{ duration: 0.15 }}
-                            className="absolute top-full left-0 pt-2 z-[110]"
-                          >
-                            <div className="w-56 rounded-xl bg-surface/95 backdrop-blur-xl border border-paper/[0.08] shadow-[0_8px_40px_rgba(0,0,0,0.4)] overflow-hidden">
-                              {serviceItems.map((service) => (
-                                <Link
-                                  key={service.href}
-                                  to={service.href}
-                                  className={`block px-5 py-3 font-body text-sm transition-colors duration-150 ${
-                                    location.pathname === service.href
-                                      ? 'text-accent bg-accent/[0.06]'
-                                      : 'text-paper/60 hover:text-paper hover:bg-paper/[0.04]'
-                                  }`}
-                                >
-                                  {service.title}
-                                </Link>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                }
+            <div className="hidden items-center justify-self-center lg:flex lg:gap-1 xl:gap-2">
+              {menuItems.map((item, i) => {
+                const active = location.pathname === item.href;
                 return (
                   <Link
                     key={item.href}
                     to={item.href}
-                    className="relative px-4 py-2 group"
+                    className={`nav-rubric ${active ? 'is-active' : ''} ${
+                      isOverLight ? 'is-light' : 'is-dark'
+                    }`}
                   >
-                    <span className={`font-body text-sm font-medium transition-colors duration-200 ${
-                      location.pathname === item.href
-                        ? 'text-paper'
-                        : 'text-paper/50 group-hover:text-paper/80'
-                    }`}>
+                    <span className="nav-rubric-kicker">
+                      <span>{String(i + 1).padStart(2, '0')}</span>
+                      {item.eyebrow}
+                    </span>
+                    <span className="nav-rubric-title">
                       {item.title}
                     </span>
-                    {location.pathname === item.href && (
-                      <motion.div
-                        layoutId="nav-active"
-                        className="absolute bottom-0 left-4 right-4 h-px bg-accent"
-                        transition={{ duration: 0.25 }}
-                      />
-                    )}
                   </Link>
                 );
               })}
             </div>
 
-            {/* CTA Desktop */}
-            <a
-              href="#contact"
-              className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 rounded-pill bg-accent text-ink font-body text-sm font-semibold hover:bg-accent-light transition-colors duration-200"
-            >
-              On discute ?
-            </a>
+            <div className="flex justify-self-end items-center gap-2">
+              <a
+                href="#contact"
+                className="premium-btn premium-btn-paper premium-btn-sm group !hidden sm:!inline-flex"
+              >
+                On discute ?
+                <span className="premium-btn-icon">
+                  <ArrowUpRight size={14} strokeWidth={2.4} />
+                </span>
+              </a>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden w-10 h-10 flex items-center justify-center text-paper/70"
-            >
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+              <button
+                onClick={() => setIsMenuOpen((open) => !open)}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-paper/[0.14] bg-paper/[0.055] text-paper/[0.82] backdrop-blur-md transition hover:border-paper/[0.28] hover:text-paper lg:hidden"
+                type="button"
+                aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                aria-expanded={isMenuOpen}
+              >
+                {isMenuOpen ? <X size={19} /> : <Menu size={19} />}
+              </button>
+            </div>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -196,84 +144,49 @@ export const Navigation = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[90] bg-deep/98 backdrop-blur-xl flex flex-col pt-24 px-6"
+            className="fixed inset-0 z-[90] flex flex-col bg-deep px-6 pb-8 pt-28"
           >
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col">
               {menuItems.map((item, i) => (
                 <motion.div
                   key={item.href}
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: 16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05, duration: 0.3 }}
+                  transition={{ delay: i * 0.045, duration: 0.28 }}
                 >
-                  {item.hasDropdown ? (
-                    <>
-                      <button
-                        onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                        className="flex items-center gap-4 py-4 border-b border-paper/6 w-full text-left"
-                      >
-                        <span className="eyebrow text-paper/30">{String(i + 1).padStart(2, '0')}</span>
-                        <span className={`font-display text-2xl font-bold tracking-display ${
-                          location.pathname.startsWith('/services') ? 'text-paper' : 'text-paper/60'
-                        }`}>
-                          {item.title}
-                        </span>
-                        <ChevronDown size={18} className={`ml-auto text-paper/30 transition-transform duration-200 ${mobileServicesOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      <AnimatePresence>
-                        {mobileServicesOpen && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="pl-12 pb-2">
-                              {serviceItems.map((service) => (
-                                <Link
-                                  key={service.href}
-                                  to={service.href}
-                                  onClick={() => setIsMenuOpen(false)}
-                                  className={`block py-3 font-body text-base ${
-                                    location.pathname === service.href ? 'text-accent' : 'text-paper/40'
-                                  }`}
-                                >
-                                  {service.title}
-                                </Link>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </>
-                  ) : (
-                    <Link
-                      to={item.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center gap-4 py-4 border-b border-paper/6"
-                    >
-                      <span className="eyebrow text-paper/30">{String(i + 1).padStart(2, '0')}</span>
-                      <span className={`font-display text-2xl font-bold tracking-display ${
-                        location.pathname === item.href ? 'text-paper' : 'text-paper/60'
+                  <Link
+                    to={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="grid grid-cols-[44px_1fr] items-center border-b border-paper/[0.08] py-5"
+                  >
+                    <span className="premium-kicker text-paper/[0.34]">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span>
+                      <span className="premium-kicker block text-accent-light/70">
+                        {item.eyebrow}
+                      </span>
+                      <span className={`mt-1 block font-display text-3xl font-black ${
+                        location.pathname === item.href ? 'text-paper' : 'text-paper/[0.64]'
                       }`}>
                         {item.title}
                       </span>
-                    </Link>
-                  )}
+                    </span>
+                  </Link>
                 </motion.div>
               ))}
             </nav>
 
-            <div className="mt-auto pb-8">
-              <a
-                href="#contact"
-                onClick={() => setIsMenuOpen(false)}
-                className="block w-full text-center py-4 rounded-pill bg-accent text-ink font-body font-semibold text-base"
-              >
-                On discute ?
-              </a>
-            </div>
+            <a
+              href="#contact"
+              onClick={() => setIsMenuOpen(false)}
+              className="premium-btn premium-btn-paper group mt-auto w-full"
+            >
+              On discute ?
+              <span className="premium-btn-icon">
+                <ArrowUpRight size={15} strokeWidth={2.4} />
+              </span>
+            </a>
           </motion.div>
         )}
       </AnimatePresence>

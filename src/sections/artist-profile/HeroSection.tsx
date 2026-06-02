@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { Instagram, BookText as TikTok, Youtube } from 'lucide-react';
+import type { Artist } from '../../types/artist';
 
-export const HeroSection = ({ artist }: { artist: any }) => {
+export const HeroSection = ({ artist }: { artist: Artist }) => {
   const socials = [
     { key: 'instagram', icon: Instagram, href: artist.social?.instagram },
     { key: 'tiktok', icon: TikTok, href: artist.social?.tiktok },
@@ -19,7 +20,7 @@ export const HeroSection = ({ artist }: { artist: any }) => {
       <div className="relative z-20 max-w-container mx-auto px-6 md:px-12 py-32">
         <div className="max-w-3xl">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
           >

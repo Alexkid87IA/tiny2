@@ -8,7 +8,7 @@ import { artists } from '../data/artists';
 
 const visibleArtists = artists.filter(a => a.image);
 
-export const ArtistsPage = () => {
+export const ArtistesPage = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const inView = useInView(headRef, { once: true, margin: '-80px' });
@@ -38,7 +38,7 @@ export const ArtistsPage = () => {
         <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
           <motion.span
             className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.5 }}
           >
@@ -47,7 +47,7 @@ export const ArtistsPage = () => {
 
           <motion.h1
             className="font-display font-black text-paper tracking-tight leading-[0.88]"
-            initial={{ opacity: 0, y: 50 }}
+            initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
           >
@@ -61,7 +61,7 @@ export const ArtistsPage = () => {
 
           <motion.p
             className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.25 }}
           >
@@ -77,7 +77,7 @@ export const ArtistsPage = () => {
             {visibleArtists.map((artist, i) => (
               <motion.div
                 key={artist.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.6, delay: i * 0.05, ease: [0.23, 1, 0.32, 1] }}
@@ -93,12 +93,6 @@ export const ArtistsPage = () => {
                   </div>
 
                   <div className="mq-overlay absolute inset-0 rounded-[20px]" />
-
-                  {artist.prod && (
-                    <span className="absolute top-5 left-5 z-[4] px-3 py-1.5 rounded-full bg-ink/60 backdrop-blur-sm border border-paper/10 font-mono text-[9px] tracking-[0.14em] uppercase text-paper/70">
-                      {artist.prod}
-                    </span>
-                  )}
 
                   <div className="mq-name absolute bottom-6 left-6 right-6 z-[3]">
                     <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1.5">

@@ -1,34 +1,58 @@
-import { ArrowRight } from 'lucide-react';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { artists } from '../data/artists';
 
-const allImages = artists.filter(a => a.image);
+const artistsWithImages = artists.filter(a => a.image);
+
+const colCount = 5;
+const columns: (typeof artistsWithImages)[] = Array.from({ length: colCount }, () => []);
+artistsWithImages.forEach((artist, i) => columns[i % colCount].push(artist));
+
+const marqueeJobs = [
+  'Production',
+  'Management',
+  'Diffusion',
+  'Communication',
+  'Digital',
+  'Événements',
+  'Booking',
+  'Relations presse',
+];
 
 export const HeroSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  const contentOpacity = useTransform(scrollY, [0, 520], [1, 0]);
+  const contentY = useTransform(scrollY, [0, 520], [0, 80]);
+
   return (
-    <section className="relative h-screen flex flex-col overflow-hidden bg-deep">
-      {/* 3-row horizontal mosaic */}
-      <div className="absolute inset-[-30%] flex flex-col gap-3 -rotate-[8deg] origin-center justify-center">
-        {[0, 1, 2].map((rowIdx) => {
-          const images = [...allImages, ...allImages, ...allImages];
-          const isLeft = rowIdx % 2 === 0;
+    <section
+      ref={containerRef}
+      className="relative flex min-h-[100svh] overflow-hidden bg-deep pt-[84px]"
+    >
+      <div className="absolute inset-[-28%] flex origin-center -rotate-[12deg] gap-3 opacity-100">
+        {columns.map((col, i) => {
+          const doubled = [...col, ...col, ...col];
+          const isDown = i % 2 === 0;
           return (
             <div
-              key={rowIdx}
-              className={`flex gap-3 will-change-transform ${isLeft ? 'animate-hero-left' : 'animate-hero-right'}`}
+              key={i}
+              className={`flex flex-1 flex-col ${isDown ? 'animate-hero-down' : 'animate-hero-up'}`}
               style={{
-                animationDuration: isLeft ? '40s' : '45s',
-                animationDelay: `${-rowIdx * 6}s`,
+                animationDuration: isDown ? '24s' : '31s',
+                animationDelay: `${-i * 4.5}s`,
               }}
             >
-              {images.map((artist, j) => (
-                <div key={`${artist.id}-${rowIdx}-${j}`} className="flex-shrink-0 w-[160px] md:w-[220px] lg:w-[260px]">
-                  <div className="aspect-[3/4] overflow-hidden rounded-xl">
+              {doubled.map((artist, j) => (
+                <div key={`${artist.id}-${j}`} className="shrink-0 pb-3">
+                  <div className="aspect-[3/4] overflow-hidden rounded-[10px]">
                     <img
                       src={artist.image}
                       alt=""
-                      className="w-full h-full object-cover opacity-40"
-                      loading={j < allImages.length ? 'eager' : 'lazy'}
+                      className="h-full w-full object-cover saturate-[0.78] brightness-[0.58]"
+                      loading={j < col.length ? 'eager' : 'lazy'}
                     />
                   </div>
                 </div>
@@ -38,55 +62,103 @@ export const HeroSection = () => {
         })}
       </div>
 
-      {/* Overlay layers */}
-      <div className="absolute inset-0 bg-deep/50" />
-      <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/50 to-deep/20" />
-      <div className="absolute inset-0 bg-gradient-to-r from-deep/70 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-[linear-gradient(112deg,rgba(10,15,41,0.9)_0%,rgba(10,15,41,0.68)_43%,rgba(10,15,41,0.24)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_24%,rgba(236,72,153,0.16),transparent_34%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-deep via-deep/62 to-transparent" />
 
-      {/* Content */}
-      <div className="relative z-10 mt-auto pb-16 md:pb-20 lg:pb-24 px-6 md:px-12 max-w-container mx-auto w-full">
-        <h1 className="font-display font-black tracking-tight leading-[0.88]">
-          <span className="block text-paper text-[clamp(2.8rem,9vw,7.5rem)]">
-            Tiny Team,
-          </span>
-          <span className="block text-[clamp(2.8rem,9vw,7.5rem)]">
-            <span className="font-serif italic font-normal text-accent-light">Big</span>
-            <span className="text-paper"> Dreams.</span>
-          </span>
-        </h1>
+      <motion.div
+        className="relative z-10 mx-auto flex w-full max-w-container flex-col justify-center px-6 pb-8 pt-7 md:px-12 md:pb-10 md:pt-10"
+        style={{ opacity: contentOpacity, y: contentY }}
+      >
+        <div className="grid gap-7 lg:grid-cols-12 lg:items-center">
+          <div className="lg:col-span-8">
+            <div className="mb-5 flex flex-wrap items-center gap-3">
+              <span className="premium-kicker rounded-full border border-paper/16 bg-paper/[0.055] px-3 py-1.5 text-paper/72 backdrop-blur-md">
+                Production · Management · Diffusion · Spectacles vivants
+              </span>
+            </div>
 
-        <p className="font-body text-paper/45 text-base md:text-lg max-w-lg leading-relaxed mt-8 md:mt-12">
-          Production, management & diffusion de spectacles vivants.
-          On accompagne les artistes de scène — de l'idée au rideau final.
-        </p>
+            <h1 className="premium-title max-w-5xl text-paper">
+              <span
+                className="block whitespace-nowrap"
+                style={{ fontSize: 'clamp(3.1rem, 7.4vw, 7.25rem)' }}
+              >
+                Tiny Team
+              </span>
+              <span
+                className="mt-1 block whitespace-nowrap"
+                style={{ fontSize: 'clamp(3rem, 6.9vw, 6.65rem)' }}
+              >
+                <span className="font-serif font-normal italic text-accent-light">Big</span> Dream
+              </span>
+            </h1>
+          </div>
 
-        {/* Buttons */}
-        <div className="flex flex-wrap items-center gap-4 md:gap-6 mt-10 md:mt-14">
-          <a
-            href="#contact"
-            className="group inline-flex items-center gap-3"
-          >
-            <span className="inline-flex items-center gap-2 px-5 md:px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-              On discute ?
-            </span>
-            <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-              <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
-            </span>
-          </a>
+          <div className="lg:col-span-4">
+            <div className="ml-auto max-w-[380px] rounded-[10px] border border-paper/12 bg-deep/48 p-4 backdrop-blur-xl md:p-5 lg:max-w-[360px]">
+              <p className="premium-copy max-w-md text-sm leading-[1.6] text-paper/76 md:text-base lg:text-[15px]">
+                Une équipe resserrée pour produire, défendre et diffuser des artistes
+                qui tiennent la salle, le rythme et la trajectoire.
+              </p>
 
-          <Link
-            to="/artistes"
-            className="group inline-flex items-center gap-3"
-          >
-            <span className="inline-flex items-center gap-2 px-5 md:px-6 py-3 rounded-full border border-paper/10 font-mono text-[11px] tracking-[0.14em] uppercase text-paper/60 group-hover:text-paper group-hover:border-accent/40 group-hover:bg-accent/[0.06] transition-all duration-300">
-              Découvrir nos artistes
-            </span>
-            <span className="w-10 h-10 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_24px_rgba(236,72,153,0.35)]">
-              <ArrowRight size={15} className="text-ink group-hover:translate-x-0.5 transition-transform duration-300" />
-            </span>
-          </Link>
+              <div className="mt-4 border-y border-paper/12 py-4">
+                <div>
+                  <div>
+                    <span className="premium-kicker text-paper/42">
+                      Réseau de diffusion
+                    </span>
+                    <div className="mt-2 flex items-end gap-2.5">
+                      <span className="premium-title text-[3.2rem] leading-[0.8] text-paper md:text-[3.85rem]">
+                        300+
+                      </span>
+                      <span className="premium-kicker pb-1.5 text-[8.5px] text-paper/62">
+                        salles partenaires
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 grid gap-2 border-t border-paper/10 pt-3 sm:grid-cols-2">
+                  <div className="flex items-center justify-between gap-4 rounded-full border border-paper/10 px-3 py-1.5">
+                    <span className="premium-kicker text-[8.5px] text-paper/40">Artistes</span>
+                    <span className="font-display text-lg font-black text-paper">10</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 rounded-full border border-paper/10 px-3 py-1.5">
+                    <span className="premium-kicker text-[8.5px] text-paper/40">Métiers</span>
+                    <span className="font-display text-lg font-black text-paper">5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap lg:flex-col">
+                <a href="#contact" className="premium-btn premium-btn-paper premium-btn-sm group">
+                  Parler d’un projet
+                  <span className="premium-btn-icon">
+                    <ArrowUpRight size={16} strokeWidth={2.5} />
+                  </span>
+                </a>
+
+                <Link to="/artistes" className="premium-btn premium-btn-glass premium-btn-sm group">
+                  Voir le plateau
+                  <span className="premium-btn-icon">
+                    <ArrowRight size={14} strokeWidth={2.4} />
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div className="hero-jobs-marquee mt-8 border-y border-accent-light/18 bg-deep/28 py-2.5 backdrop-blur-sm md:py-3">
+          <div className="hero-jobs-track">
+            {[...marqueeJobs, ...marqueeJobs, ...marqueeJobs].map((job, index) => (
+              <span key={`${job}-${index}`} className="hero-jobs-item">
+                {job}
+              </span>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 };
