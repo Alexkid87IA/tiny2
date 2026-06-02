@@ -16,13 +16,15 @@ export const ManifestoSection = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
         <div className="absolute inset-0 flex items-center justify-center px-6">
           <motion.h2
-            className="max-w-4xl text-center font-display text-3xl font-black leading-[1.05] tracking-tight text-paper sm:text-4xl md:text-6xl lg:text-7xl"
+            className="text-center drop-shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
-            On ne remplit pas des salles.
-            <span className="block font-serif font-normal italic text-accent-light">
+            <span className="block font-display text-3xl font-black tracking-tight text-paper sm:text-5xl md:text-6xl lg:text-7xl">
+              On ne remplit pas des salles.
+            </span>
+            <span className="block font-serif text-3xl font-normal italic text-accent-light sm:text-5xl md:text-6xl lg:text-7xl mt-1 md:mt-2">
               On crée des moments.
             </span>
           </motion.h2>
