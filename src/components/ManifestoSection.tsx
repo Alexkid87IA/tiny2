@@ -21,11 +21,11 @@ export const ManifestoSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
-            <span className="block font-display text-3xl font-black tracking-tight text-paper sm:text-5xl md:text-6xl lg:text-7xl">
-              On ne remplit pas des salles.
+            <span className="block font-display text-2xl font-black tracking-tight text-paper sm:text-4xl md:text-5xl lg:text-6xl">
+              On s'occupe de tout ce qui n'est pas drôle,
             </span>
-            <span className="block font-serif text-3xl font-normal italic text-accent-light sm:text-5xl md:text-6xl lg:text-7xl mt-1 md:mt-2">
-              On crée des moments.
+            <span className="block font-serif text-2xl font-normal italic text-accent-light sm:text-4xl md:text-5xl lg:text-6xl mt-1 md:mt-2">
+              pour que tout le reste le soit.
             </span>
           </motion.h2>
         </div>
