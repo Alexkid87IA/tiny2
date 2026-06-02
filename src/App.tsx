@@ -5,6 +5,7 @@ import { ArtistsSliderSection } from './components/ArtistsSliderSection';
 import { StorySection } from './components/StorySection';
 import { MissionSection } from './components/MissionSection';
 import { ContactSection } from './components/ContactSection';
+import { ManifestoSection } from './components/ManifestoSection';
 import { Footer } from './components/Footer';
 import { Navigation } from './components/Navigation';
 import { ArtistProfilePage } from './pages/ArtistProfilePage';
@@ -46,6 +47,7 @@ function HomePage() {
       <StorySection />
       <ArtistsSliderSection />
       <MissionSection />
+      <ManifestoSection />
       <ContactSection />
       <Footer />
     </main>
