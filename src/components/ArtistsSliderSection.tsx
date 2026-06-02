@@ -108,7 +108,7 @@ export const ArtistsSliderSection = () => {
             to={`/artiste/${activeArtist.id}`}
             aria-label={`Voir le profil de ${activeArtist.name}`}
             style={{ aspectRatio: posterAspectRatio }}
-            className="group relative mx-auto flex w-full max-w-[420px] items-center justify-center overflow-hidden rounded-[10px] border border-paper/10 bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:max-w-[460px] lg:col-span-5 lg:h-[520px] lg:w-auto lg:max-w-none lg:justify-self-center"
+            className="group relative mx-auto flex w-full max-w-[420px] items-center justify-center overflow-hidden rounded-[10px] border border-paper/10 bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:max-w-[460px] lg:col-span-5 lg:h-[620px] lg:w-auto lg:max-w-none lg:justify-self-center"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.img
@@ -124,7 +124,7 @@ export const ArtistsSliderSection = () => {
             </AnimatePresence>
           </Link>
 
-          <div className="flex min-h-0 flex-col gap-3 overflow-hidden rounded-[10px] border border-paper/10 bg-paper/[0.035] p-4 lg:col-span-7 lg:h-[520px]">
+          <div className="flex min-h-0 flex-col gap-3 overflow-hidden rounded-[10px] border border-paper/10 bg-paper/[0.035] p-4 lg:col-span-7 lg:h-[620px]">
             <div className="flex items-center justify-between gap-4">
               <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent/80">
                 Plateau complet
