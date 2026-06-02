@@ -1,231 +1,210 @@
 import { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import {
+  ArrowUpRight,
+  Briefcase,
+  Mail,
+  Megaphone,
+  MessageSquareText,
+  PartyPopper,
+  Play,
+} from 'lucide-react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
-import { artists } from '../data/artists';
+import { AudienceArtistGridSection } from '../components/AudienceArtistGridSection';
 
-const visibleArtists = artists.filter(a => a.image);
-
-const solutions = [
+const formats = [
   {
-    num: '01',
-    title: 'Soirées corporate',
-    desc: 'Des shows sur mesure pour vos séminaires, team buildings et événements d\'entreprise.',
-    features: ['Spectacles personnalisés', 'Animation de soirées', 'Concepts clé en main'],
+    title: 'Événements internes',
+    desc: 'Séminaires, conventions, soirées : un format scène qui donne du rythme et rassemble les équipes.',
+    Icon: PartyPopper,
+    tags: ['Séminaire', 'Team event', 'Convention'],
   },
   {
-    num: '02',
-    title: 'Conventions & lancements',
-    desc: 'De l\'humour pour marquer les esprits lors de vos grands moments.',
-    features: ['Présentateurs humoristes', 'Sketches sur mesure', 'Formats hybrides'],
+    title: 'Lancements & prises de parole',
+    desc: 'Un artiste, un ton, une écriture : pour rendre un moment de marque plus vivant et plus mémorable.',
+    Icon: Megaphone,
+    tags: ['Lancement', 'Animation', 'Scène'],
   },
   {
-    num: '03',
     title: 'Contenu de marque',
-    desc: 'Associez votre image à celle de nos artistes pour des campagnes qui résonnent.',
-    features: ['Partenariats artistes', 'Création de contenu', 'Activation digitale'],
+    desc: 'Des formats courts, incarnés, conçus avec les artistes sans lisser leur personnalité.',
+    Icon: Play,
+    tags: ['Social', 'Brand content', 'Campagne'],
   },
 ];
 
+const principles = [
+  ['01', 'Le bon artiste', 'Un univers aligné avec le public, le contexte et le niveau d’énergie attendu.'],
+  ['02', 'Le bon format', 'Show, intervention, animation, contenu ou dispositif hybride : on adapte le cadre.'],
+  ['03', 'La bonne exécution', 'Brief, production, coordination et suivi pour que le moment soit fluide.'],
+];
+
 export const BrandPage = () => {
-  const heroRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const inView = useInView(headRef, { once: true, margin: '-80px' });
 
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start end', 'end start'],
-  });
-
-  const orbY = useTransform(scrollYProgress, [0, 1], [60, -60]);
-
   return (
-    <main className="min-h-screen bg-deep">
+    <main className="min-h-screen bg-deep text-paper">
       <Navigation />
 
-      {/* Hero */}
-      <section ref={heroRef} className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-        <motion.div
-          className="absolute w-[500px] h-[500px] rounded-full pointer-events-none blur-[120px]"
-          style={{
-            top: '5%', right: '-10%',
-            background: 'radial-gradient(circle, rgba(236,72,153,0.10) 0%, transparent 70%)',
-            y: orbY,
-          }}
-        />
-
-        <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
-          <motion.span
-            className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
-            initial={false}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            Entreprises & marques
-          </motion.span>
-
-          <motion.h1
-            className="font-display font-black text-paper tracking-tight leading-[0.88]"
+      <section className="audience-hero audience-hero-brand pt-28 md:pt-32">
+        <div className="mx-auto grid max-w-container gap-10 px-6 pb-12 md:px-12 md:pb-16 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.72fr)] lg:items-end">
+          <motion.div
+            ref={headRef}
             initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
           >
-            <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
-              L'humour au service
-            </span>
-            <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
-              <span className="font-serif italic font-normal text-accent-light">de votre marque.</span>
-            </span>
-          </motion.h1>
-
-          <motion.p
-            className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
-            initial={false}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.25 }}
-          >
-            Séminaires, lancements, contenu de marque — on crée des moments qui marquent avec des artistes qui comptent.
-          </motion.p>
-        </div>
-      </section>
-
-      {/* Solutions */}
-      <section className="relative pb-28 md:pb-40">
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent/50 block mb-10">
-            Nos solutions
-          </span>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {solutions.map((s, i) => (
-              <motion.div
-                key={s.title}
-                className="mission-card group block relative"
-                initial={false}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <div className="mission-card-inner relative p-7 md:p-9">
-                  <span className="mission-card-num font-display font-black absolute top-7 right-8 md:top-9 md:right-9">
-                    {s.num}
-                  </span>
-
-                  <h3 className="font-display font-bold text-paper text-lg md:text-xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12 mb-3">
-                    {s.title}
-                  </h3>
-                  <p className="font-body text-paper/30 text-sm leading-relaxed mb-6">{s.desc}</p>
-                  <div className="space-y-2.5 pt-5 border-t border-paper/[0.06]">
-                    {s.features.map(f => (
-                      <div key={f} className="flex items-center gap-2.5">
-                        <div className="w-1 h-1 rounded-full bg-accent/50" />
-                        <span className="font-body text-sm text-paper/25">{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Artists preview */}
-      <section className="relative py-28 md:py-40">
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <motion.h2
-            className="font-display font-black text-paper tracking-tight leading-[0.88] mb-16 md:mb-20"
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          >
-            <span className="block text-[clamp(2rem,5vw,4rem)]">
-              Des artistes qui
-            </span>
-            <span className="block text-[clamp(2rem,5vw,4rem)] mt-1">
-              <span className="font-serif italic font-normal text-accent-light">font la différence.</span>
-            </span>
-          </motion.h2>
-
-          {/* Mobile: carousel */}
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:hidden">
-            {visibleArtists.map((artist) => (
-              <Link key={artist.id} to={`/artiste/${artist.id}`} className="mq-card relative shrink-0 w-[200px] snap-start rounded-[16px] overflow-hidden">
-                <div className="aspect-square overflow-hidden rounded-[16px]">
-                  <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
-                </div>
-                <div className="mq-overlay absolute inset-0 rounded-[16px]" />
-                <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
-                  <span className="font-display font-black text-paper text-sm tracking-tight leading-tight block">{artist.name}</span>
-                </div>
-                <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
-              </Link>
-            ))}
-          </div>
-
-          {/* Desktop: 2 rows of 5 */}
-          <div className="hidden md:grid md:grid-cols-5 gap-4">
-            {visibleArtists.map((artist, i) => (
-              <motion.div
-                key={artist.id}
-                initial={false}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.04 }}
-              >
-                <Link to={`/artiste/${artist.id}`} className="mq-card block relative rounded-[16px] overflow-hidden">
-                  <div className="aspect-square overflow-hidden rounded-[16px]">
-                    <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
-                  </div>
-                  <div className="mq-overlay absolute inset-0 rounded-[16px]" />
-                  <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
-                    <span className="font-display font-black text-paper text-base tracking-tight leading-tight block">{artist.name}</span>
-                  </div>
-                  <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+            <span className="premium-kicker text-accent-light/82">Entreprises & marques</span>
+            <h1 className="premium-title mt-7 max-w-5xl text-[52px] text-paper md:text-[76px] lg:text-[96px]">
+              Des moments vivants,
+              <span className="block font-serif font-normal italic text-accent-light">
+                jamais corporate.
+              </span>
+            </h1>
+            <p className="premium-copy mt-7 max-w-2xl text-lg text-paper/68 md:text-xl">
+              Spectacle, intervention, contenu ou événement : on crée des formats qui gardent
+              la personnalité des artistes et servent vraiment votre message.
+            </p>
+          </motion.div>
 
           <motion.div
-            className="mt-12 text-center"
+            className="audience-hero-panel"
             initial={false}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.12, ease: [0.23, 1, 0.32, 1] }}
           >
-            <Link to="/artistes" className="premium-btn premium-btn-glass premium-btn-sm group">
-              Tous nos artistes
-              <span className="premium-btn-icon">
-                <ArrowRight size={13} strokeWidth={2.4} />
-              </span>
-            </Link>
+            <div className="audience-panel-top">
+              <span className="premium-kicker text-paper/46">Brief marque</span>
+              <Briefcase size={18} strokeWidth={2.2} />
+            </div>
+            <div className="brand-brief-card">
+              <span>Objectif</span>
+              <strong>Créer un moment vivant, utile, mémorable.</strong>
+            </div>
+            <div className="mt-3 grid gap-2">
+              {['Événement interne', 'Campagne contenu', 'Activation scène'].map((item) => (
+                <div key={item} className="audience-panel-line">
+                  <span>{item}</span>
+                  <ArrowUpRight size={14} />
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative py-20 md:py-28">
-        <div className="max-w-container mx-auto px-6 md:px-12 text-center">
-          <h2 className="font-display font-black text-paper text-2xl md:text-4xl tracking-tight leading-[0.92] mb-4">
-            Un événement
-            <span className="font-serif italic font-normal text-accent-light"> à imaginer ?</span>
-          </h2>
-          <p className="font-body text-paper/40 text-base max-w-md mx-auto mb-10">
-            Racontez-nous votre projet — on trouve l'artiste et le format qui vous correspondent.
-          </p>
-          <a
-            href="mailto:contact@tinyteam.fr"
-            className="premium-btn premium-btn-paper group"
-          >
-            Nous contacter
-            <span className="premium-btn-icon">
-              <ArrowRight size={15} strokeWidth={2.4} />
-            </span>
-          </a>
+      <section className="bg-paper py-14 text-ink md:py-20 lg:py-24">
+        <div className="mx-auto max-w-container px-6 md:px-12">
+          <div className="mb-10 grid gap-5 md:mb-14 md:grid-cols-[0.9fr_0.7fr] md:items-end">
+            <div>
+              <span className="premium-kicker text-accent-dark/70">Formats</span>
+              <h2 className="premium-title mt-4 max-w-3xl text-[44px] md:text-[68px]">
+                Pas une animation. Un vrai moment.
+              </h2>
+            </div>
+            <p className="premium-copy max-w-lg text-base text-ink/58 md:text-lg">
+              On part de votre contexte, puis on choisit le niveau d’écriture,
+              de scène et de production qui rend l’expérience juste.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {formats.map((format, index) => {
+              const Icon = format.Icon;
+              return (
+                <motion.article
+                  key={format.title}
+                  className="brand-format-card"
+                  initial={false}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5, delay: index * 0.06, ease: [0.23, 1, 0.32, 1] }}
+                >
+                  <div className="brand-format-top">
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <Icon size={20} strokeWidth={2.2} />
+                  </div>
+                  <h3>{format.title}</h3>
+                  <p>{format.desc}</p>
+                  <div>
+                    {format.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                </motion.article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-deep py-16 md:py-22 lg:py-28">
+        <div className="mx-auto max-w-container px-6 md:px-12">
+          <div className="grid gap-10 lg:grid-cols-[0.78fr_1fr] lg:items-start">
+            <div className="lg:sticky lg:top-28">
+              <span className="premium-kicker text-accent-light/74">Approche</span>
+              <h2 className="premium-title mt-4 text-[44px] text-paper md:text-[68px]">
+                Un cadre précis, un ton vivant.
+              </h2>
+              <p className="premium-copy mt-6 max-w-lg text-lg text-paper/62">
+                L’artiste n’est pas un décor. On protège son univers tout en répondant
+                à votre objectif de marque.
+              </p>
+            </div>
+
+            <div className="grid gap-3">
+              {principles.map(([num, title, desc]) => (
+                <article key={num} className="brand-principle-row">
+                  <span>{num}</span>
+                  <div>
+                    <strong>{title}</strong>
+                    <p>{desc}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <AudienceArtistGridSection
+        eyebrow="Plateau disponible"
+        title="Des présences qui marquent."
+        description="Les 10 artistes du plateau peuvent être mobilisés selon le contexte : scène, contenu, événement interne ou prise de parole."
+        ctaLabel="Voir le plateau"
+        theme="paper"
+      />
+
+      <section id="contact" className="audience-contact-section scroll-mt-24">
+        <div className="mx-auto max-w-container px-6 md:px-12">
+          <div className="audience-contact-panel">
+            <div>
+              <span className="premium-kicker text-accent-light/82">Projet entreprise</span>
+              <h2 className="premium-title mt-5 text-[44px] text-paper md:text-[70px]">
+                Une idée à
+                <span className="block font-serif font-normal italic text-accent-light">
+                  rendre vivante ?
+                </span>
+              </h2>
+              <p className="premium-copy mt-6 max-w-xl text-lg text-paper/64">
+                Brief, public, objectif, timing : envoyez-nous le contexte et on imagine
+                le bon format avec vous.
+              </p>
+            </div>
+            <div className="audience-contact-card">
+              <MessageSquareText size={20} strokeWidth={2.2} />
+              <span className="premium-kicker text-paper/44">Contact marque</span>
+              <a href="mailto:contact@tinyteam.fr">contact@tinyteam.fr</a>
+              <a href="mailto:contact@tinyteam.fr" className="premium-btn premium-btn-paper group mt-6">
+                Parler d’un projet
+                <span className="premium-btn-icon">
+                  <Mail size={15} strokeWidth={2.4} />
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 

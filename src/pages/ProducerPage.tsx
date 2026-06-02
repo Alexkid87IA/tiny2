@@ -1,229 +1,204 @@
 import { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import {
+  ArrowUpRight,
+  CalendarDays,
+  Mail,
+  RadioTower,
+  ShieldCheck,
+  TicketCheck,
+} from 'lucide-react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
-import { artists } from '../data/artists';
-
-const visibleArtists = artists.filter(a => a.image);
+import { AudienceArtistGridSection } from '../components/AudienceArtistGridSection';
 
 const commitments = [
   {
-    num: '01',
-    title: 'Des artistes prêts à créer l\'exception',
-    desc: 'Chaque humoriste arrive sur scène avec une énergie, une générosité et une maîtrise qui font la différence.',
-    features: ['Artistes accompagnés et préparés', 'Performances calibrées', 'Expérience scénique confirmée'],
+    title: 'Sélection claire',
+    desc: 'On vous oriente vers les artistes et les formats qui correspondent vraiment à votre salle, votre public et votre saison.',
+    Icon: TicketCheck,
   },
   {
-    num: '02',
-    title: 'Une logistique fluide, pensée pour vous',
-    desc: 'Interlocuteur unique, process simplifié, planning millimétré. La sérénité est notre standard.',
-    features: ['Interlocuteur dédié', 'Process optimisés', 'Planning détaillé'],
+    title: 'Conditions cadrées',
+    desc: 'Interlocuteur unique, informations propres, éléments de communication et suivi de date sans friction.',
+    Icon: ShieldCheck,
   },
   {
-    num: '03',
-    title: 'Votre événement propulsé au sommet',
-    desc: 'Chaque date est portée par notre équipe marketing pour maximiser l\'impact et remplir vos salles.',
-    features: ['Stratégie marketing dédiée', 'Communication multi-canal', 'Visibilité amplifiée'],
+    title: 'Date amplifiée',
+    desc: 'Le spectacle ne s’arrête pas au contrat : on aide à installer la date, le récit et la visibilité.',
+    Icon: RadioTower,
   },
 ];
 
+const process = [
+  ['01', 'On comprend votre contexte', 'Salle, jauge, ligne artistique, timing, contraintes et ambition.'],
+  ['02', 'On propose le bon plateau', 'Une sélection courte, lisible, argumentée. Pas un catalogue envoyé au hasard.'],
+  ['03', 'On cadre la date', 'Conditions, planning, technique, communication : chaque détail doit être fluide.'],
+  ['04', 'On suit la suite', 'Retours terrain, prochaines dates, relation programmateur tenue dans le temps.'],
+];
+
 export const ProducerPage = () => {
-  const heroRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const inView = useInView(headRef, { once: true, margin: '-80px' });
 
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start end', 'end start'],
-  });
-
-  const orbY = useTransform(scrollYProgress, [0, 1], [60, -60]);
-
   return (
-    <main className="min-h-screen bg-deep">
+    <main className="min-h-screen bg-deep text-paper">
       <Navigation />
 
-      {/* Hero */}
-      <section ref={heroRef} className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-        <motion.div
-          className="absolute w-[500px] h-[500px] rounded-full pointer-events-none blur-[120px]"
-          style={{
-            top: '5%', right: '-10%',
-            background: 'radial-gradient(circle, rgba(236,72,153,0.10) 0%, transparent 70%)',
-            y: orbY,
-          }}
-        />
-
-        <div className="relative max-w-container mx-auto px-6 md:px-12" ref={headRef}>
-          <motion.span
-            className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
-            initial={false}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            Programmateurs & salles
-          </motion.span>
-
-          <motion.h1
-            className="font-display font-black text-paper tracking-tight leading-[0.88]"
+      <section className="audience-hero audience-hero-producer pt-28 md:pt-32">
+        <div className="mx-auto grid max-w-container gap-10 px-6 pb-12 md:px-12 md:pb-16 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.72fr)] lg:items-end">
+          <motion.div
+            ref={headRef}
             initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
           >
-            <span className="block text-[clamp(2.6rem,7vw,6.5rem)]">
-              Nos artistes,
-            </span>
-            <span className="block text-[clamp(2.6rem,7vw,6.5rem)] mt-1 md:mt-2">
-              <span className="font-serif italic font-normal text-accent-light">votre prochain</span>{' '}
-              succès.
-            </span>
-          </motion.h1>
+            <span className="premium-kicker text-accent-light/82">Programmateurs & salles</span>
+            <h1 className="premium-title mt-7 max-w-5xl text-[52px] text-paper md:text-[76px] lg:text-[96px]">
+              Un plateau prêt
+              <span className="block font-serif font-normal italic text-accent-light">
+                pour votre saison.
+              </span>
+            </h1>
+            <p className="premium-copy mt-7 max-w-2xl text-lg text-paper/68 md:text-xl">
+              Des artistes accompagnés, des formats lisibles, une logistique carrée :
+              on vous aide à programmer le bon spectacle au bon moment.
+            </p>
+          </motion.div>
 
-          <motion.p
-            className="font-body text-paper/40 text-lg md:text-xl leading-[1.7] max-w-xl mt-8"
+          <motion.div
+            className="audience-hero-panel"
             initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.25 }}
+            transition={{ duration: 0.7, delay: 0.12, ease: [0.23, 1, 0.32, 1] }}
           >
-            Une programmation fluide, fiable et amplifiée pour faire rayonner vos événements.
-          </motion.p>
+            <div className="audience-panel-top">
+              <span className="premium-kicker text-paper/46">Réseau de diffusion</span>
+              <CalendarDays size={18} strokeWidth={2.2} />
+            </div>
+            <div className="audience-big-number">
+              <strong>300+</strong>
+              <span>salles partenaires</span>
+            </div>
+            <div className="mt-5 grid gap-2">
+              <div className="audience-panel-line">
+                <span>10 artistes accompagnés</span>
+                <ArrowUpRight size={14} />
+              </div>
+              <div className="audience-panel-line">
+                <span>Un interlocuteur unique</span>
+                <ArrowUpRight size={14} />
+              </div>
+              <div className="audience-panel-line">
+                <span>Dates, supports, relais</span>
+                <ArrowUpRight size={14} />
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Artists Grid */}
-      <section className="relative pb-28 md:pb-40">
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent/50 block mb-10">
-            {visibleArtists.length} artistes disponibles
-          </span>
-
-          {/* Mobile: carousel */}
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:hidden">
-            {visibleArtists.map((artist) => (
-              <Link key={artist.id} to={`/artiste/${artist.id}`} className="mq-card relative shrink-0 w-[200px] snap-start rounded-[16px] overflow-hidden">
-                <div className="aspect-square overflow-hidden rounded-[16px]">
-                  <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
-                </div>
-                <div className="mq-overlay absolute inset-0 rounded-[16px]" />
-                <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
-                  <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1">{artist.type}</span>
-                  <span className="font-display font-black text-paper text-sm tracking-tight leading-tight block">{artist.name}</span>
-                </div>
-                <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
-              </Link>
-            ))}
+      <section className="bg-paper py-14 text-ink md:py-20 lg:py-24">
+        <div className="mx-auto max-w-container px-6 md:px-12">
+          <div className="mb-10 grid gap-5 md:mb-14 md:grid-cols-[0.9fr_0.7fr] md:items-end">
+            <div>
+              <span className="premium-kicker text-accent-dark/70">Ce que vous gagnez</span>
+              <h2 className="premium-title mt-4 max-w-3xl text-[44px] md:text-[68px]">
+                Moins de bruit, plus de certitude.
+              </h2>
+            </div>
+            <p className="premium-copy max-w-lg text-base text-ink/58 md:text-lg">
+              L’objectif : vous faire gagner du temps sans réduire l’exigence artistique.
+            </p>
           </div>
 
-          {/* Desktop: 2 rows of 5 */}
-          <div className="hidden md:grid md:grid-cols-5 gap-4">
-            {visibleArtists.map((artist, i) => (
-              <motion.div
-                key={artist.id}
-                initial={false}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: i * 0.04, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <Link to={`/artiste/${artist.id}`} className="mq-card block relative rounded-[16px] overflow-hidden">
-                  <div className="aspect-square overflow-hidden rounded-[16px]">
-                    <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" loading="lazy" />
-                  </div>
-                  <div className="mq-overlay absolute inset-0 rounded-[16px]" />
-                  <div className="mq-name absolute bottom-4 left-4 right-4 z-[3]">
-                    <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-accent-light/70 block mb-1">{artist.type}</span>
-                    <span className="font-display font-black text-paper text-base tracking-tight leading-tight block">{artist.name}</span>
-                  </div>
-                  <div className="mq-border absolute inset-0 rounded-[16px] pointer-events-none z-[5]" />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Commitments */}
-      <section className="relative py-28 md:py-40">
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <motion.span
-            className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent block mb-8 md:mb-10"
-            initial={false}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            Nos engagements
-          </motion.span>
-
-          <motion.h2
-            className="font-display font-black text-paper tracking-tight leading-[0.88] mb-16 md:mb-20"
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          >
-            <span className="block text-[clamp(2rem,5vw,4rem)]">
-              Chaque spectacle devient
-            </span>
-            <span className="block text-[clamp(2rem,5vw,4rem)] mt-1">
-              <span className="font-serif italic font-normal text-accent-light">une expérience.</span>
-            </span>
-          </motion.h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {commitments.map((c, i) => (
-              <motion.div
-                key={c.title}
-                className="mission-card group block relative"
-                initial={false}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <div className="mission-card-inner relative p-7 md:p-9">
-                  <span className="mission-card-num font-display font-black absolute top-7 right-8 md:top-9 md:right-9">
-                    {c.num}
+          <div className="grid gap-4 md:grid-cols-3">
+            {commitments.map((item, index) => {
+              const Icon = item.Icon;
+              return (
+                <motion.article
+                  key={item.title}
+                  className="audience-benefit-card"
+                  initial={false}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5, delay: index * 0.06, ease: [0.23, 1, 0.32, 1] }}
+                >
+                  <span className="audience-benefit-icon">
+                    <Icon size={20} strokeWidth={2.2} />
                   </span>
-
-                  <h3 className="font-display font-bold text-paper text-lg md:text-xl tracking-tight group-hover:text-accent transition-colors duration-300 pr-12 mb-3">
-                    {c.title}
-                  </h3>
-                  <p className="font-body text-paper/30 text-sm leading-relaxed mb-6">{c.desc}</p>
-                  <div className="space-y-2.5 pt-5 border-t border-paper/[0.06]">
-                    {c.features.map(f => (
-                      <div key={f} className="flex items-center gap-2.5">
-                        <div className="w-1 h-1 rounded-full bg-accent/50" />
-                        <span className="font-body text-sm text-paper/25">{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                  <span className="premium-kicker text-accent-dark/70">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </motion.article>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative py-20 md:py-28">
-        <div className="max-w-container mx-auto px-6 md:px-12 text-center">
-          <h2 className="font-display font-black text-paper text-2xl md:text-4xl tracking-tight leading-[0.92] mb-4">
-            Prêt à créer quelque chose
-            <span className="font-serif italic font-normal text-accent-light"> d'unique ?</span>
-          </h2>
-          <p className="font-body text-paper/40 text-base max-w-md mx-auto mb-10">
-            Discutons de votre projet et découvrons ensemble comment nos artistes peuvent contribuer à son succès.
-          </p>
-          <a
-            href="mailto:contact@tinyteam.fr"
-            className="premium-btn premium-btn-paper group"
-          >
-            Commencer la discussion
-            <span className="premium-btn-icon">
-              <ArrowRight size={15} strokeWidth={2.4} />
-            </span>
-          </a>
+      <AudienceArtistGridSection
+        eyebrow="Plateau disponible"
+        title="Des formats prêts à tourner."
+        description="Les 10 artistes accompagnés par Tiny Team, présentés dans une grille claire pour comparer les univers et accéder vite aux profils."
+        ctaLabel="Voir tous les artistes"
+      />
+
+      <section className="bg-paper py-14 text-ink md:py-20 lg:py-24">
+        <div className="mx-auto max-w-container px-6 md:px-12">
+          <div className="mb-12 grid gap-5 md:grid-cols-[0.74fr_0.52fr] md:items-end">
+            <div>
+              <span className="premium-kicker text-accent-dark/70">Méthode</span>
+              <h2 className="premium-title mt-4 max-w-4xl text-[42px] md:text-[58px]">
+                Une relation programmateur qui tient.
+              </h2>
+            </div>
+            <p className="premium-copy max-w-lg text-base text-ink/58 md:text-lg">
+              Une méthode courte, lisible et tenue jusqu’au terrain.
+            </p>
+          </div>
+          <ol className="audience-process-grid">
+            {process.map(([num, title, desc]) => (
+              <li key={num}>
+                <span>{num}</span>
+                <strong>{title}</strong>
+                <p>{desc}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section id="contact" className="audience-contact-section scroll-mt-24">
+        <div className="mx-auto max-w-container px-6 md:px-12">
+          <div className="audience-contact-panel">
+            <div>
+              <span className="premium-kicker text-accent-light/82">Programmer un artiste</span>
+              <h2 className="premium-title mt-5 text-[44px] text-paper md:text-[70px]">
+                Une date à
+                <span className="block font-serif font-normal italic text-accent-light">
+                  construire ?
+                </span>
+              </h2>
+              <p className="premium-copy mt-6 max-w-xl text-lg text-paper/64">
+                Donnez-nous le contexte, la salle, la période et l’envie artistique.
+                On revient avec une proposition claire.
+              </p>
+            </div>
+            <div className="audience-contact-card">
+              <CalendarDays size={20} strokeWidth={2.2} />
+              <span className="premium-kicker text-paper/44">Booking</span>
+              <a href="mailto:contact@tinyteam.fr">contact@tinyteam.fr</a>
+              <a href="mailto:contact@tinyteam.fr" className="premium-btn premium-btn-paper group mt-6">
+                Parler programmation
+                <span className="premium-btn-icon">
+                  <Mail size={15} strokeWidth={2.4} />
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 

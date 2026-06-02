@@ -166,7 +166,7 @@ export const Navigation = () => {
                       <span className="premium-kicker block text-accent-light/70">
                         {item.eyebrow}
                       </span>
-                      <span className={`mt-1 block font-display text-2xl font-black sm:text-3xl ${
+                      <span className={`mt-1 block font-display text-3xl font-black ${
                         location.pathname === item.href ? 'text-paper' : 'text-paper/[0.64]'
                       }`}>
                         {item.title}

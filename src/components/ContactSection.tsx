@@ -52,7 +52,7 @@ export const ContactSection = () => {
           </div>
         </motion.div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2">
+        <div className="mt-14 grid gap-5 lg:grid-cols-2">
           {paths.map((path, i) => (
             <motion.div
               key={path.eyebrow}
@@ -63,7 +63,7 @@ export const ContactSection = () => {
             >
               <Link
                 to={path.link}
-                className="group flex min-h-[270px] flex-col justify-between rounded-[10px] border border-ink/10 bg-ink px-5 py-6 text-paper transition duration-200 hover:border-accent/35 hover:bg-[#151018] sm:px-6 md:px-8 md:py-8"
+                className="group flex min-h-[270px] flex-col justify-between rounded-[10px] border border-ink/10 bg-ink px-6 py-6 text-paper transition duration-200 hover:border-accent/35 hover:bg-[#151018] md:px-8 md:py-8"
               >
                 <div>
                   <div className="mb-10 flex items-center justify-between gap-4">
@@ -105,7 +105,7 @@ export const ContactSection = () => {
                 <span className="premium-kicker text-ink/42">Ou écrivez-nous directement</span>
                 <a
                   href="mailto:contact@tinyteam.fr"
-                  className="premium-title mt-1 block text-xl text-ink transition hover:text-accent-dark sm:text-2xl md:text-4xl break-all"
+                  className="premium-title mt-1 block text-2xl text-ink transition hover:text-accent-dark md:text-4xl"
                 >
                   contact@tinyteam.fr
                 </a>
