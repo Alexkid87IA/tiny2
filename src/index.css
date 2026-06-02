@@ -1458,10 +1458,6 @@ button:focus-visible {
   justify-content: center;
   overflow: hidden;
   border-bottom: 1px solid rgba(10, 10, 10, 0.1);
-  background:
-    radial-gradient(circle at 26% 28%, color-mix(in srgb, var(--service-a) 54%, transparent), transparent 34%),
-    radial-gradient(circle at 76% 62%, color-mix(in srgb, var(--service-b) 48%, transparent), transparent 36%),
-    linear-gradient(135deg, var(--service-ink), color-mix(in srgb, var(--service-a) 24%, #0A0A0A));
 }
 
 .service-card-media::before {
@@ -1586,10 +1582,6 @@ button:focus-visible {
   position: relative;
   min-height: 100%;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--service-a) 54%, transparent), transparent 34%),
-    radial-gradient(circle at 78% 70%, color-mix(in srgb, var(--service-b) 50%, transparent), transparent 34%),
-    linear-gradient(135deg, var(--service-ink), #0A0F29);
 }
 
 .service-modal-media::before,

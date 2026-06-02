@@ -5,7 +5,7 @@ import {
   ArrowUpRight,
   CalendarDays,
   Handshake,
-  ImagePlus,
+
   Megaphone,
   RadioTower,
   Route,
@@ -108,18 +108,8 @@ export const MissionSection = () => {
                 </Link>
               </div>
 
-              <div className="mt-9 overflow-hidden rounded-[16px] border border-dashed border-ink/[0.16] bg-[linear-gradient(135deg,rgba(10,10,10,0.035),rgba(236,72,153,0.055))] p-3">
-                <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden rounded-[12px] border border-ink/[0.08] bg-paper">
-                  <div className="absolute inset-0 opacity-[0.42] [background-image:linear-gradient(rgba(10,10,10,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(10,10,10,0.08)_1px,transparent_1px)] [background-size:36px_36px]" />
-                  <div className="relative flex flex-col items-center gap-3 text-center">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-paper">
-                      <ImagePlus size={20} strokeWidth={2.2} />
-                    </span>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/[0.48]">
-                      Photo équipe
-                    </span>
-                  </div>
-                </div>
+              <div className="mt-9 overflow-hidden rounded-[16px]">
+                <img src="/team.png" alt="L'équipe Tiny Team" className="aspect-[16/10] w-full rounded-[12px] object-cover" />
               </div>
             </div>
           </motion.div>

@@ -38,6 +38,7 @@ type Service = {
   process: string[];
   Icon: LucideIcon;
   theme: ServiceTheme;
+  image: string;
 };
 
 const services: Service[] = [
@@ -54,6 +55,7 @@ const services: Service[] = [
     features: ['Direction artistique', 'Construction du format', 'Budget & production', 'Coordination plateau'],
     process: ['Clarifier le concept', 'Tester la matière', 'Structurer la production', 'Ajuster après les dates'],
     Icon: Route,
+    image: '/services/production.png',
     theme: {
       '--service-a': '#EC4899',
       '--service-b': '#45D4C5',
@@ -74,6 +76,7 @@ const services: Service[] = [
     features: ['Stratégie artistique', 'Négociation', 'Planning priorisé', 'Décisions long terme'],
     process: ['Lire le moment', 'Fixer les priorités', 'Ouvrir les bonnes portes', 'Réviser la trajectoire'],
     Icon: Handshake,
+    image: '/services/management.png',
     theme: {
       '--service-a': '#FFB703',
       '--service-b': '#5B7CFA',
@@ -94,6 +97,7 @@ const services: Service[] = [
     features: ['Booking national', 'Relations programmateurs', 'Tournées', 'Suivi des dates'],
     process: ['Qualifier les salles', 'Présenter le projet', 'Négocier les conditions', 'Piloter la tournée'],
     Icon: RadioTower,
+    image: '/services/diffusion.png',
     theme: {
       '--service-a': '#2DD4BF',
       '--service-b': '#7C3AED',
@@ -114,6 +118,7 @@ const services: Service[] = [
     features: ['Relations presse', 'Narration', 'Image', 'Lancements de spectacle'],
     process: ['Trouver le bon angle', 'Écrire le récit', 'Activer les relais', 'Mesurer les retours'],
     Icon: Megaphone,
+    image: '/services/communication.png',
     theme: {
       '--service-a': '#F43F5E',
       '--service-b': '#FACC15',
@@ -134,6 +139,7 @@ const services: Service[] = [
     features: ['Stratégie social media', 'Formats contenus', 'Calendrier éditorial', 'Suivi performance'],
     process: ['Auditer les canaux', 'Définir les formats', 'Produire et publier', 'Optimiser sans dénaturer'],
     Icon: Smartphone,
+    image: '/services/digital.png',
     theme: {
       '--service-a': '#38BDF8',
       '--service-b': '#A3E635',
@@ -154,6 +160,7 @@ const services: Service[] = [
     features: ['Casting artistique', 'Production sur mesure', 'Coordination', 'Logistique événementielle'],
     process: ['Comprendre le contexte', 'Composer le format', 'Produire le dispositif', 'Encadrer le jour J'],
     Icon: CalendarDays,
+    image: '/services/evenements.png',
     theme: {
       '--service-a': '#FB7185',
       '--service-b': '#22C55E',
@@ -262,22 +269,19 @@ export const ServicesPage = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.12, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div className="service-hero-placeholder">
-              <div className="service-hero-placeholder-inner">
-                <ImagePlus size={24} strokeWidth={2.2} />
-                <span>Visuel métier</span>
-              </div>
+            <div className="relative aspect-[16/10] overflow-hidden">
+              <img src="/services/hero-metiers.png" alt="Vue coulisses d'une salle de spectacle" className="h-full w-full object-cover" />
             </div>
-            <div className="grid grid-cols-2 gap-px border-t border-paper/12">
-              <div className="p-5">
-                <span className="premium-kicker text-paper/42">Réseau</span>
-                <strong className="mt-3 block font-display text-4xl font-black text-paper">
-                  300+
+            <div className="grid grid-cols-2">
+              <div className="border-t border-r border-paper/12 px-5 py-4 md:px-6 md:py-5">
+                <span className="premium-kicker text-paper/42">Salles partenaires</span>
+                <strong className="mt-2 block font-display text-3xl font-black tracking-tight text-paper">
+                  300<span className="text-accent-light">+</span>
                 </strong>
               </div>
-              <div className="p-5">
-                <span className="premium-kicker text-paper/42">Métiers</span>
-                <strong className="mt-3 block font-display text-4xl font-black text-paper">
+              <div className="border-t border-paper/12 px-5 py-4 md:px-6 md:py-5">
+                <span className="premium-kicker text-paper/42">Métiers intégrés</span>
+                <strong className="mt-2 block font-display text-3xl font-black tracking-tight text-paper">
                   6
                 </strong>
               </div>
@@ -319,9 +323,7 @@ export const ServicesPage = () => {
                 >
                   <span className="service-card-index">{String(index + 1).padStart(2, '0')}</span>
                   <div className="service-card-media" aria-hidden>
-                    <div className="service-card-placeholder">
-                      <ImagePlus size={18} strokeWidth={2.2} />
-                    </div>
+                    <img src={service.image} alt="" className="h-full w-full object-cover" />
                   </div>
                   <div className="relative z-10 flex min-h-[430px] flex-col p-5 pt-[166px] md:p-6 md:pt-[174px]">
                     <div className="mb-8 flex items-start justify-between gap-5">
@@ -377,10 +379,7 @@ export const ServicesPage = () => {
               </button>
 
               <div className="service-modal-media">
-                <div className="service-modal-placeholder">
-                  <ImagePlus size={26} strokeWidth={2.2} />
-                  <span>Photo métier à intégrer</span>
-                </div>
+                <img src={activeService.image} alt="" className="h-full w-full object-cover" />
               </div>
 
               <div className="service-modal-content">
