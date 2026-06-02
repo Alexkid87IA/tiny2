@@ -5,7 +5,7 @@ import {
   ArrowUpRight,
   CalendarDays,
   Handshake,
-  ImagePlus,
+
   Mail,
   Megaphone,
   MessageCircle,
@@ -269,22 +269,19 @@ export const ServicesPage = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.12, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div className="service-hero-placeholder">
-              <div className="service-hero-placeholder-inner">
-                <ImagePlus size={24} strokeWidth={2.2} />
-                <span>Visuel métier</span>
-              </div>
+            <div className="relative aspect-[16/10] overflow-hidden">
+              <img src="/services/hero-metiers.png" alt="Vue coulisses d'une salle de spectacle" className="h-full w-full object-cover" />
             </div>
-            <div className="grid grid-cols-2 gap-px border-t border-paper/12">
-              <div className="p-5">
-                <span className="premium-kicker text-paper/42">Réseau</span>
-                <strong className="mt-3 block font-display text-4xl font-black text-paper">
-                  300+
+            <div className="grid grid-cols-2">
+              <div className="border-t border-r border-paper/12 px-5 py-4 md:px-6 md:py-5">
+                <span className="premium-kicker text-paper/42">Salles partenaires</span>
+                <strong className="mt-2 block font-display text-5xl font-black tracking-tight text-paper md:text-6xl">
+                  300<span className="text-accent-light">+</span>
                 </strong>
               </div>
-              <div className="p-5">
-                <span className="premium-kicker text-paper/42">Métiers</span>
-                <strong className="mt-3 block font-display text-4xl font-black text-paper">
+              <div className="border-t border-paper/12 px-5 py-4 md:px-6 md:py-5">
+                <span className="premium-kicker text-paper/42">Métiers intégrés</span>
+                <strong className="mt-2 block font-display text-5xl font-black tracking-tight text-paper md:text-6xl">
                   6
                 </strong>
               </div>
