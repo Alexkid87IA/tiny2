@@ -27,7 +27,7 @@ export const ContactSection = () => {
   const inView = useInView(sectionRef, { once: true, margin: '-80px' });
 
   return (
-    <section ref={sectionRef} id="contact" className="relative overflow-hidden bg-paper py-24 text-ink md:py-32 lg:py-36">
+    <section ref={sectionRef} id="contact" className="relative overflow-hidden bg-paper py-14 text-ink md:py-24 lg:py-32">
       <div className="mx-auto max-w-container px-6 md:px-12">
         <motion.div
           className="grid gap-10 lg:grid-cols-12 lg:items-end"
@@ -70,7 +70,7 @@ export const ContactSection = () => {
                     <span className="premium-kicker text-paper/42">{path.eyebrow}</span>
                     <span className="premium-kicker text-paper/22">{path.num}</span>
                   </div>
-                  <h3 className="premium-title max-w-lg text-3xl md:text-4xl">
+                  <h3 className="premium-title max-w-lg text-2xl sm:text-3xl md:text-4xl">
                     {path.title}
                   </h3>
                   <p className="premium-copy mt-5 max-w-md text-base text-paper/60">
@@ -105,7 +105,7 @@ export const ContactSection = () => {
                 <span className="premium-kicker text-ink/42">Ou écrivez-nous directement</span>
                 <a
                   href="mailto:contact@tinyteam.fr"
-                  className="premium-title mt-1 block text-2xl text-ink transition hover:text-accent-dark md:text-4xl"
+                  className="premium-title mt-1 block break-all text-xl text-ink transition hover:text-accent-dark sm:text-2xl md:break-normal md:text-4xl"
                 >
                   contact@tinyteam.fr
                 </a>
