@@ -64,7 +64,7 @@ export const StorySection = () => {
   const inView = useInView(sectionRef, { once: true, margin: '-80px' });
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-paper py-20 text-ink md:py-28 lg:py-32">
+    <section ref={sectionRef} className="relative overflow-hidden bg-paper py-14 text-ink md:py-20 lg:py-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-ink/10" />
       <div className="mx-auto max-w-container px-6 md:px-12">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
@@ -76,7 +76,7 @@ export const StorySection = () => {
           >
             <div>
               <span className="premium-kicker text-ink/[0.46]">Qui sommes-nous</span>
-              <h2 className="premium-title mt-5 text-[54px] md:text-[72px] lg:text-[82px]">
+              <h2 className="premium-title mt-4 text-[42px] md:text-[54px] lg:text-[64px]">
                 Une petite équipe,
                 <span className="block font-serif font-normal italic text-accent-dark">
                   de grandes ambitions.
@@ -91,7 +91,7 @@ export const StorySection = () => {
                 <div className="flex items-center justify-between border-b border-paper/[0.14] px-2 pb-4">
                   <div>
                     <span className="premium-kicker text-paper/[0.64]">Une petite équipe</span>
-                    <p className="mt-2 font-display text-2xl font-black leading-none text-paper md:text-3xl">
+                    <p className="mt-2 font-display text-xl font-black leading-none text-paper md:text-2xl">
                       5 contacts directs
                     </p>
                   </div>
@@ -102,13 +102,13 @@ export const StorySection = () => {
                     <a
                       key={member.email}
                       href={`mailto:${member.email}`}
-                      className={`group relative grid min-w-0 grid-cols-[64px_minmax(0,1fr)] items-center gap-3 rounded-[14px] border p-2.5 pr-3 transition duration-200 hover:-translate-y-0.5 hover:border-accent/[0.55] hover:bg-paper/[0.09] sm:pr-12 ${
+                      className={`group relative grid min-w-0 grid-cols-[56px_minmax(0,1fr)] items-center gap-3 rounded-[14px] border p-2 pr-3 transition duration-200 hover:-translate-y-0.5 hover:border-accent/[0.55] hover:bg-paper/[0.09] sm:pr-12 ${
                         index === 0
                           ? 'border-accent/[0.42] bg-paper/[0.105]'
                           : 'border-paper/[0.1] bg-paper/[0.045]'
                       }`}
                     >
-                      <span className="h-16 w-16 overflow-hidden rounded-[11px] bg-paper/[0.08]">
+                      <span className="h-14 w-14 overflow-hidden rounded-[10px] bg-paper/[0.08]">
                         <img
                           src={member.image}
                           alt={member.name}
@@ -121,7 +121,7 @@ export const StorySection = () => {
                         <span className="block truncate font-mono text-[9px] uppercase tracking-[0.14em] text-accent-light/[0.76]">
                           {member.role}
                         </span>
-                        <span className="mt-1 block font-display text-[20px] font-black leading-[0.98] text-paper md:text-[22px]">
+                        <span className="mt-1 block font-display text-[17px] font-black leading-[0.98] text-paper md:text-[19px]">
                           {member.name}
                         </span>
                         <span className="mt-1.5 block truncate font-mono text-[10px] tracking-[0.04em] text-paper/[0.54]">
@@ -161,8 +161,8 @@ export const StorySection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.12, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div className="rounded-[22px] border border-ink/10 bg-white/50 p-6 md:p-8 lg:p-10">
-              <p className="premium-copy max-w-3xl text-[24px] leading-[1.35] text-ink md:text-[32px]">
+            <div className="rounded-[22px] border border-ink/10 bg-white/50 p-5 md:p-6 lg:p-8">
+              <p className="premium-copy max-w-3xl text-[20px] leading-[1.35] text-ink md:text-[26px]">
                 On n’est pas une grosse machine. On est cinq, et c’est notre force :
                 chaque artiste qu’on accompagne, on le connaît vraiment.
               </p>
@@ -177,7 +177,7 @@ export const StorySection = () => {
               {stats.map((stat, index) => (
                 <div
                   key={stat.label}
-                  className={`min-w-0 rounded-[18px] border p-6 md:p-7 ${
+                  className={`min-w-0 rounded-[18px] border p-5 md:p-6 ${
                     index === 2
                       ? 'border-ink bg-ink text-paper sm:col-span-2 md:grid md:grid-cols-[auto_1fr] md:items-end md:gap-8'
                       : 'border-ink/10 bg-paper text-ink'
@@ -186,8 +186,8 @@ export const StorySection = () => {
                   <span
                     className={`premium-title block whitespace-nowrap ${
                       index === 2
-                        ? 'text-[76px] md:text-[104px]'
-                        : 'text-[68px] md:text-[82px]'
+                        ? 'text-[56px] md:text-[72px]'
+                        : 'text-[48px] md:text-[60px]'
                     }`}
                   >
                     {stat.value}

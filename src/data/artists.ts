@@ -163,7 +163,7 @@ export const artists = [
       tiktok: "",
       youtube: ""
     },
-    showName: "Lucie Carbone",
+    showName: "Jour de fête",
     showDescription: "Un spectacle qui parle de la vie et de toutes les cases qu'on est censées cocher pour la « réussir ». Chaleureux, doux, léger — et surtout la joie de se rencontrer en chair et en os.",
     videoUrl: "",
     dates: [],
@@ -250,7 +250,7 @@ export const artists = [
       tiktok: "",
       youtube: ""
     },
-    showName: "Sophie et Alex",
+    showName: "Solides",
     showDescription: "Un spectacle sur les étapes de la vie — burn out, culotte filet, et tout ce qu'on montre pas sur Insta. On a décidé de rire de tout.",
     videoUrl: "",
     dates: [],
