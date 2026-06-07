@@ -73,33 +73,33 @@ export const MissionSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div className="rounded-[14px] border border-ink/10 bg-white/[0.55] p-5 md:p-6 lg:p-7">
+            <div className="rounded-[10px] border border-ink/10 bg-white/[0.72] p-4 md:p-6 lg:p-7">
               <span className="premium-kicker text-accent-dark/70">Nos métiers</span>
-              <h2 className="premium-title mt-4 max-w-xl text-[42px] md:text-[54px] lg:text-[64px]">
+              <h2 className="premium-title mt-3 max-w-xl text-[clamp(2.25rem,10vw,2.75rem)] md:mt-4 md:text-[54px] lg:text-[64px]">
                 Une équipe,
                 <span className="block font-serif font-normal italic text-accent-dark">
                   six leviers.
                 </span>
               </h2>
-              <p className="premium-copy mt-5 max-w-lg text-base text-ink/[0.66] md:text-lg">
+              <p className="premium-copy mt-4 max-w-lg text-[15px] leading-[1.55] text-ink/[0.66] md:mt-5 md:text-lg">
                 On ne sépare pas l’artistique, la diffusion et l’image. Les métiers
                 avancent ensemble, pour éviter les angles morts et les décisions hors-sol.
               </p>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="mt-5 grid gap-2.5 sm:grid-cols-3 lg:mt-6 lg:grid-cols-1">
                 {[
                   ['01', 'Produire juste'],
                   ['02', 'Défendre fort'],
                   ['03', 'Diffuser mieux'],
                 ].map(([num, label]) => (
-                  <div key={num} className="flex items-center justify-between rounded-full border border-ink/10 px-4 py-3">
+                  <div key={num} className="flex items-center justify-between rounded-full border border-ink/10 px-3.5 py-2.5 md:px-4 md:py-3">
                     <span className="premium-kicker text-ink/[0.38]">{num}</span>
                     <span className="font-body text-sm font-semibold text-ink">{label}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6">
+              <div className="mt-5 md:mt-6">
                 <Link to="/services" className="premium-btn premium-btn-dark group">
                   Voir tous les services
                   <span className="premium-btn-icon">
@@ -108,7 +108,7 @@ export const MissionSection = () => {
                 </Link>
               </div>
 
-              <div className="mt-6 overflow-hidden rounded-[16px]">
+              <div className="mt-5 overflow-hidden rounded-[12px] md:mt-6 md:rounded-[16px]">
                 <img src="/team.png" alt="L'équipe Tiny Team" className="aspect-[16/10] w-full rounded-[12px] object-cover" />
               </div>
             </div>

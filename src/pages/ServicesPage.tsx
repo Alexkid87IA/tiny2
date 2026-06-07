@@ -446,7 +446,7 @@ export const ServicesPage = () => {
           <div className="service-contact-panel">
             <div className="service-contact-copy">
               <span className="premium-kicker text-accent-light/86">On discute ?</span>
-              <h2 className="premium-title mt-6 text-[clamp(3rem,7vw,7.2rem)] text-paper">
+              <h2 className="premium-title service-contact-title mt-6 text-[clamp(2.85rem,11vw,4rem)] text-paper md:text-[clamp(3rem,7vw,7.2rem)]">
                 Un projet,
                 <span className="block font-serif font-normal italic text-accent-light">
                   une salle, une idée ?

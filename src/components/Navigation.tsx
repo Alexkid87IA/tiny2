@@ -125,7 +125,11 @@ export const Navigation = () => {
 
               <button
                 onClick={() => setIsMenuOpen((open) => !open)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-paper/[0.14] bg-paper/[0.055] text-paper/[0.82] backdrop-blur-md transition hover:border-paper/[0.28] hover:text-paper lg:hidden"
+                className={`flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-md transition lg:hidden ${
+                  isOverLight
+                    ? 'border-ink/[0.1] bg-ink text-paper shadow-[0_10px_28px_rgba(10,15,41,0.16)] hover:bg-ink/[0.88]'
+                    : 'border-paper/[0.14] bg-paper/[0.055] text-paper/[0.82] hover:border-paper/[0.28] hover:text-paper'
+                }`}
                 type="button"
                 aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
                 aria-expanded={isMenuOpen}

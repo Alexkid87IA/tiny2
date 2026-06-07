@@ -97,15 +97,15 @@ export const ContactSection = () => {
           transition={{ duration: 0.55, delay: 0.08 }}
         >
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-4">
+            <div className="flex flex-col items-start gap-4 md:flex-row">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ink text-paper">
                 <Mail size={19} />
               </span>
-              <div>
+              <div className="min-w-0 w-full">
                 <span className="premium-kicker text-ink/42">Ou écrivez-nous directement</span>
                 <a
                   href="mailto:contact@tinyteam.fr"
-                  className="premium-title mt-1 block break-all text-xl text-ink transition hover:text-accent-dark sm:text-2xl md:break-normal md:text-4xl"
+                  className="premium-title mt-1 block whitespace-nowrap text-[clamp(1.45rem,6.7vw,2.5rem)] text-ink transition hover:text-accent-dark md:text-4xl"
                 >
                   contact@tinyteam.fr
                 </a>

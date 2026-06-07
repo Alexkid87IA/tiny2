@@ -54,7 +54,7 @@ export const ProducerPage = () => {
             transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
           >
             <span className="premium-kicker text-accent-light/82">Programmateurs & salles</span>
-            <h1 className="premium-title mt-7 max-w-5xl text-[52px] text-paper md:text-[76px] lg:text-[96px]">
+            <h1 className="premium-title audience-hero-title mt-7 max-w-5xl text-[clamp(2.85rem,11vw,3.75rem)] text-paper md:text-[76px] lg:text-[96px]">
               Un plateau prêt
               <span className="block font-serif font-normal italic text-accent-light">
                 pour votre saison.

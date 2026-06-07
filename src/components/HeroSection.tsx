@@ -70,15 +70,16 @@ export const HeroSection = () => {
         className="relative z-10 mx-auto flex w-full max-w-container flex-col justify-center px-6 pb-8 pt-7 md:px-12 md:pb-10 md:pt-10"
         style={{ opacity: contentOpacity, y: contentY }}
       >
-        <div className="grid gap-7 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-8">
-            <div className="mb-5 flex flex-wrap items-center gap-3">
-              <span className="premium-kicker rounded-full border border-paper/16 bg-paper/[0.055] px-3 py-1.5 text-paper/72 backdrop-blur-md">
-                Production · Management · Diffusion · Spectacles vivants
+        <div className="grid justify-items-center gap-7 text-center lg:grid-cols-12 lg:items-center lg:justify-items-stretch lg:text-left">
+          <div className="flex w-full flex-col items-center lg:col-span-8 lg:items-start">
+            <div className="mb-5 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+              <span className="premium-kicker whitespace-nowrap rounded-full border border-paper/16 bg-paper/[0.055] px-3 py-1.5 text-[9px] tracking-[0.1em] text-paper/72 backdrop-blur-md sm:text-[10px] sm:tracking-[0.14em]">
+                <span className="sm:hidden">Production · Diffusion · Spectacle vivant</span>
+                <span className="hidden sm:inline">Production · Management · Diffusion · Spectacles vivants</span>
               </span>
             </div>
 
-            <h1 className="premium-title max-w-5xl text-paper">
+            <h1 className="premium-title max-w-5xl text-center text-paper lg:text-left">
               <span
                 className="block whitespace-nowrap"
                 style={{ fontSize: 'clamp(3.1rem, 7.4vw, 7.25rem)' }}
@@ -94,9 +95,9 @@ export const HeroSection = () => {
             </h1>
           </div>
 
-          <div className="lg:col-span-4">
-            <div className="ml-auto max-w-[380px] rounded-[10px] border border-paper/12 bg-deep/48 p-4 backdrop-blur-xl md:p-5 lg:max-w-[360px]">
-              <p className="premium-copy max-w-md text-sm leading-[1.6] text-paper/76 md:text-base lg:text-[15px]">
+          <div className="w-full lg:col-span-4">
+            <div className="mx-auto max-w-[380px] rounded-[10px] border border-paper/12 bg-deep/48 p-4 backdrop-blur-xl md:p-5 lg:ml-auto lg:mr-0 lg:max-w-[360px]">
+              <p className="premium-copy mx-auto max-w-md text-center text-sm leading-[1.6] text-paper/76 md:text-base lg:mx-0 lg:text-left lg:text-[15px]">
                 Une équipe resserrée pour produire, défendre et diffuser des artistes
                 qui tiennent la salle, le rythme et la trajectoire.
               </p>
@@ -107,7 +108,7 @@ export const HeroSection = () => {
                     <span className="premium-kicker text-paper/42">
                       Réseau de diffusion
                     </span>
-                    <div className="mt-2 flex items-end gap-2.5">
+                    <div className="mt-2 flex items-end justify-center gap-2.5 lg:justify-start">
                       <span className="premium-title text-[3.2rem] leading-[0.8] text-paper md:text-[3.85rem]">
                         300+
                       </span>

@@ -76,9 +76,9 @@ export const StorySection = () => {
           >
             <div>
               <span className="premium-kicker text-ink/[0.46]">Qui sommes-nous</span>
-              <h2 className="premium-title mt-4 text-[42px] md:text-[54px] lg:text-[64px]">
-                Une petite équipe,
-                <span className="block font-serif font-normal italic text-accent-dark">
+              <h2 className="premium-title mt-4 text-[clamp(2.05rem,8.2vw,2.625rem)] md:text-[54px] lg:text-[64px]">
+                <span className="block whitespace-nowrap">Une petite équipe,</span>
+                <span className="block whitespace-nowrap font-serif font-normal italic text-accent-dark">
                   de grandes ambitions.
                 </span>
               </h2>
