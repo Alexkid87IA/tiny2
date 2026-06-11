@@ -67,18 +67,18 @@ export const StorySection = () => {
     <section ref={sectionRef} className="relative overflow-hidden bg-paper py-14 text-ink md:py-20 lg:py-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-ink/10" />
       <div className="mx-auto max-w-container px-6 md:px-12">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start xl:gap-14">
           <motion.div
             className="space-y-8"
             initial={false}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div>
+            <div className="max-w-[34rem]">
               <span className="premium-kicker text-ink/[0.46]">Qui sommes-nous</span>
-              <h2 className="premium-title mt-4 text-[clamp(2.05rem,8.2vw,2.625rem)] md:text-[54px] lg:text-[64px]">
-                <span className="block whitespace-nowrap">Une petite équipe,</span>
-                <span className="block whitespace-nowrap font-serif font-normal italic text-accent-dark">
+              <h2 className="premium-title mt-4 text-[clamp(2.05rem,8.2vw,2.625rem)] md:text-[54px] lg:text-[clamp(3.15rem,4vw,3.7rem)] 2xl:text-[64px]">
+                <span className="block whitespace-nowrap lg:whitespace-normal">Une petite équipe,</span>
+                <span className="block whitespace-nowrap font-serif font-normal italic text-accent-dark lg:whitespace-normal">
                   de grandes ambitions.
                 </span>
               </h2>
