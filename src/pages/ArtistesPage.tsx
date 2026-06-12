@@ -14,7 +14,7 @@ const preferredArtistIds = [
   'marc-antoine',
   'thomas',
   'sophie-et-alex',
-  'djamel-comedy-club',
+  'jamel-comedy-club',
   'morgane',
   'urbain',
 ];

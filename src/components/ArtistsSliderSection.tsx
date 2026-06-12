@@ -15,7 +15,7 @@ const preferredArtistIds = [
   'marc-antoine',
   'thomas',
   'sophie-et-alex',
-  'djamel-comedy-club',
+  'jamel-comedy-club',
   'morgane',
   'urbain',
 ];
@@ -37,7 +37,7 @@ const posterAspectRatioByArtistId: Record<string, string> = {
   'marc-antoine': '1600 / 2388',
   thomas: '1200 / 1797',
   'sophie-et-alex': '1600 / 2400',
-  'djamel-comedy-club': '1200 / 1600',
+  'jamel-comedy-club': '1200 / 1600',
   morgane: '1600 / 2166',
   urbain: '1600 / 2400',
 };
