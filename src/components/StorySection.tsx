@@ -4,7 +4,7 @@ import { ArrowUpRight, Mail } from 'lucide-react';
 
 const stats = [
   {
-    value: '10',
+    value: '9',
     label: 'artistes accompagnés',
     detail: 'Un plateau resserré, suivi de près.',
   },
