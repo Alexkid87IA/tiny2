@@ -10,7 +10,6 @@ const artistsWithImages = artists.filter((artist): artist is Artist => Boolean(a
 const preferredArtistIds = [
   'djal',
   'santini',
-  'lucie',
   'edouard',
   'marc-antoine',
   'thomas',
@@ -32,7 +31,6 @@ const orderedArtists = [
 const posterAspectRatioByArtistId: Record<string, string> = {
   djal: '1600 / 2400',
   santini: '1080 / 1350',
-  lucie: '1200 / 1801',
   edouard: '1600 / 2400',
   'marc-antoine': '1600 / 2388',
   thomas: '1200 / 1797',

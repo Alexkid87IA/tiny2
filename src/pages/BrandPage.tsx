@@ -172,7 +172,7 @@ export const BrandPage = () => {
       <AudienceArtistGridSection
         eyebrow="Plateau disponible"
         title="Des présences qui marquent."
-        description="Les 10 artistes du plateau peuvent être mobilisés selon le contexte : scène, contenu, événement interne ou prise de parole."
+        description="Les 9 artistes du plateau peuvent être mobilisés selon le contexte : scène, contenu, événement interne ou prise de parole."
         ctaLabel="Voir le plateau"
         theme="paper"
       />

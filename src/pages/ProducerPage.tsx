@@ -82,7 +82,7 @@ export const ProducerPage = () => {
             </div>
             <div className="mt-5 grid gap-2">
               <div className="audience-panel-line">
-                <span>10 artistes accompagnés</span>
+                <span>9 artistes accompagnés</span>
                 <ArrowUpRight size={14} />
               </div>
               <div className="audience-panel-line">
@@ -142,7 +142,7 @@ export const ProducerPage = () => {
       <AudienceArtistGridSection
         eyebrow="Plateau disponible"
         title="Des formats prêts à tourner."
-        description="Les 10 artistes accompagnés par Tiny Team, présentés dans une grille claire pour comparer les univers et accéder vite aux profils."
+        description="Les 9 artistes accompagnés par Tiny Team, présentés dans une grille claire pour comparer les univers et accéder vite aux profils."
         ctaLabel="Voir tous les artistes"
       />
 

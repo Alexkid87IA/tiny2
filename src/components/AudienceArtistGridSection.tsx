@@ -5,7 +5,6 @@ import { artists } from '../data/artists';
 const preferredArtistIds = [
   'djal',
   'santini',
-  'lucie',
   'edouard',
   'marc-antoine',
   'thomas',

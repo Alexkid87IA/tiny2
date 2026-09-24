@@ -150,33 +150,6 @@ export const artists = [
     }
   },
   {
-    id: "lucie",
-    name: "Lucie Carbone",
-    type: "Seule en scène",
-    tagline: "Les cases qu'on est censées cocher",
-    description: "C'est l'histoire d'un nouveau spectacle qui parle de la vie, cette coquine, et de toutes les cases qu'on est censées cocher pour la « réussir ».",
-    longDescription: "« Grosso modum, je te promets » (comme disait Johnny) : un moment aussi chaleureux qu'une raclette en plein mois d'août, aussi doux qu'un agneau ignorant Pâques, aussi léger qu'une plume sous hélium et surtout : la joie de se rencontrer en chair et en os !",
-    image: "/artists/lucie.jpg",
-    posterImage: "/artists/lucie.jpg",
-    social: {
-      instagram: "",
-      tiktok: "",
-      youtube: ""
-    },
-    showName: "Jour de fête",
-    showDescription: "Un spectacle qui parle de la vie et de toutes les cases qu'on est censées cocher pour la « réussir ». Chaleureux, doux, léger — et surtout la joie de se rencontrer en chair et en os.",
-    videoUrl: "",
-    dates: [],
-    socialContent: [],
-    achievements: [],
-    reviews: [],
-    stats: {
-      shows: 0,
-      cities: 0,
-      followers: 0
-    }
-  },
-  {
     id: "edouard",
     name: "Edouard Deloignon",
     type: "Humoriste",
